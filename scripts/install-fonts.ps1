@@ -24,7 +24,8 @@ $shell = New-Object -ComObject Shell.Application
 $existing = Get-ItemProperty -Path $reg
 $installed = 0; $skipped = 0; $repaired = 0
 
-Get-ChildItem (Join-Path $src '*.ttf'), (Join-Path $src '*.otf') -ErrorAction SilentlyContinue | ForEach-Object {
+Get-ChildItem (Join-Path $src '*.ttf'), (Join-Path $src '*.otf') -ErrorAction SilentlyContinue |
+  Where-Object { $_.Name -notlike '._*' } | ForEach-Object {   # skip macOS AppleDouble junk
     $target = Join-Path $dst $_.Name
 
     # font display name from the file's own metadata; fall back to basename
@@ -40,7 +41,20 @@ Get-ChildItem (Join-Path $src '*.ttf'), (Join-Path $src '*.otf') -ErrorAction Si
         return
     }
 
-    Copy-Item $_.FullName $target -Force
+    try {
+        Copy-Item $_.FullName $target -Force
+    } catch {
+        # in use by a running app. The file on disk keeps working; make sure it is
+        # at least registered under this name and move on — a later run (post-reboot)
+        # refreshes the bytes if they differ.
+        if (Test-Path $target) {
+            New-ItemProperty -Path $reg -Name $regName -Value $target -PropertyType String -Force | Out-Null
+            Write-Host "  ~ $title (in use, kept existing bytes)"
+            $skipped++
+            return
+        }
+        throw
+    }
     New-ItemProperty -Path $reg -Name $regName -Value $target -PropertyType String -Force | Out-Null
     if ($regValue -or $onDisk) { $repaired++ } else { $installed++ }
     Write-Host "  + $title"

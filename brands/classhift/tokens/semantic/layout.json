@@ -1,0 +1,93 @@
+{
+  "line-weight": {
+    "$type": "dimension",
+    "hair": {
+      "$value": "{border.hair}"
+    },
+    "rule": {
+      "$value": "{border.rule}"
+    }
+  },
+  "motion": {
+    "duration": {
+      "$type": "duration",
+      "fast": {
+        "$value": "{duration.fast}"
+      },
+      "base": {
+        "$value": "{duration.base}"
+      },
+      "slow": {
+        "$value": "{duration.slow}"
+      }
+    },
+    "easing": {
+      "$type": "cubicBezier",
+      "standard": {
+        "$value": "{easing.standard}"
+      },
+      "entrance": {
+        "$value": "{easing.entrance}"
+      },
+      "exit": {
+        "$value": "{easing.exit}"
+      }
+    }
+  },
+  "gap": {
+    "$type": "dimension",
+    "inline-xs": {
+      "$value": "{space.2}"
+    },
+    "inline-sm": {
+      "$value": "{space.4}"
+    },
+    "inline-md": {
+      "$value": "{space.5}"
+    },
+    "stack-sm": {
+      "$value": "{space.6}"
+    },
+    "stack-md": {
+      "$value": "{space.8}"
+    },
+    "stack-lg": {
+      "$value": "{space.10}"
+    },
+    "section": {
+      "$value": "{space.12}"
+    },
+    "section-lg": {
+      "$value": "{space.13}"
+    },
+    "gutter": {
+      "$value": "{space.11}",
+      "$description": "page side padding"
+    },
+    "tab-col": {
+      "$value": "118px",
+      "$description": "the marginal tab column — a structural constant of this direction, not a spacing step"
+    }
+  },
+  "corner": {
+    "$type": "dimension",
+    "default": {
+      "$value": "{radius.none}"
+    }
+  },
+  "frame": {
+    "$type": "dimension",
+    "page": {
+      "$value": "1240px",
+      "$description": "outer page width — the sheet"
+    },
+    "column": {
+      "$value": "660px",
+      "$description": "reading column width; measure.prose caps the text inside it"
+    },
+    "rail": {
+      "$value": "380px",
+      "$description": "the right-hand data rail beside the hero"
+    }
+  }
+}

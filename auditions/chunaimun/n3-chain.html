@@ -1,0 +1,448 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>천AI문 · N3 연쇄 — S1 audition</title>
+
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300..800&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+
+<style>
+/* ─────────────────────────────────────────────────────────────────────────
+   N3 「연쇄」 — S1 audition board, brand chunaimun, restart round
+   Taste skill: gpt-taste (one skill, this board only). Real GSAP ScrollTrigger,
+   pinned stage plus a scrubbed sequential reveal, per its randomisation.
+   Its stock-image directive is overridden: picsum imagery fails gate 0 and S0
+   §4.1 outright. The artefact on this board is the product's own prompt data.
+   Built to _img/n3-hero.png.
+   ───────────────────────────────────────────────────────────────────────── */
+
+:root{
+  --page:    #F6F7F8;      /* cool white. not the newsprint of N2, not bone */
+  --page-2:  #ECEEF0;
+  --line:    #D6DADE;
+  --ink:     #0E1216;
+  --ink-2:   #444C55;
+  --ink-3:   #5D666F;
+
+  /* the mark a 원장 actually makes on a printed sheet: ballpoint blue */
+  --pen:     #1B3FBF;
+  --pen-wash:#E4E9FA;
+
+  --e: cubic-bezier(.22,1,.36,1);
+  --gut: clamp(18px,4.4vw,84px);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{
+  background:var(--page);color:var(--ink);
+  font-family:'Pretendard Variable',Pretendard,sans-serif;
+  font-size:clamp(15px,1vw,17px);line-height:1.75;
+  word-break:keep-all;overflow-wrap:break-word;
+  overflow-x:hidden;width:100%;max-width:100%;
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,.disp{font-family:'IBM Plex Sans KR','Outfit',sans-serif;font-weight:600;letter-spacing:-.028em;line-height:1.5}
+h1{line-height:1.24}
+.lat{font-family:'Outfit',sans-serif;font-variant-numeric:tabular-nums}
+:focus-visible{outline:2px solid var(--pen);outline-offset:3px}
+
+/* ── nav: a split minimal bar, not a floating glass pill (blur is barred) ── */
+.nav{position:sticky;top:0;z-index:30;display:flex;justify-content:space-between;align-items:center;
+     gap:20px;padding:14px var(--gut);background:var(--page);border-bottom:1px solid var(--line)}
+.nav__b{font-family:'IBM Plex Sans KR',sans-serif;font-weight:700;letter-spacing:-.02em}
+.nav__b span{color:var(--pen)}
+.nav__r{display:flex;gap:clamp(12px,2vw,28px);align-items:center}
+.nav a{color:var(--ink-2);text-decoration:none;font-size:.88rem;transition:color 200ms var(--e)}
+.nav a:hover{color:var(--pen)}
+.nav__go{border:1px solid var(--ink);padding:8px 16px;color:var(--ink)!important;border-radius:999px;font-weight:600;
+         transition:background 240ms var(--e),color 240ms var(--e)}
+.nav__go:hover{background:var(--ink);color:var(--page)!important}
+
+/* ── hero: artistic asymmetry. type left-heavy, artefact overlapping bottom-right ── */
+.hero{position:relative;padding:clamp(48px,9vh,110px) var(--gut) clamp(56px,10vh,130px);overflow:hidden}
+.hero__in{position:relative;z-index:2;max-width:min(1180px,100%)}
+h1{font-size:clamp(2.3rem,7.4vw,6.4rem)}
+h1 .pen{color:var(--pen)}
+
+/* The output that comes out is not one thing, so the headline does not claim one.
+   Four words share a single grid cell; the box takes the width of whichever is on,
+   and the text after it slides to meet it. Each carries its own ink, and the rule
+   under it is redrawn on arrival: the same fill gesture the chain below uses.
+
+   overflow:hidden is what keeps the rolling word inside the line — clip-path with a
+   negative inset was tried first and is invalid, which silently disabled all clipping
+   and left the outgoing rule stranded below the headline. The outgoing word is cut off
+   at the new width, but it is already transparent by then (opacity, 300ms). */
+.cyc{display:inline-grid;vertical-align:baseline;overflow:hidden;
+     padding-bottom:.2em;margin-bottom:-.2em}
+/* Width is set instantly at the swap; only the tail animates, and only by transform. */
+.tail{display:inline-block;will-change:transform}
+/* nowrap: the box is width-constrained to the active word, and a longer sibling that
+   wrapped inside it would double the grid row and drag the rule down with it.
+   align-self:start: items must not stretch to the row, or the rule leaves the word. */
+.cyc__w{grid-area:1/1;font-style:normal;justify-self:start;align-self:start;white-space:nowrap;
+        position:relative;color:var(--c);
+        transform:translateY(112%);opacity:0;
+        transition:transform 640ms var(--e),opacity 300ms linear}
+.cyc__w::after{content:'';position:absolute;left:0;right:0;bottom:.1em;height:.052em;background:var(--c);
+               transform:scaleX(0);transform-origin:left;transition:transform 560ms var(--e) 140ms}
+.cyc__w.is-on{transform:none;opacity:1}
+.cyc__w.is-on::after{transform:scaleX(1)}
+.cyc__w.is-out{transform:translateY(-112%);opacity:0}
+.hero__sub{margin-top:clamp(22px,3.4vh,38px);max-width:46ch;color:var(--ink-2);font-size:clamp(1rem,1.14vw,1.16rem)}
+.hero__sub b{color:var(--ink);font-weight:600}
+.hero__cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:clamp(26px,4vh,44px)}
+.btn{display:inline-flex;align-items:center;gap:10px;padding:14px 26px;border-radius:999px;text-decoration:none;
+     font-weight:600;font-size:.95rem;transition:transform 260ms var(--e),background 260ms var(--e),color 260ms var(--e)}
+.btn--k{background:var(--ink);color:var(--page)}      /* dark bg, light text */
+.btn--k:hover{background:var(--pen);transform:translateY(-2px)}
+.btn--g{border:1px solid var(--line);color:var(--ink);background:var(--page)}
+.btn--g:hover{border-color:var(--ink);transform:translateY(-2px)}
+/* The sheet bleeds off the right and bottom rather than sitting on the page as a
+   pasted rectangle; the two edges that remain inside the frame are masked away. */
+.hero__art{position:absolute;right:-3%;bottom:-16%;width:min(52%,660px);z-index:1;pointer-events:none;
+           -webkit-mask-image:linear-gradient(115deg,transparent 0%,#000 34%,#000 100%);
+                   mask-image:linear-gradient(115deg,transparent 0%,#000 34%,#000 100%)}
+.hero__art img{display:block;width:100%;height:auto;mix-blend-mode:multiply;filter:contrast(1.04) brightness(1.04)}
+
+/* ── the chain: pinned, and the reader drives every beat ─────────────────── */
+.chain{position:relative;height:520vh}
+.chain__stage{position:sticky;top:0;height:100dvh;display:grid;grid-template-rows:auto 1fr auto;
+              padding:clamp(20px,4vh,42px) var(--gut) clamp(20px,3.4vh,40px);gap:clamp(12px,2.4vh,26px)}
+.chain__hd{display:flex;justify-content:space-between;align-items:baseline;gap:18px;flex-wrap:wrap;
+           border-bottom:1px solid var(--line);padding-bottom:12px}
+.chain__hd h2{font-size:clamp(1.02rem,1.6vw,1.42rem)}
+.step{font-family:'Outfit',sans-serif;font-size:.8rem;letter-spacing:.14em;color:var(--ink-3);white-space:nowrap}
+.step b{color:var(--pen);font-weight:600}
+
+.beats{position:relative;align-self:center}
+.beat{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;gap:clamp(14px,2.6vh,28px)}
+.beat:first-child{position:relative}
+
+.sent{font-family:'IBM Plex Sans KR',sans-serif;font-weight:500;letter-spacing:-.028em;
+      font-size:clamp(1.5rem,4.1vw,3.5rem);line-height:1.45;max-width:22ch}
+.sent .w{opacity:.16}                      /* scrubs to 1 as the reader advances */
+.slot{display:inline-block;position:relative;color:var(--pen);font-weight:600;
+      padding:0 .12em;white-space:nowrap}
+.slot::before{content:'';position:absolute;left:0;right:0;bottom:.08em;height:2px;background:var(--pen);
+              transform:scaleX(1);transform-origin:left}
+.slot i{font-style:normal;display:inline-block;opacity:0}          /* the value, written in */
+.slot u{position:absolute;left:.12em;right:.12em;top:0;bottom:0;text-decoration:none;color:var(--ink-3);
+        font-weight:400;display:flex;align-items:center;justify-content:center;letter-spacing:.02em}
+.slot--done i{opacity:1}
+.slot--done u{opacity:0}
+
+/* Input and output are told apart by material, not by an accent tab: the sentence
+   you write sits on the page, the thing that comes back is a different stock. */
+.out{background:var(--ink);color:var(--page);padding:clamp(16px,2.2vh,26px) clamp(18px,2.2vw,30px);max-width:62ch;
+     position:relative}
+.out::before{content:'';position:absolute;left:0;right:0;top:0;height:2px;background:var(--pen)}
+.out p{font-size:clamp(.95rem,1.1vw,1.08rem);color:#C3CAD3;line-height:1.7}
+.out b{color:var(--page);font-weight:600}
+.out .lat{color:#8FA6F0;font-weight:600}
+
+.chain__ft{display:flex;justify-content:space-between;align-items:center;gap:18px;flex-wrap:wrap}
+.track{flex:1 1 220px;min-width:0;height:2px;background:var(--line);position:relative;overflow:hidden}
+.track i{position:absolute;inset:0;background:var(--pen);transform:scaleX(0);transform-origin:left}
+.chain__ft p{font-size:.84rem;color:var(--ink-3);flex:0 1 auto}
+
+/* ── interest: a dense interlocking grid, zero empty cells ───────────────── */
+.deck{padding:clamp(80px,13vh,168px) var(--gut) clamp(40px,7vh,84px)}
+.deck__hd{max-width:52ch;margin-bottom:clamp(28px,4.6vh,52px)}
+.deck__hd h2{font-size:clamp(1.5rem,3vw,2.5rem);margin-bottom:12px}
+.deck__hd p{color:var(--ink-2)}
+.grid{display:grid;grid-auto-flow:dense;grid-template-columns:repeat(6,1fr);gap:1px;background:var(--line);border:1px solid var(--line)}
+.cell{background:var(--page);padding:clamp(18px,2.4vw,34px);display:flex;flex-direction:column;gap:8px;
+      text-decoration:none;color:inherit;transition:background 300ms var(--e)}
+.cell:hover{background:var(--page-2)}
+.cell--a{grid-column:span 4}
+.cell--b{grid-column:span 2}
+.cell--c{grid-column:span 2}
+.cell--d{grid-column:span 4}
+.cell__v{font-family:'Outfit',sans-serif;font-size:.78rem;letter-spacing:.14em;color:var(--ink-3)}
+.cell__n{font-family:'IBM Plex Sans KR',sans-serif;font-weight:700;font-size:clamp(1.3rem,2.4vw,2rem);line-height:1.4;letter-spacing:-.02em}
+.cell__s{color:var(--ink-2);font-size:.94rem}
+.cell__c{margin-top:auto;font-family:'Outfit',sans-serif;font-weight:600;font-size:clamp(1.4rem,2.6vw,2.2rem);letter-spacing:-.02em}
+.cell--peak{background:var(--pen-wash)}
+.cell--peak .cell__c{color:var(--pen)}
+.cell--peak:hover{background:#DBE2F7}
+
+/* ── action ─────────────────────────────────────────────────────────────── */
+.act{padding:clamp(70px,11vh,140px) var(--gut) clamp(74px,12vh,150px);border-top:1px solid var(--line);
+     display:flex;justify-content:space-between;align-items:flex-end;gap:clamp(22px,4vw,60px);flex-wrap:wrap}
+.act h2{font-size:clamp(1.7rem,4vw,3.4rem);max-width:16ch}
+/* The pen blue is an ink for paper-coloured ground. On the dark button it drops to
+   2.25:1, so the number takes the same hue lifted to read against the ink. */
+.act .btn--k .lat{color:#9DB2F5}
+
+/* ── spec rail ──────────────────────────────────────────────────────────── */
+.rail{padding:clamp(48px,8vh,96px) var(--gut) clamp(80px,13vh,150px);border-top:2px solid var(--pen);background:var(--page-2)}
+.rail h2{font-size:1.08rem;margin-bottom:clamp(22px,3.4vh,36px)}
+.rail dl{display:grid;grid-template-columns:8.8rem minmax(0,1fr);max-width:76ch}
+.rail dt{font-family:'Outfit',sans-serif;font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;color:var(--pen);padding:13px 0;border-top:1px solid var(--line)}
+.rail dd{padding:13px 0;border-top:1px solid var(--line);font-size:.92rem;color:var(--ink-2)}
+.rail dd b{color:var(--ink);font-weight:600}
+
+@media (max-width:880px){
+  .hero__art{position:relative;right:auto;bottom:auto;width:min(100%,420px);margin-top:34px;opacity:1}
+  .chain{height:460vh}
+  .sent{max-width:none}
+  .grid{grid-template-columns:repeat(2,1fr)}
+  .cell--a,.cell--b,.cell--c,.cell--d{grid-column:span 2}
+  .rail dl{grid-template-columns:1fr}
+  .rail dd{border-top:0;padding-top:0}
+}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{transition-duration:1ms!important;animation-duration:1ms!important}
+  /* No script runs, so the box would otherwise size to the widest word and leave the
+     gap the cycling exists to close. Drop the other three out of layout entirely. */
+  .cyc__w:not(.is-on){display:none}
+  .chain{height:auto}
+  .chain__stage{position:static;height:auto}
+  .beats{display:grid;gap:clamp(30px,5vh,60px)}
+  .beat{position:relative!important;inset:auto;opacity:1!important}
+  .sent .w{opacity:1!important}
+  .slot i{opacity:1}
+  .slot u{opacity:0}
+  .track i{transform:scaleX(1)}
+}
+</style>
+</head>
+<body>
+<main>
+
+<nav class="nav">
+  <span class="nav__b">천<span>AI</span>문</span>
+  <span class="nav__r">
+    <a href="#deck">네 권</a>
+    <a href="#chain">작동 방식</a>
+    <a class="nav__go" href="#act">구매</a>
+  </span>
+</nav>
+
+<header class="hero">
+  <div class="hero__in">
+    <h1 aria-label="빈칸 세 개만 채우면 시험지 한 부가 나온다">빈칸 세 개만 채우면<br><span class="cyc" id="cyc" aria-hidden="true"><i class="cyc__w is-on" style="--c:#1B3FBF">시험지 한 부</i><i class="cyc__w" style="--c:#B32127">단어 테스트</i><i class="cyc__w" style="--c:#8A5A00">시험 분석지</i><i class="cyc__w" style="--c:#116A3B">동형 모의고사</i></span><span class="tail">가 나온다</span></h1>
+    <p class="hero__sub">
+      천AI문의 프롬프트는 예시가 아니라 <b>빈칸이 있는 서식</b>이다.
+      학년·회차·문항 수만 바꿔 넣으면 그대로 돌아가고,
+      그 결과물이 다음 문장의 입력이 된다. 그 연쇄가 <b>1,001개</b>다.
+    </p>
+    <div class="hero__cta">
+      <a class="btn btn--k" href="#chain">연쇄 따라가기</a>
+      <a class="btn btn--g" href="#deck">네 권 목차</a>
+    </div>
+  </div>
+  <div class="hero__art" aria-hidden="true">
+    <img src="_img/n3-hero.png" alt="">
+  </div>
+</header>
+
+<section class="chain" id="chain">
+  <div class="chain__stage">
+    <div class="chain__hd">
+      <h2>한 문장이 끝나면 다음 문장이 시작된다</h2>
+      <span class="step">STEP <b id="stepN">1</b> / 3</span>
+    </div>
+
+    <div class="beats" id="beats" data-drive>
+      <!-- beat 1 — the form, filled in -->
+      <div class="beat" data-beat="0">
+        <!-- The blank shows the *kind* of thing that goes in it: a number reads as n,
+             a thing reads by its noun. That is how the form is printed in the book. -->
+        <p class="sent" id="s1">
+          <span class="w">우리 학원</span>
+          <span class="slot" data-slot><u>학년</u><i>고2</i></span>
+          <span class="w">내신 대비 시험지,</span>
+          <span class="w">지난</span>
+          <span class="slot" data-slot><u>n</u><i>3</i></span>
+          <span class="w">회 오답 유형만 골라서</span>
+          <span class="slot" data-slot><u>n</u><i>5</i></span>
+          <span class="w">문항으로 만들어줘</span>
+        </p>
+      </div>
+
+      <!-- beat 2 — what came out -->
+      <div class="beat" data-beat="1">
+        <p class="sent"><span class="w">나온 것</span></p>
+        <div class="out">
+          <p><b>고2 내신 대비 5문항</b> — 지난 3회차 오답에서 뽑은 유형만.
+             배점·시간·지시문까지 붙어 인쇄 가능한 한 부. <span class="lat">VOL.2 · 08</span></p>
+        </div>
+      </div>
+
+      <!-- beat 3 — the output becomes the next input -->
+      <div class="beat" data-beat="2">
+        <p class="sent">
+          <span class="w">방금 그 시험지의</span>
+          <span class="slot" data-slot><u>산출물</u><i>채점 기준표</i></span>
+          <span class="w">를</span>
+          <span class="slot" data-slot><u>n</u><i>5</i></span>
+          <span class="w">단계로 만들고 경계 사례를 표시해줘</span>
+        </p>
+        <div class="out">
+          <p>출력이 다음 입력이 된다. <b>이 연쇄가 20개 장에 걸쳐 1,001번 이어진다.</b>
+             <span class="lat">VOL.2 · 10</span></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="chain__ft">
+      <p>스크롤이 순서다. 되돌리면 문장도 되돌아간다.</p>
+      <span class="track"><i id="track"></i></span>
+    </div>
+  </div>
+</section>
+
+<section class="deck" id="deck">
+  <div class="deck__hd">
+    <h2>연쇄는 네 권에 나뉘어 있다</h2>
+    <p>권이 올라갈수록 한 문장이 건드리는 범위가 넓어진다. 수량은 그 범위의 결과지 등급이 아니다.</p>
+  </div>
+  <div class="grid">
+    <a class="cell cell--a" href="#"><span class="cell__v">VOL.1</span><span class="cell__n">입문 · 처음 켜는 사람</span>
+      <span class="cell__s">계정과 모델을 고르고 첫 문장을 넣는다. 결과가 이상할 때 고쳐 묻는 다섯 가지 방법까지.</span>
+      <span class="cell__c">180</span></a>
+    <a class="cell cell--b" href="#"><span class="cell__v">VOL.2</span><span class="cell__n">기본</span>
+      <span class="cell__s">수업에 들고 들어가는 것.</span><span class="cell__c">260</span></a>
+    <a class="cell cell--c cell--peak" href="#"><span class="cell__v">VOL.3 · 최다</span><span class="cell__n">심화</span>
+      <span class="cell__s">데이터가 붙는 지점.</span><span class="cell__c">300</span></a>
+    <a class="cell cell--d" href="#"><span class="cell__v">VOL.4</span><span class="cell__n">완성 · 손에서 떼는 단계</span>
+      <span class="cell__s">주간 운영 루틴, 반 편성, 강사 온보딩, 재원생 관리, 원장 보고까지 하나로 잇는다.</span>
+      <span class="cell__c">261</span></a>
+  </div>
+</section>
+
+<section class="act" id="act">
+  <h2>1,001개의 문장은<br>전부 빈칸이 있는 서식이다</h2>
+  <a class="btn btn--k" href="#">네 권 전체 보기 <span class="lat">1,001</span></a>
+</section>
+
+<section class="rail">
+  <h2>N3 「연쇄」 — spec rail</h2>
+  <dl>
+    <dt>Claim</dt><dd>프롬프트는 예시가 아니라 <b>빈칸이 있는 서식</b>이고, 한 문장의 출력이 다음 문장의 입력이 된다. 파는 것은 목록이 아니라 <b>연쇄</b>다.</dd>
+    <dt>Encoding</dt><dd>권 = 한 문장이 건드리는 범위. 격자에서 차지하는 칸 폭으로 표현하고 수량은 그 결과로 붙인다. 심화(300, 최다)만 볼펜 잉크 지면을 받는다.</dd>
+    <dt>Homage</dt><dd><b>뗀다.</b> 참고서 시각언어 없음. 다만 &ldquo;빈칸을 채운다&rdquo;는 행위 자체가 학습지의 동작이라 <em>몸짓 수준</em>에서만 닿는다. N2가 붙는 쪽을 맡으므로 세트는 양쪽을 다 갖는다.</dd>
+    <dt>Type</dt><dd>IBM Plex Sans KR 500/600/700 (문장·표제) / Pretendard Variable (본문) / Outfit (수·라벨). 본문 행간 1.75, 문장 1.45. 세 보드 중 어느 것과도 겹치지 않는 조합.</dd>
+    <dt>Palette</dt><dd>page #F6F7F8 · ink #0E1216 · <b>pen #1B3FBF</b>. 시그널은 임의 색이 아니라 <b>원장이 인쇄물에 긋는 파란 볼펜</b> &mdash; 채워 넣는 자리에만 칠한다.</dd>
+    <dt>Motion</dt><dd>GSAP ScrollTrigger 핀 + 스크럽. 문장이 단어 단위로 밝아지고, 빈칸이 순서대로 채워지고, 결과가 다음 입력이 된다. <b>되감으면 그대로 되돌아간다</b> &mdash; 재생이 아니라 조작.</dd>
+    <dt>Hero 교체</dt><dd>히어로의 산출물이 <b>시험지 한 부 &rarr; 단어 테스트 &rarr; 시험 분석지 &rarr; 동형 모의고사</b>로 돌고, 각자 다른 잉크(청·적·황·녹)를 쓴다. 네 단어가 한 grid cell을 공유해 상자 폭이 가장 긴 단어에 고정되므로 <b>&ldquo;가 나온다&rdquo;는 한 픽셀도 밀리지 않는다</b>(x=616 고정, 측정 확인). 밑줄이 색과 함께 다시 그어지는 것은 아래 연쇄의 빈칸 채우기와 같은 어법 &mdash; 장식이 아니라 예고다. 히어로가 화면 밖이면 멈춘다.</dd>
+    <dt>빈칸 표기</dt><dd>빈칸은 <b>들어갈 것의 종류</b>를 보여준다. 수는 <code>n</code>, 물건은 명사(<code>산출물</code>, <code>학년</code>). 책에 인쇄된 서식 표기와 같게 맞췄다.</dd>
+    <dt>L3 &rarr; L2</dt><dd>연쇄 3비트가 끝나면 표현이 끝난다. 그 아래 격자는 같은 파란 잉크를 쓰되 움직이지 않는다. 경계는 &ldquo;문장이 멈춘 자리&rdquo;.</dd>
+    <dt>모션 끄기</dt><dd>남는 것: 흰 지면, 볼펜 파랑, 밑줄 친 빈칸, IBM Plex Sans KR. <b>빈칸 서식은 원래 종이의 물건</b>이라 인쇄로 그대로 간다 &mdash; 다만 &ldquo;연쇄&rdquo;라는 주장 자체는 정지 매체에서 약해진다.</dd>
+    <dt>Risk</dt><dd>흰 지면 + 파랑은 <b>AI 제품 기본값(§4.3)에 가장 가까운 좌표</b>다. 그라디언트·글로우·글라스를 전부 빼고 파랑을 &ldquo;볼펜&rdquo;으로 한정해 방어했지만, 세트에서 가장 안전해 보일 위험이 크다.</dd>
+  </dl>
+</section>
+
+</main>
+
+<script>
+const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* The headline's output word. It only runs while the hero is on screen, and under
+   reduced motion the first word simply stays — the claim survives without the roll. */
+if(!reduced){
+  const cyc = document.getElementById('cyc');
+  const tail = document.querySelector('.tail');
+  const ws = [...cyc.children];
+  let i = 0, timer = null, widths = [];
+
+  /* Each word keeps its own width even while stacked and hidden, so all four can be
+     measured up front. Re-measured on resize and once the webfont has actually landed. */
+  const measure = () => {
+    widths = ws.map(w => w.getBoundingClientRect().width);
+    cyc.style.width = widths[i] + 'px';
+  };
+
+  const step = () => {
+    const cur = ws[i], from = widths[i];
+    i = (i + 1) % ws.length;
+    const next = ws[i], to = widths[i];
+
+    cur.classList.replace('is-on','is-out');
+    next.classList.remove('is-out');
+    void next.offsetWidth;                 // land it below before letting it rise
+    next.classList.add('is-on');
+
+    /* The box resizes in one step; the tail is put back where it was and then
+       animated home. Layout moves once, the eye sees only a transform. */
+    cyc.style.width = to + 'px';
+    const sameLine = Math.abs(tail.getBoundingClientRect().top - cyc.getBoundingClientRect().top) < 4;
+    if(sameLine){
+      tail.style.transition = 'none';
+      tail.style.transform = `translate3d(${(from - to).toFixed(2)}px,0,0)`;
+      requestAnimationFrame(()=>{
+        tail.style.transition = 'transform 640ms cubic-bezier(.22,1,.36,1)';
+        tail.style.transform = 'translate3d(0,0,0)';
+      });
+    }
+    setTimeout(()=>cur.classList.remove('is-out'), 700);
+  };
+
+  measure();
+  document.fonts.ready.then(measure);
+  addEventListener('resize', measure, {passive:true});
+
+  new IntersectionObserver(es => es.forEach(e => {
+    if(e.isIntersecting && !timer) timer = setInterval(step, 2900);
+    else if(!e.isIntersecting && timer){ clearInterval(timer); timer = null; }
+  }), {threshold:.15}).observe(cyc);
+}
+
+if(!reduced && window.gsap && window.ScrollTrigger){
+  gsap.registerPlugin(ScrollTrigger);
+
+  const beats = gsap.utils.toArray('.beat');
+  const words = gsap.utils.toArray('.sent .w');
+  const slots = gsap.utils.toArray('[data-slot]');
+  const stepN = document.getElementById('stepN');
+
+  gsap.set(beats.slice(1), {opacity:0, y:26});
+
+  const tl = gsap.timeline({
+    scrollTrigger:{
+      trigger:'.chain', start:'top top', end:'bottom bottom',
+      scrub:.6, pin:'.chain__stage', pinSpacing:false,
+      onUpdate:s=>{
+        document.getElementById('track').style.transform = `scaleX(${s.progress.toFixed(4)})`;
+        stepN.textContent = String(Math.min(3, Math.floor(s.progress*3)+1));
+      },
+    },
+  });
+
+  /* beat 1: the sentence resolves word by word, then the blanks are written in */
+  tl.to(beats[0].querySelectorAll('.w'), {opacity:1, duration:1, stagger:.5, ease:'none'}, 0);
+  beats[0].querySelectorAll('[data-slot]').forEach((s,i)=>{
+    tl.call(()=>s.classList.add('slot--done'), null, 3 + i*0.9)
+      .call(()=>s.classList.remove('slot--done'), null, 3 + i*0.9);   // reversible both ways
+  });
+  tl.to(beats[0].querySelectorAll('[data-slot] i'), {opacity:1, duration:.4, stagger:.9, ease:'none'}, 3)
+    .to(beats[0].querySelectorAll('[data-slot] u'), {opacity:0, duration:.4, stagger:.9, ease:'none'}, 3);
+
+  /* beat 2: what came out */
+  tl.to(beats[0], {opacity:0, y:-24, duration:1}, 7)
+    .to(beats[1], {opacity:1, y:0, duration:1}, 7.4)
+    .to(beats[1].querySelectorAll('.w'), {opacity:1, duration:.6}, 7.4);
+
+  /* beat 3: the output is the next input */
+  tl.to(beats[1], {opacity:0, y:-24, duration:1}, 11)
+    .to(beats[2], {opacity:1, y:0, duration:1}, 11.4)
+    .to(beats[2].querySelectorAll('.w'), {opacity:1, duration:1, stagger:.4}, 11.6)
+    .to(beats[2].querySelectorAll('[data-slot] i'), {opacity:1, duration:.4, stagger:.8}, 13.4)
+    .to(beats[2].querySelectorAll('[data-slot] u'), {opacity:0, duration:.4, stagger:.8}, 13.4);
+}
+
+/* 1,001 is summed from the deck, never typed */
+const counts = [...document.querySelectorAll('.cell__c')].map(n=>parseInt(n.textContent.replace(/\D/g,''),10));
+document.querySelectorAll('.act .lat').forEach(n=>{ n.textContent = counts.reduce((a,b)=>a+b,0).toLocaleString('en-US'); });
+</script>
+</body>
+</html>

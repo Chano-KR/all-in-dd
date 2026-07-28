@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>Classhift — token specimen</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="dist/tokens.css">
+<style>
+/* SPECIMEN — the locked direction rebuilt from tokens only.
+   Every value below is a var(--ds-*). If this page cannot be built without a
+   literal, the token set is missing something and the fix belongs in S3, not here.
+   Compare against ../../auditions/classhift/_shots/r1b-locked-full.png. */
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:var(--ds-surface-page);
+  color:var(--ds-text-primary);
+  font-family:var(--ds-font-body);
+  font-size:var(--ds-text-size-body);
+  line-height:var(--ds-leading-body);
+  word-break:keep-all;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:var(--ds-frame-page);margin:0 auto;padding-bottom:var(--ds-gap-section-lg)}
+
+.bar{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:var(--ds-gap-stack-sm) var(--ds-gap-gutter);
+  border-bottom:var(--ds-line-weight-rule) solid var(--ds-line-rule);
+  font-family:var(--ds-font-meta);font-size:var(--ds-text-size-meta);
+  letter-spacing:var(--ds-tracking-meta);text-transform:uppercase;color:var(--ds-text-secondary);
+}
+.bar .m{font-weight:var(--ds-font-weight-strong);color:var(--ds-text-primary)}
+.bar .m i{font-style:normal;color:var(--ds-accent-action)}
+.bar nav{display:flex;gap:var(--ds-gap-stack-sm)}
+
+.hero{padding:var(--ds-gap-stack-lg) var(--ds-gap-gutter) 0;
+  border-bottom:var(--ds-line-weight-rule) solid var(--ds-line-rule)}
+.eyebrow{font-family:var(--ds-font-meta);font-size:var(--ds-text-size-meta);
+  letter-spacing:var(--ds-tracking-eyebrow);text-transform:uppercase;color:var(--ds-accent-action)}
+h1{margin:var(--ds-gap-inline-sm) 0 0;font-size:var(--ds-text-size-hero);
+  line-height:var(--ds-leading-hero);font-weight:var(--ds-font-weight-display);
+  letter-spacing:var(--ds-tracking-hero);max-width:var(--ds-measure-hero)}
+h1 .mark{position:relative;display:inline-block}
+h1 .mark svg{position:absolute;left:0;bottom:-.10em;width:100%;height:.26em;overflow:visible}
+h1 .mark path{fill:none;stroke:var(--ds-mark-stroke);stroke-width:var(--ds-mark-stroke-width);stroke-linecap:round}
+.hero .sub{display:grid;grid-template-columns:1fr var(--ds-frame-rail);
+  gap:var(--ds-gap-stack-lg);align-items:end;padding:var(--ds-gap-stack-md) 0}
+.hero .sub p{margin:0;font-size:var(--ds-text-size-lead);line-height:var(--ds-leading-lead);
+  color:var(--ds-text-secondary);max-width:var(--ds-measure-standfirst)}
+.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:var(--ds-line-weight-hair);
+  background:var(--ds-line-hair);border:var(--ds-line-weight-hair) solid var(--ds-line-hair)}
+.stat{background:var(--ds-surface-page);padding:var(--ds-gap-inline-sm) var(--ds-gap-inline-md)}
+.stat b{display:block;font-size:var(--ds-text-size-title);line-height:var(--ds-leading-title);
+  font-weight:var(--ds-font-weight-display);letter-spacing:var(--ds-tracking-title)}
+.stat span{font-family:var(--ds-font-meta);font-size:var(--ds-text-size-micro);
+  color:var(--ds-text-muted);letter-spacing:var(--ds-tracking-body)}
+
+.doc{display:grid;grid-template-columns:var(--ds-gap-tab-col) minmax(0,var(--ds-frame-column));
+  gap:0 var(--ds-gap-stack-lg);padding:var(--ds-gap-stack-lg) var(--ds-gap-gutter) 0}
+.doc > *{grid-column:2;max-width:var(--ds-measure-prose)}
+.tab{grid-column:1;font-family:var(--ds-font-meta);font-size:var(--ds-text-size-micro);
+  letter-spacing:var(--ds-tracking-meta);text-transform:uppercase;color:var(--ds-line-rule);
+  text-align:right;padding-top:var(--ds-gap-inline-xs)}
+p{margin:0 0 var(--ds-gap-stack-sm)}
+.lead{font-size:var(--ds-text-size-lead);line-height:var(--ds-leading-lead);
+  font-weight:var(--ds-font-weight-lead)}
+.hl{background:linear-gradient(transparent 58%,var(--ds-mark-highlight-bg) 58% 92%,transparent 92%)}
+h2{margin:var(--ds-gap-stack-md) 0 var(--ds-gap-inline-xs);font-size:var(--ds-text-size-title);
+  font-weight:var(--ds-font-weight-display);letter-spacing:var(--ds-tracking-title);
+  line-height:var(--ds-leading-title);padding-bottom:var(--ds-gap-inline-sm);
+  border-bottom:var(--ds-line-weight-rule) solid var(--ds-line-rule)}
+blockquote{margin:var(--ds-gap-stack-md) 0;padding:0;font-size:var(--ds-text-size-quote);
+  line-height:var(--ds-leading-quote);font-weight:var(--ds-font-weight-display);
+  letter-spacing:var(--ds-tracking-quote)}
+blockquote p{margin:0}
+blockquote b{color:var(--ds-accent-action)}
+code{font-family:var(--ds-font-meta);font-size:var(--ds-text-size-small);
+  background:var(--ds-code-bg);color:var(--ds-code-text);padding:0 var(--ds-gap-inline-xs)}
+sup a{color:var(--ds-accent-action);font-family:var(--ds-font-meta);
+  font-size:var(--ds-text-size-micro);text-decoration:none}
+.notes{margin-top:var(--ds-gap-stack-md);padding-top:var(--ds-gap-inline-sm);
+  border-top:var(--ds-line-weight-hair) solid var(--ds-line-hair);
+  font-family:var(--ds-font-meta);font-size:var(--ds-text-size-micro);
+  color:var(--ds-text-muted);line-height:var(--ds-leading-meta)}
+
+.cap{padding:var(--ds-gap-section) var(--ds-gap-gutter) 0}
+.cap .lbl{font-family:var(--ds-font-meta);font-size:var(--ds-text-size-meta);
+  letter-spacing:var(--ds-tracking-eyebrow);text-transform:uppercase;color:var(--ds-text-muted)}
+.cap h2{margin:var(--ds-gap-inline-sm) 0 0;border:0;padding:0}
+.rows{margin-top:var(--ds-gap-stack-sm);
+  border-top:var(--ds-line-weight-rule) solid var(--ds-line-rule)}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:var(--ds-gap-stack-lg);align-items:baseline;
+  padding:var(--ds-gap-stack-sm) 0;
+  border-bottom:var(--ds-line-weight-hair) solid var(--ds-line-hair)}
+.row h3{margin:0;font-size:var(--ds-text-size-headline);
+  font-weight:var(--ds-font-weight-display);letter-spacing:var(--ds-tracking-headline);
+  line-height:var(--ds-leading-headline)}
+.row p{margin:0;font-size:var(--ds-text-size-small);color:var(--ds-text-secondary);
+  line-height:var(--ds-leading-lead)}
+
+.strip{margin:var(--ds-gap-stack-lg) var(--ds-gap-gutter) 0;
+  border:var(--ds-line-weight-rule) solid var(--ds-table-frame)}
+.strip .h{display:flex;justify-content:space-between;font-family:var(--ds-font-meta);
+  font-size:var(--ds-text-size-micro);letter-spacing:var(--ds-tracking-body);
+  padding:var(--ds-gap-inline-xs) var(--ds-gap-inline-md);
+  background:var(--ds-table-caption-bg);color:var(--ds-table-caption-text)}
+table{border-collapse:collapse;width:100%;font-size:var(--ds-text-size-small)}
+th,td{text-align:left;padding:var(--ds-gap-inline-sm) var(--ds-gap-inline-md);
+  border-bottom:var(--ds-line-weight-hair) solid var(--ds-table-row-line)}
+th{font-family:var(--ds-font-meta);font-size:var(--ds-text-size-micro);
+  color:var(--ds-table-header-text);letter-spacing:var(--ds-tracking-body);
+  font-weight:var(--ds-font-weight-body)}
+tbody tr:last-child td{border-bottom:0}
+td b{font-weight:var(--ds-font-weight-strong)}
+.flag{font-family:var(--ds-font-meta);font-size:var(--ds-text-size-micro);color:var(--ds-state-attention)}
+
+.cta{position:relative;margin:var(--ds-gap-stack-lg) var(--ds-gap-gutter) 0;
+  background:var(--ds-surface-inverse);color:var(--ds-text-on-inverse);
+  padding:var(--ds-gap-stack-lg) var(--ds-gap-stack-lg);overflow:hidden;
+  display:flex;justify-content:space-between;align-items:center;
+  gap:var(--ds-gap-stack-md);flex-wrap:wrap}
+.cta > *{position:relative}
+.cta h3{margin:0;font-size:var(--ds-text-size-headline);line-height:var(--ds-leading-headline);
+  font-weight:var(--ds-font-weight-display);letter-spacing:var(--ds-tracking-headline);
+  max-width:var(--ds-measure-hero)}
+.cta .r{display:flex;flex-direction:column;gap:var(--ds-gap-inline-sm);align-items:flex-start}
+.cta p{margin:0;font-size:var(--ds-text-size-small);color:var(--ds-text-on-inverse-muted);
+  max-width:var(--ds-measure-prose)}
+.btns{display:flex;gap:var(--ds-gap-inline-sm)}
+.btn{font-family:var(--ds-font-meta);font-size:var(--ds-button-primary-size);
+  letter-spacing:var(--ds-button-primary-tracking);text-transform:uppercase;
+  padding:var(--ds-button-primary-padding-y) var(--ds-button-primary-padding-x);
+  text-decoration:none;border-radius:var(--ds-corner-default)}
+.btn-a{background:var(--ds-button-primary-bg);color:var(--ds-button-primary-text)}
+.btn-b{border:var(--ds-line-weight-hair) solid var(--ds-button-on-inverse-border);
+  color:var(--ds-button-on-inverse-text)}
+footer{margin:var(--ds-gap-stack-md) var(--ds-gap-gutter) 0;padding-top:var(--ds-gap-inline-sm);
+  border-top:var(--ds-line-weight-hair) solid var(--ds-line-hair);
+  font-family:var(--ds-font-meta);font-size:var(--ds-text-size-micro);
+  color:var(--ds-text-muted);display:flex;justify-content:space-between}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="bar">
+    <span class="m">CLAS<i>SHIFT</i></span>
+    <nav><span>Essays</span><span>Capability</span><span>About</span><span>상담 신청</span></nav>
+  </div>
+
+  <header class="hero">
+    <div class="eyebrow">강사 AX · 현장 기록</div>
+    <h1>채점을 멈추면<br><span class="mark">수업이 보인다<svg viewBox="0 0 400 30" preserveAspectRatio="none" aria-hidden="true"><path d="M6 21 C96 9, 214 26, 302 13 S378 8, 394 17"/></svg></span></h1>
+    <div class="sub">
+      <p>한 반에 스무 명, 주당 세 번. 강사가 채점에 쓰던 시간은 주당 열한 시간이었다. 12주 뒤 그 시간의 대부분이 사라졌다.</p>
+      <div class="stats">
+        <div class="stat"><b>11.4h</b><span>주당 채점 · 도입 전</span></div>
+        <div class="stat"><b>2.1h</b><span>주당 채점 · 12주차</span></div>
+        <div class="stat"><b>40 → 6초</b><span>답안당 확인</span></div>
+        <div class="stat"><b>n=41</b><span>파일럿 표본</span></div>
+      </div>
+    </div>
+  </header>
+
+  <article class="doc">
+    <div class="tab">기록</div>
+    <p class="lead">학원의 하루는 두 종류의 노동으로 채워진다. 사람이 해야만 하는 일, 그리고 <span class="hl">사람이 하고 있을 뿐인 일</span>.</p>
+    <p>문제는 두 번째가 첫 번째의 시간을 잠식한다는 데 있다. 변형문제를 만들고, 답안을 대조하고, 오답 노트를 옮겨 적는 동안 정작 학생 한 명의 막힌 지점을 들여다볼 시간은 남지 않는다.</p>
+
+    <div class="tab">진단</div>
+    <h2>도구를 바꾸는 일과<br>일을 바꾸는 일</h2>
+    <p>도입 첫 달의 실패는 예측 가능했다. 채점을 자동화했지만 강사는 여전히 모든 답안을 눈으로 확인했다. 신뢰가 아니라 <code>습관</code>의 문제였다.</p>
+
+    <blockquote><p>기계가 무엇을 했는지 사람이 <b>30초 안에</b> 확인할 수 없다면, 그 일은 여전히 사람의 일이다.</p></blockquote>
+
+    <p>근거 링크를 답안 옆에 붙이자 확인 시간이 답안당 40초에서 6초로 줄었다.<sup><a href="#fn1">1</a></sup> 강사는 전수 확인을 포기했고, 이상 신호가 뜬 답안만 열었다. 이때부터 열한 시간이 실제로 회수되기 시작했다.</p>
+
+    <div class="notes">1 — 12주 파일럿 · 영어 내신 대비반 2개 · n=41. 단일 학원 사례이므로 일반화하지 않는다.</div>
+  </article>
+
+  <section class="cap">
+    <div class="lbl">Capability</div>
+    <h2>네 축으로 학원을 옮깁니다</h2>
+    <div class="rows">
+      <div class="row"><h3>강사 AX</h3><p>강사의 하루에서 사람이 하고 있을 뿐인 일을 걷어냅니다.</p></div>
+      <div class="row"><h3>AI 교육</h3><p>도구 사용법이 아니라 수업 설계의 언어를 가르칩니다.</p></div>
+      <div class="row"><h3>AI 문제생성</h3><p>지문에서 변형문제까지, 근거를 붙인 채로 생성합니다.</p></div>
+      <div class="row"><h3>AI 학생관리</h3><p>기록이 아니라 신호를 남깁니다. 볼 것만 보이게.</p></div>
+    </div>
+  </section>
+
+  <div class="strip">
+    <div class="h"><span>파일럿 기록 · 12주</span><span>갱신 2026.07.24</span></div>
+    <table>
+      <thead><tr><th>반</th><th>학생</th><th>주당 채점</th><th>회수</th><th>상태</th></tr></thead>
+      <tbody>
+        <tr><td>내신 대비 A</td><td>21</td><td>11.4h → 2.1h</td><td><b>9.3h</b></td><td>안정</td></tr>
+        <tr><td>내신 대비 B</td><td>20</td><td>10.8h → 2.6h</td><td><b>8.2h</b></td><td>안정</td></tr>
+        <tr><td>수능 심화</td><td>14</td><td>7.2h → 4.4h</td><td><b>2.8h</b></td><td class="flag">검토 필요</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <section class="cta">
+    <h3>수업을 어떻게 옮길지부터</h3>
+    <div class="r">
+      <p>도구 판매가 아니라 1:1 전환 설계입니다. 30분 상담으로 시작합니다.</p>
+      <div class="btns">
+        <a class="btn btn-a" href="#">상담 신청</a>
+        <a class="btn btn-b" href="#">제품 둘러보기</a>
+      </div>
+    </div>
+  </section>
+
+  <footer><span>CLASSHIFT</span><span>교육 개인별 맞춤 AI OS</span></footer>
+</div>
+</body>
+</html>

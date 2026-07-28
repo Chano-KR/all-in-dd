@@ -1,0 +1,21 @@
+{
+  "name": "house-design-system",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "House design system: DTCG token source of truth, built to CSS (screen) and Typst (print).",
+  "scripts": {
+    "build:tokens": "node scripts/build-tokens.mjs",
+    "check:tokens": "node scripts/build-tokens.mjs --check",
+    "gate:tokens": "node scripts/check-tokens.mjs",
+    "shoot": "node scripts/shoot.mjs",
+    "verify:classhift": "npm run build:tokens && node scripts/check-tokens.mjs classhift brands/classhift/specimen.html && node scripts/shoot.mjs brands/classhift/specimen.html",
+    "verify:chunaimun": "npm run build:tokens && node scripts/check-tokens.mjs chunaimun brands/chunaimun/specimen.html && node scripts/shoot.mjs brands/chunaimun/specimen.html",
+    "print:chunaimun": "npm run check:tokens && typst compile --root brands/chunaimun brands/chunaimun/print/interior-proof.typ",
+    "install:fonts": "pwsh -NoProfile -ExecutionPolicy Bypass -File scripts/install-fonts.ps1"
+  },
+  "devDependencies": {
+    "playwright": "^1.62.0",
+    "style-dictionary": "^4.4.0"
+  }
+}

@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>Classhift S1 — 시안 비교 보드</title>
+<style>
+:root{--bg:#EEEBE4;--card:#FBFAF7;--ink:#1A1815;--soft:#6B655B;--line:#D6D1C6;--red:#B4453B;--green:#2E4038}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font:15px/1.7 "Pretendard Variable",Pretendard,-apple-system,"Malgun Gothic",sans-serif;word-break:keep-all}
+header{padding:40px 40px 26px;border-bottom:1px solid var(--line)}
+h1{margin:0 0 8px;font-size:26px;letter-spacing:-.02em}
+header p{margin:0;color:var(--soft);max-width:80ch}
+.legend{margin-top:18px;display:flex;gap:26px;flex-wrap:wrap;font-size:13px;color:var(--soft)}
+.legend b{color:var(--ink);font-weight:600}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;padding:26px 40px 80px}
+@media(max-width:1500px){.grid{grid-template-columns:repeat(2,1fr)}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:8px;overflow:hidden;display:flex;flex-direction:column}
+.hd{padding:16px 18px 14px;border-bottom:1px solid var(--line)}
+.hd .id{font-size:12px;letter-spacing:.1em;color:var(--red);font-weight:700}
+.hd h2{margin:5px 0 6px;font-size:18px;letter-spacing:-.01em}
+.hd p{margin:0;font-size:13.5px;color:var(--soft);line-height:1.62}
+.shot{height:600px;overflow:auto;background:#fff}
+.shot img{display:block;width:100%}
+.ft{padding:12px 18px;border-top:1px solid var(--line);font-size:12.5px;color:var(--soft);
+  display:flex;justify-content:space-between;gap:12px}
+.ft a{color:var(--green);text-decoration:none;font-weight:600}
+.axes{padding:0 40px 60px}
+.axes h3{font-size:17px;margin:0 0 14px}
+table{border-collapse:collapse;width:100%;font-size:13.5px;background:var(--card);
+  border:1px solid var(--line);border-radius:8px;overflow:hidden}
+th,td{text-align:left;padding:11px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+th{background:#E8E4DB;font-size:12.5px;color:var(--soft);font-weight:600}
+tbody tr:last-child td{border-bottom:0}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Classhift · S1 시안 발산 — 6개 방향</h1>
+  <p>같은 콘텐츠(에세이 상세 + 4필러 + CTA)를 서로 다른 여섯 방향으로 렌더한 것입니다. 대상 화면을 랜딩 히어로가 아니라 에세이 상세로 잡은 이유는, 3D 뒤에 숨을 수 없는 표면에서 1층(브랜드 원시값)과 2층(제품 시스템)을 함께 검증하기 위해서입니다.</p>
+  <div class="legend">
+    <span><b>고정</b> 라이트 웜 페이퍼 · 칠판그린 · clip-red · 한글 우선</span>
+    <span><b>가변</b> 그린의 역할 · 레드의 정당화 · 서체 태도 · 구조</span>
+    <span><b>판정</b> 6 → 2~3 → 1</span>
+  </div>
+</header>
+
+<div class="grid">
+
+  <div class="card">
+    <div class="hd">
+      <div class="id">D1</div>
+      <h2>Ruled Ledger — 괘선 장부</h2>
+      <p>그린은 <b>선</b>이다. 모든 괘선·헤어라인·여백 주석이 그린. 레드는 CTA 한 곳에만. 따뜻함을 색조가 아니라 선의 리듬으로 만든다.</p>
+    </div>
+    <div class="shot"><img src="_shots/d1-ruled-ledger-full.png" alt="D1"></div>
+    <div class="ft"><span>Gowun Batang · IBM Plex Mono</span><a href="d1-ruled-ledger.html">열기</a></div>
+  </div>
+
+  <div class="card">
+    <div class="hd">
+      <div class="id">D2</div>
+      <h2>Chalkboard Slab — 칠판 면</h2>
+      <p>그린은 <b>면</b>이다. 종이(읽기)와 짙은 칠판면(구조·역량·CTA)이 교대한다. 큰 다크 섹션이 다크모드 AI 슬롭으로 읽히는지 검증.</p>
+    </div>
+    <div class="shot"><img src="_shots/d2-chalkboard-slab-full.png" alt="D2"></div>
+    <div class="ft"><span>Nanum Myeongjo · Pretendard</span><a href="d2-chalkboard-slab.html">열기</a></div>
+  </div>
+
+  <div class="card">
+    <div class="hd">
+      <div class="id">D3</div>
+      <h2>Warm Grotesk — 단일 산세리프 체계</h2>
+      <p>세리프 없음. 절제와 간격만으로 시스템 톤을 만든다. 사이드 레일·폼·표까지 포함해 <b>2층 워크호스</b> 적합성이 가장 높은 후보.</p>
+    </div>
+    <div class="shot"><img src="_shots/d3-warm-grotesk-full.png" alt="D3"></div>
+    <div class="ft"><span>Pretendard 단일</span><a href="d3-warm-grotesk.html">열기</a></div>
+  </div>
+
+  <div class="card">
+    <div class="hd">
+      <div class="id">D4</div>
+      <h2>Press Column — 브로드시트</h2>
+      <p>제호·2단 조판·드롭캡·촘촘한 위계. 권위를 여백이 아니라 <b>조판 밀도</b>로 만든다. 그린은 읽기 면에서 완전히 빠지고 역량 구획에만.</p>
+    </div>
+    <div class="shot"><img src="_shots/d4-press-column-full.png" alt="D4"></div>
+    <div class="ft"><span>Noto Serif KR · Instrument Serif</span><a href="d4-press-column.html">열기</a></div>
+  </div>
+
+  <div class="card">
+    <div class="hd">
+      <div class="id">D5</div>
+      <h2>Chalk &amp; Origami — 접힌 종이</h2>
+      <p>PRD의 두 번째 모티프(종이접기 = 학생마다 다르게 접는 한 장)를 장식이 아니라 <b>레이아웃</b>으로. 3D 없이 모티프가 버티는지 검증.</p>
+    </div>
+    <div class="shot"><img src="_shots/d5-chalk-origami-full.png" alt="D5"></div>
+    <div class="ft"><span>Gowun Dodum · Pretendard</span><a href="d5-chalk-origami.html">열기</a></div>
+  </div>
+
+  <div class="card">
+    <div class="hd">
+      <div class="id">D6</div>
+      <h2>Terminal Sheet — 운영 콘솔</h2>
+      <p>“OS”를 문자 그대로. 모노스페이스 메타·기계 판독 라벨·상태 레지스터를 다크 터미널이 아니라 <b>웜 페이퍼</b> 위에. 톤 레인의 최대치.</p>
+    </div>
+    <div class="shot"><img src="_shots/d6-terminal-sheet-full.png" alt="D6"></div>
+    <div class="ft"><span>IBM Plex Mono · Plex Sans KR</span><a href="d6-terminal-sheet.html">열기</a></div>
+  </div>
+
+</div>
+
+<section class="axes">
+  <h3>판정 축 — 무엇을 보고 고르는가</h3>
+  <table>
+    <thead><tr><th style="width:150px">축</th><th>D1</th><th>D2</th><th>D3</th><th>D4</th><th>D5</th><th>D6</th></tr></thead>
+    <tbody>
+      <tr><td><b>그린의 역할</b></td><td>선</td><td>면</td><td>미세 표식</td><td>구획 한정</td><td>접힘 그림자</td><td>상태색</td></tr>
+      <tr><td><b>레드의 근거</b><br><span style="color:#6B655B">3D 없이 버티나</span></td><td>CTA 단독</td><td>칠판 위 분필 자국</td><td>강조 전담</td><td>제호·드롭캡</td><td>접힌 모서리</td><td>주의 상태</td></tr>
+      <tr><td><b>적녹 충돌 위험</b></td><td>낮음</td><td>높음</td><td>낮음</td><td>중간</td><td>중간</td><td>낮음</td></tr>
+      <tr><td><b>2층 이식성</b><br><span style="color:#6B655B">대시보드·폼·표</span></td><td>중간</td><td>낮음</td><td><b>높음</b></td><td>낮음</td><td>중간</td><td><b>높음</b></td></tr>
+      <tr><td><b>인쇄(Typst) 전이</b></td><td><b>높음</b></td><td>중간</td><td>중간</td><td><b>높음</b></td><td>낮음</td><td>중간</td></tr>
+      <tr><td><b>톤 레인 적합</b><br><span style="color:#6B655B">차분·엔지니어드</span></td><td>높음</td><td>중간</td><td>높음</td><td>중간</td><td>중간</td><td>높음</td></tr>
+    </tbody>
+  </table>
+</section>
+
+</body>
+</html>

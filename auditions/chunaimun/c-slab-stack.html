@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>C · 슬랩 적층 — 천AI문</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Gothic+A1:wght@400;500;700;900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* C — 슬랩 적층 (SLAB STACK)
+   Homage: HOLD BACK. Poster energy, not book energy.
+   Hangul display type used as architecture: the wordmark is cropped by the viewport edge,
+   and the four levels are four physical bars that get taller, darker and heavier as they
+   descend — a stack you could stand on. Difficulty is mass.
+   Refused: editorial column, gradient, glass, icon row, centered hero. */
+:root{
+  --bone:#EDEAE3;
+  --ink:#0C0C0B;
+  --g1:#6B6862;
+  --g2:#494640;
+  --g3:#2B2926;
+  --g4:#0C0C0B;
+  --vermilion:#E03B12;
+  --ink-2:#4A4741;
+  --ink-3:#8A867D;
+  --display:"Black Han Sans",system-ui,sans-serif;
+  --sans:"Gothic A1",system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  background:var(--bone);color:var(--ink);font-family:var(--sans);
+  word-break:keep-all;line-height:1.7;overflow-x:hidden;-webkit-font-smoothing:antialiased;
+}
+.mono{font-family:var(--mono);font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3)}
+
+/* --- top edge -------------------------------------------------------- */
+.edge{display:flex;justify-content:space-between;align-items:center;padding:16px 40px;border-bottom:2px solid var(--ink)}
+.edge .brand{font-family:var(--display);font-size:19px;letter-spacing:.02em}
+
+/* --- hero: cropped wordmark ----------------------------------------- */
+.hero{position:relative;padding:38px 40px 0}
+.mark{
+  font-family:var(--display);font-size:clamp(170px,17vw,244px);line-height:.86;
+  letter-spacing:-.005em;margin-left:-.03em;white-space:nowrap;
+}
+.mark .ai{color:var(--vermilion)}
+.under{display:flex;gap:34px;align-items:flex-start;margin-top:34px;border-top:2px solid var(--ink);padding-top:24px}
+.claim{font-size:30px;font-weight:900;line-height:1.42;letter-spacing:-.025em;max-width:19ch;flex:0 0 auto}
+.claim mark{background:var(--vermilion);color:var(--bone);padding:.06em .12em .1em;box-decoration-break:clone;-webkit-box-decoration-break:clone}
+.say{font-size:16px;color:var(--ink-2);line-height:1.8;max-width:38ch}
+.say b{color:var(--ink);font-weight:700}
+.figs{margin-left:auto;text-align:right;flex:0 0 auto}
+.figs .big{font-family:var(--display);font-size:96px;line-height:.86;letter-spacing:-.02em}
+.figs .lbl{margin-top:8px}
+
+/* --- CTA ------------------------------------------------------------- */
+.acts{display:flex;gap:0;margin:40px 40px 0;border:2px solid var(--ink)}
+.acts button{font-family:var(--sans);font-size:17px;font-weight:900;border:none;cursor:pointer;padding:20px 34px}
+.acts .buy{background:var(--ink);color:var(--bone);flex:0 0 auto}
+.acts .peek{background:none;color:var(--ink);border-left:2px solid var(--ink)}
+.acts .fine{margin-left:auto;align-self:center;padding-right:22px;font-size:13px;color:var(--ink-3)}
+
+/* --- stack ----------------------------------------------------------- */
+.stack{margin-top:86px;border-top:2px solid var(--ink)}
+.stack .cap{padding:14px 40px;display:flex;justify-content:space-between;border-bottom:2px solid var(--ink)}
+.bar{
+  display:grid;grid-template-columns:auto 1fr auto;gap:40px;align-items:center;
+  padding:0 40px;color:var(--bone);border-bottom:1px solid rgba(255,255,255,.16);
+}
+.bar:nth-child(2){background:var(--g1);height:104px}
+.bar:nth-child(3){background:var(--g2);height:126px}
+.bar:nth-child(4){background:var(--g3);height:150px}
+.bar:nth-child(5){background:var(--g4);height:176px;border-bottom:none}
+.bar .lv{display:flex;align-items:baseline;gap:16px}
+.bar .lv b{font-family:var(--display);letter-spacing:-.01em}
+.bar:nth-child(2) .lv b{font-size:40px}
+.bar:nth-child(3) .lv b{font-size:50px}
+.bar:nth-child(4) .lv b{font-size:60px}
+.bar:nth-child(5) .lv b{font-size:72px}
+.bar .lv span{font-family:var(--mono);font-size:11px;letter-spacing:.09em;opacity:.85}
+.bar p{font-size:15px;line-height:1.65;max-width:44ch;opacity:.94}
+.bar .n{font-family:var(--display);font-size:34px;letter-spacing:-.01em;white-space:nowrap}
+.bar:nth-child(5) .n{color:var(--vermilion)}
+
+/* --- spec rail ------------------------------------------------------- */
+.rail{border-top:2px solid var(--ink);background:var(--bone);padding:20px 40px 30px;display:grid;grid-template-columns:150px 1fr;gap:38px}
+.rail dt{font-family:var(--mono);font-size:11px;letter-spacing:.08em;color:var(--ink-3);text-transform:uppercase}
+.rail dd{font-size:14px;color:var(--ink-2);line-height:1.7;margin-bottom:9px}
+.rail dd b{color:var(--ink)}
+</style>
+</head>
+<body>
+
+<div class="edge">
+  <span class="brand">천AI문</span>
+  <span class="mono">학원 · 교육자용 AI 실무서 · VOL 1–4 · 2026</span>
+</div>
+
+<header class="hero">
+  <h1 class="mark">천<span class="ai">AI</span>문</h1>
+  <div class="under">
+    <p class="claim">문장 1,001개로 구문을 뗐다면,<br><mark>프롬프트 1,001개</mark>로<br>학원을 뗀다.</p>
+    <p class="say">교재 제작, 시험지, 성적 분석, 학부모 리포트. <b>운영 중인 학원에서 실제로 돌려보고 결과를 확인한 문장만</b> 실었다. 읽는 책이 아니라 여는 책.</p>
+    <div class="figs">
+      <div class="big">1,001</div>
+      <div class="mono lbl">수록 프롬프트</div>
+    </div>
+  </div>
+</header>
+
+<div class="acts">
+  <button class="buy">전권 구매 68,000원</button>
+  <button class="peek">입문 40쪽 미리보기</button>
+  <span class="fine">결제는 외부 스토어에서 진행됩니다</span>
+</div>
+
+<section class="stack">
+  <div class="cap"><span class="mono">레벨 구성</span><span class="mono">아래로 갈수록 무겁다</span></div>
+
+  <article class="bar">
+    <div class="lv"><b>입문</b><span>VOL.1</span></div>
+    <p>계정과 모델을 고르고 첫 문장을 넣는다. 아직 한 번도 안 켜 본 사람 기준.</p>
+    <div class="n">180</div>
+  </article>
+  <article class="bar">
+    <div class="lv"><b>기본</b><span>VOL.2</span></div>
+    <p>교재·시험지·문항을 만든다. 다음 수업에 그대로 들고 들어가는 산출물.</p>
+    <div class="n">260</div>
+  </article>
+  <article class="bar">
+    <div class="lv"><b>심화</b><span>VOL.3</span></div>
+    <p>학생 데이터를 붙인다. 성적 분석, 학부모 리포트, 상담 준비까지.</p>
+    <div class="n">300</div>
+  </article>
+  <article class="bar">
+    <div class="lv"><b>완성</b><span>VOL.4</span></div>
+    <p>학원 운영 전체를 하나로 잇는다. 반복 업무를 사람 손에서 떼는 단계.</p>
+    <div class="n">261</div>
+  </article>
+</section>
+
+<dl class="rail">
+  <dt>주장</dt>
+  <dd>거대 한글 슬랩을 <b>건축으로</b> 쓴다. 워드마크가 화면 폭을 거의 다 먹고, 레벨은 밟고 올라서는 네 개의 단. 포스터 에너지지 책 에너지가 아님 — 에디토리얼 배제 지시를 가장 정면으로 받은 안.</dd>
+  <dt>레벨 인코딩</dt>
+  <dd>바 높이 + 글자 크기 + 명도, 셋이 동시에 상승. <b>난이도 = 질량.</b> 흑백 인쇄해도 계단이 남는다.</dd>
+  <dt>오마주 거리</dt>
+  <dd><b>안 밀기.</b> 참고서 시각 언어 0. 연결은 1,001과 이름뿐.</dd>
+  <dt>타입 / 팔레트</dt>
+  <dd>Black Han Sans · Gothic A1 900 · IBM Plex Mono / 본 #EDEAE3 · 그레이 램프 4단(#6B6862→#0C0C0B) · 버밀리언 #E03B12</dd>
+  <dt>위험</dt>
+  <dd>Black Han Sans는 단일 웨이트라 본문에 못 씀 — 디스플레이 전용. 슬랩이 세면 레이어2(폼·표·목차)로 못 내려간다. 이 톤이 웹 히어로 밖에서 버티는지 S2에서 확인 필요.</dd>
+</dl>
+
+</body>
+</html>

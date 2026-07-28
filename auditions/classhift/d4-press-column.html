@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>D4 · Press Column — Classhift audition</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;900&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" rel="stylesheet">
+<style>
+/* D4 — PRESS COLUMN
+   Thesis: broadsheet. Dense typographic hierarchy, a real masthead, multi-column
+   standfirst, drop cap, tight leading. Red is press-red — masthead rule, dateline,
+   drop cap. Green stays out of the reading plane entirely and appears only in the
+   capability register. Tests whether "authority" can come from typographic
+   density rather than whitespace. */
+:root{
+  --paper:#F3EEE3;
+  --paper-2:#EAE3D4;
+  --ink:#141210;
+  --ink-2:#4C463C;
+  --ink-3:#7C7466;
+  --rule:#141210;
+  --hair:#CFC7B5;
+  --green:#2A3A31;
+  --red:#B3382F;
+  --kr:"Noto Serif KR",serif;
+  --lat:"Instrument Serif",serif;
+  --sans:"Pretendard Variable",Pretendard,system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--kr);
+  font-size:16px;line-height:1.82;word-break:keep-all;-webkit-font-smoothing:antialiased}
+.page{max-width:1100px;margin:0 auto;padding:0 46px 90px}
+
+/* masthead */
+.masthead{padding:30px 0 10px;text-align:center;border-bottom:3px double var(--rule)}
+.masthead .name{font-family:var(--lat);font-size:58px;line-height:1;letter-spacing:.01em}
+.masthead .name i{font-style:italic;color:var(--red)}
+.masthead .strap{margin-top:12px;font-family:var(--sans);font-size:11.5px;letter-spacing:.3em;
+  text-transform:uppercase;color:var(--ink-3)}
+.dateline{display:flex;justify-content:space-between;font-family:var(--sans);font-size:11.5px;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--ink-2);padding:9px 0;border-bottom:1px solid var(--rule)}
+
+/* head */
+.head{padding:44px 0 26px;border-bottom:1px solid var(--hair)}
+.section-mark{font-family:var(--sans);font-size:11.5px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--red);margin-bottom:16px}
+h1{margin:0;font-size:50px;line-height:1.28;font-weight:900;letter-spacing:-.025em;max-width:20ch}
+.stand{margin:22px 0 0;columns:2;column-gap:44px;font-size:17.5px;line-height:1.75;color:var(--ink-2);max-width:none}
+.stand p{margin:0}
+.credit{margin-top:20px;font-family:var(--sans);font-size:12.5px;color:var(--ink-3);
+  display:flex;gap:16px}
+
+/* body — two column press */
+.cols{columns:2;column-gap:48px;column-rule:1px solid var(--hair);padding-top:34px}
+.cols p{margin:0 0 18px}
+.cols p.first::first-letter{float:left;font-size:62px;line-height:.82;font-weight:900;
+  color:var(--red);padding:6px 10px 0 0}
+.cols h2{column-span:all;margin:26px 0 16px;font-size:26px;font-weight:900;letter-spacing:-.015em;
+  padding-top:16px;border-top:1px solid var(--rule)}
+.cols h3{margin:22px 0 6px;font-size:17px;font-weight:600}
+.cols blockquote{margin:22px 0;padding:16px 0;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);
+  font-size:20px;line-height:1.62;font-weight:600}
+.cols blockquote p{margin:0}
+.cols figure{margin:20px 0 22px;break-inside:avoid}
+.plate{height:150px;background:var(--paper-2);border:1px solid var(--hair)}
+figcaption{margin-top:8px;font-family:var(--sans);font-size:11.5px;line-height:1.65;color:var(--ink-3)}
+code{font-family:ui-monospace,monospace;font-size:.86em;background:var(--paper-2);padding:1px 5px}
+sup a{color:var(--red);text-decoration:none;font-size:11px}
+.notes{column-span:all;margin-top:26px;padding-top:12px;border-top:1px solid var(--rule);
+  font-family:var(--sans);font-size:12px;line-height:1.75;color:var(--ink-3)}
+
+/* capability register */
+.reg{margin-top:64px;border-top:3px double var(--rule);padding-top:28px}
+.reg .lbl{font-family:var(--sans);font-size:11.5px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--green);margin-bottom:22px}
+.reg h2{margin:0 0 26px;font-size:30px;font-weight:900;letter-spacing:-.02em}
+.entries{display:grid;grid-template-columns:repeat(2,1fr);gap:0 48px}
+.entry{display:grid;grid-template-columns:1fr;padding:18px 0;border-bottom:1px solid var(--hair)}
+.entry h4{margin:0 0 4px;font-size:19px;font-weight:900}
+.entry h4 em{font-family:var(--lat);font-style:italic;font-weight:400;color:var(--green);font-size:17px;margin-left:8px}
+.entry p{margin:0;font-size:14.5px;line-height:1.75;color:var(--ink-2)}
+
+/* cta */
+.cta{margin-top:56px;padding:32px 36px;background:var(--green);color:#EDEFE9;
+  display:flex;justify-content:space-between;align-items:center;gap:30px;flex-wrap:wrap}
+.cta h3{margin:0 0 6px;font-size:26px;font-weight:900;letter-spacing:-.015em;color:#F6F7F2}
+.cta p{margin:0;font-family:var(--sans);font-size:14px;color:#B9C3B9}
+.btns{display:flex;gap:10px;font-family:var(--sans)}
+.btn{font-size:14px;font-weight:600;padding:13px 26px;text-decoration:none}
+.btn-a{background:var(--red);color:#FFF6F2}
+.btn-b{border:1px solid rgba(237,239,233,.5);color:#EDEFE9}
+footer{margin-top:34px;padding-top:14px;border-top:1px solid var(--rule);
+  font-family:var(--sans);font-size:12px;color:var(--ink-3);display:flex;justify-content:space-between}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="masthead">
+    <div class="name">Clas<i>shift</i></div>
+    <div class="strap">교육 개인별 맞춤 AI OS · 강사를 위한 전환 스튜디오</div>
+  </div>
+  <div class="dateline"><span>Essays</span><span>2026년 7월 24일 금요일</span><span>강사 AX</span></div>
+
+  <header class="head">
+    <div class="section-mark">현장 기록</div>
+    <h1>채점을 멈추면 비로소 수업이 보인다</h1>
+    <div class="stand">
+      <p>한 반에 스무 명, 주당 세 번. 한 학원에서 강사가 채점에 쓰던 시간은 주당 열한 시간이었다. 12주 파일럿에서 그 시간의 대부분이 사라졌고, 남은 것은 시간이 아니라 질문이었다 — 회수한 시간을 무엇에 쓸 것인가.</p>
+    </div>
+    <div class="credit"><span>Classhift 기록</span><span>읽는 데 9분</span></div>
+  </header>
+
+  <article class="cols">
+    <p class="first">학원의 하루는 대체로 두 종류의 노동으로 채워진다. 하나는 사람이 해야만 하는 일이고, 다른 하나는 사람이 하고 있을 뿐인 일이다. 문제는 두 번째가 첫 번째의 시간을 잠식한다는 데 있다.</p>
+    <p>변형문제를 만들고, 답안을 대조하고, 오답 노트를 옮겨 적는 동안 정작 학생 한 명의 막힌 지점을 들여다볼 시간은 남지 않는다. 강사가 게을러서가 아니라 하루의 구조가 그렇게 짜여 있기 때문이다.</p>
+
+    <h2>도구를 바꾸는 일과 일을 바꾸는 일</h2>
+    <p>도입 첫 달의 실패는 예측 가능했다. 채점을 자동화했지만 강사는 여전히 모든 답안을 눈으로 확인했다. 신뢰의 문제가 아니라 <code>습관</code>의 문제였다.</p>
+    <p>검증 절차를 설계에 넣지 않으면 자동화는 일을 없애지 못하고 한 겹 더 쌓는다. 첫 달의 기록이 정확히 그 모양이었다.</p>
+
+    <blockquote><p>기계가 무엇을 했는지 사람이 30초 안에 확인할 수 없다면, 그 일은 여전히 사람의 일이다.</p></blockquote>
+
+    <h3>세 번째 달에 생긴 변화</h3>
+    <p>근거 링크를 답안 옆에 붙이자 확인 시간이 답안당 40초에서 6초로 줄었다.<sup><a href="#fn1">1</a></sup> 강사는 전수 확인을 포기했고, 대신 이상 신호가 뜬 답안만 열었다. 이때부터 열한 시간이 실제로 회수되기 시작했다.</p>
+
+    <figure>
+      <div class="plate"></div>
+      <figcaption>주당 채점 시간 추이 — 도입 12주. 3주차의 반등이 검증 절차를 다시 설계한 시점이다.</figcaption>
+    </figure>
+
+    <h2>남는 시간은 저절로 수업이 되지 않는다</h2>
+    <p>회수된 시간이 자동으로 좋은 수업이 되지는 않았다. 무엇을 볼지 정해주지 않으면 그 시간은 다시 행정으로 흘러간다.</p>
+    <p>그래서 우리가 만드는 것은 채점기가 아니라, 강사의 하루를 재배치하는 운영 체계다. 도구는 그 체계의 일부일 뿐이다.</p>
+
+    <div class="notes">1 — 12주 파일럿, 영어 내신 대비반 2개 · n=41. 표본이 작고 단일 학원 사례이므로 일반화하지 않는다.</div>
+  </article>
+
+  <section class="reg">
+    <div class="lbl">Capability</div>
+    <h2>네 축으로 학원을 옮깁니다</h2>
+    <div class="entries">
+      <div class="entry"><h4>강사 AX <em>instructor</em></h4><p>강사의 하루에서 사람이 하고 있을 뿐인 일을 걷어냅니다.</p></div>
+      <div class="entry"><h4>AI 교육 <em>teaching</em></h4><p>도구 사용법이 아니라 수업 설계의 언어를 가르칩니다.</p></div>
+      <div class="entry"><h4>AI 문제생성 <em>variants</em></h4><p>지문에서 변형문제까지, 근거를 붙인 채로 생성합니다.</p></div>
+      <div class="entry"><h4>AI 학생관리 <em>signals</em></h4><p>기록이 아니라 신호를 남깁니다. 볼 것만 보이게.</p></div>
+    </div>
+  </section>
+
+  <section class="cta">
+    <div>
+      <h3>수업을 어떻게 옮길지부터 이야기합니다</h3>
+      <p>도구 판매가 아니라 1:1 전환 설계입니다. 30분 상담으로 시작합니다.</p>
+    </div>
+    <div class="btns">
+      <a class="btn btn-a" href="#">상담 신청</a>
+      <a class="btn btn-b" href="#">제품 둘러보기</a>
+    </div>
+  </section>
+
+  <footer><span>Classhift</span><span>Seoul · 2026</span></footer>
+</div>
+</body>
+</html>

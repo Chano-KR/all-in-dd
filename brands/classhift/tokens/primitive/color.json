@@ -1,0 +1,64 @@
+{
+  "paper": {
+    "$type": "color",
+    "0": {
+      "$value": "#FFF4F1",
+      "$description": "bone — text on red only"
+    },
+    "50": {
+      "$value": "#F8F4EA"
+    },
+    "100": {
+      "$value": "#F1ECDF",
+      "$description": "the page ground"
+    },
+    "200": {
+      "$value": "#E5DECB"
+    },
+    "300": {
+      "$value": "#C8C0AC",
+      "$description": "hairline"
+    }
+  },
+  "ink": {
+    "$type": "color",
+    "900": {
+      "$value": "#141210"
+    },
+    "700": {
+      "$value": "#57503F"
+    },
+    "500": {
+      "$value": "#8A8170"
+    }
+  },
+  "green": {
+    "$type": "color",
+    "$description": "chalkboard. Ink and rule colour, and the one reserved dark surface layer 3 inherits.",
+    "900": {
+      "$value": "#232E27"
+    },
+    "800": {
+      "$value": "#2E3C33"
+    },
+    "200": {
+      "$value": "#B4BCB2",
+      "$description": "muted text on the dark surface"
+    },
+    "100": {
+      "$value": "#EDE9D9",
+      "$description": "chalk — text on the dark surface"
+    }
+  },
+  "red": {
+    "$type": "color",
+    "$description": "clip-red. Single job: the 3D object colour, the primary CTA, and the one gestural mark. Never distributed through the UI.",
+    "600": {
+      "$value": "#C4392C"
+    },
+    "alpha26": {
+      "$value": "#C4392C42",
+      "$description": "the highlight wash — 26% of red.600"
+    }
+  }
+}

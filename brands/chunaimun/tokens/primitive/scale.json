@@ -1,0 +1,101 @@
+{
+  "space": {
+    "$type": "dimension",
+    "0": { "$value": "0px" },
+    "1": { "$value": "4px" },
+    "2": { "$value": "6px" },
+    "3": { "$value": "10px" },
+    "4": { "$value": "14px" },
+    "5": { "$value": "20px" },
+    "6": { "$value": "28px" },
+    "7": { "$value": "38px" },
+    "8": { "$value": "52px" },
+    "9": { "$value": "72px" },
+    "10": { "$value": "96px" },
+    "11": { "$value": "132px" }
+  },
+
+  "size": {
+    "$type": "dimension",
+    "$description": "Screen ladder. `display` is the ceiling at 96px and there is nothing above it — the S2 audit caught the board at 102px, which reads as shouting rather than as scale. A larger heading is not available in this brand; that is the point of a ladder.",
+    "micro": { "$value": "11px" },
+    "meta": { "$value": "12.5px" },
+    "small": { "$value": "13.5px" },
+    "body": { "$value": "16px" },
+    "lead": { "$value": "19px" },
+    "title": { "$value": "26px" },
+    "sentence": { "$value": "56px", "$description": "the prompt line in the chain — the largest thing that is still a sentence you read left to right" },
+    "display": { "$value": "96px", "$description": "hero. Ceiling. Do not add a step above this." },
+    "figure": { "$value": "72px", "$description": "1,001 and the volume counts" }
+  },
+
+  "size-print": {
+    "$type": "dimension",
+    "$description": "Print ladder. A separate ladder, not a scaled copy: paper is read closer, holds finer detail, has no minimum tap target, and here it also has to leave room to be written in. Values are px and converted to pt at 96dpi by the Typst build.",
+    "micro": { "$value": "8px" },
+    "meta": { "$value": "9px" },
+    "small": { "$value": "11px" },
+    "body": { "$value": "13px", "$description": "≈9.75pt — sustained 명조 reading on paper runs smaller than screen prose" },
+    "lead": { "$value": "16px" },
+    "title": { "$value": "22px" },
+    "sentence": { "$value": "18px", "$description": "a printed prompt is set to be filled in, not to be seen across a room" },
+    "display": { "$value": "34px", "$description": "chapter opener. The web ceiling does not travel to paper." },
+    "figure": { "$value": "44px" }
+  },
+
+  "border": {
+    "$type": "dimension",
+    "hair": { "$value": "1px" },
+    "rule": { "$value": "2px", "$description": "the blank. Every rule in this brand is a place something gets written; a 2px stroke is a printed line, not a divider." },
+    "focus": { "$value": "2px" }
+  },
+
+  "radius": {
+    "$type": "dimension",
+    "$description": "Two values only. A form is set square; the pill exists because a control is a thing you press, not a thing that is printed.",
+    "none": { "$value": "0px" },
+    "pill": { "$value": "999px" }
+  },
+
+  "weight": {
+    "$type": "fontWeight",
+    "$description": "IBM Plex Sans KR ships 100–700 as real cuts and Nanum Myeongjo ships 400/700/800, so nothing here is ever synthesised. There is no 800 for the sans, which is what keeps the display from being solved by weight instead of by scale.",
+    "regular": { "$value": 400 },
+    "medium": { "$value": 500 },
+    "semibold": { "$value": 600 },
+    "bold": { "$value": 700 }
+  },
+
+  "leading": {
+    "$type": "number",
+    "$description": "Hangul-first, per ENGINE §5. `display` is the floor for anything at or above size.title; `body` is the floor everywhere else. The two-floor split is what the drive script enforces.",
+    "display": { "$value": 1.2 },
+    "sentence": { "$value": 1.45 },
+    "body": { "$value": 1.75 },
+    "read": { "$value": 1.9, "$description": "sustained 명조 prose, screen and paper alike" }
+  },
+
+  "tracking": {
+    "$type": "dimension",
+    "$description": "Floor is -0.03em. Tighter than -0.04em makes Hangul counters collide and reads as cramped rather than as designed.",
+    "display": { "$value": "-0.028em" },
+    "body": { "$value": "0em" },
+    "meta": { "$value": "0.14em" }
+  },
+
+  "duration": {
+    "$type": "duration",
+    "fast": { "$value": "140ms", "$description": "a state change; anything slower reads as lag" },
+    "base": { "$value": "240ms" },
+    "roll": { "$value": "640ms", "$description": "one word leaves and the next arrives" },
+    "rule": { "$value": "560ms", "$description": "a blank being drawn" },
+    "dwell": { "$value": "2900ms", "$description": "how long an output stays before the next one" }
+  },
+
+  "easing": {
+    "$type": "cubicBezier",
+    "$description": "Exponential ease-out only. There is no bounce, no elastic and no ease-in-out in this brand: a pen stroke decelerates and stops, it does not overshoot and settle.",
+    "standard": { "$value": [0.2, 0, 0, 1] },
+    "entrance": { "$value": [0.22, 1, 0.36, 1] }
+  }
+}

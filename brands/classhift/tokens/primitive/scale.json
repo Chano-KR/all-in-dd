@@ -1,0 +1,150 @@
+{
+  "space": {
+    "$type": "dimension",
+    "0": {
+      "$value": "0px"
+    },
+    "1": {
+      "$value": "2px"
+    },
+    "2": {
+      "$value": "4px"
+    },
+    "3": {
+      "$value": "8px"
+    },
+    "4": {
+      "$value": "12px"
+    },
+    "5": {
+      "$value": "16px"
+    },
+    "6": {
+      "$value": "20px"
+    },
+    "7": {
+      "$value": "24px"
+    },
+    "8": {
+      "$value": "32px"
+    },
+    "9": {
+      "$value": "40px"
+    },
+    "10": {
+      "$value": "48px"
+    },
+    "11": {
+      "$value": "56px"
+    },
+    "12": {
+      "$value": "72px"
+    },
+    "13": {
+      "$value": "96px"
+    }
+  },
+  "size": {
+    "$type": "dimension",
+    "$description": "Type ladder. The middle of this ladder is deliberately thin — the direction's impact comes from jumping it, not from filling it.",
+    "micro": {
+      "$value": "11px"
+    },
+    "meta": {
+      "$value": "12px"
+    },
+    "small": {
+      "$value": "14px"
+    },
+    "body": {
+      "$value": "16px"
+    },
+    "lead": {
+      "$value": "20px"
+    },
+    "quote": {
+      "$value": "30px"
+    },
+    "title": {
+      "$value": "34px"
+    },
+    "headline": {
+      "$value": "44px"
+    },
+    "hero": {
+      "$value": "104px"
+    }
+  },
+  "border": {
+    "$type": "dimension",
+    "hair": {
+      "$value": "1px"
+    },
+    "rule": {
+      "$value": "2px",
+      "$description": "the structural ledger rule"
+    }
+  },
+  "radius": {
+    "$type": "dimension",
+    "none": {
+      "$value": "0px",
+      "$description": "the system is square. A rounded corner is a deviation, not a default."
+    }
+  },
+  "weight": {
+    "$type": "fontWeight",
+    "regular": {
+      "$value": 400
+    },
+    "medium": {
+      "$value": 500
+    },
+    "semibold": {
+      "$value": 600
+    },
+    "bold": {
+      "$value": 700,
+      "$description": "IBM Plex Sans KR tops out here; scale carries what weight cannot"
+    }
+  },
+  "duration": {
+    "$type": "duration",
+    "fast": {
+      "$value": "120ms"
+    },
+    "base": {
+      "$value": "200ms"
+    },
+    "slow": {
+      "$value": "320ms"
+    }
+  },
+  "easing": {
+    "$type": "cubicBezier",
+    "standard": {
+      "$value": [
+        0.2,
+        0,
+        0,
+        1
+      ]
+    },
+    "entrance": {
+      "$value": [
+        0,
+        0,
+        0,
+        1
+      ]
+    },
+    "exit": {
+      "$value": [
+        0.3,
+        0,
+        1,
+        1
+      ]
+    }
+  }
+}

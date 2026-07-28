@@ -1,0 +1,76 @@
+{
+  "surface": {
+    "$type": "color",
+    "page": {
+      "$value": "{paper.100}"
+    },
+    "raised": {
+      "$value": "{paper.50}"
+    },
+    "sunken": {
+      "$value": "{paper.200}"
+    },
+    "inverse": {
+      "$value": "{green.900}",
+      "$description": "the one reserved dark surface. Layer 3 (3D scenes) inherits this as its ground."
+    },
+    "inverse-2": {
+      "$value": "{green.800}"
+    }
+  },
+  "text": {
+    "$type": "color",
+    "primary": {
+      "$value": "{ink.900}"
+    },
+    "secondary": {
+      "$value": "{ink.700}"
+    },
+    "muted": {
+      "$value": "{ink.500}"
+    },
+    "on-inverse": {
+      "$value": "{green.100}"
+    },
+    "on-inverse-muted": {
+      "$value": "{green.200}"
+    },
+    "on-accent": {
+      "$value": "{paper.0}"
+    }
+  },
+  "line": {
+    "$type": "color",
+    "hair": {
+      "$value": "{paper.300}",
+      "$description": "row separators, table rules"
+    },
+    "rule": {
+      "$value": "{green.900}",
+      "$description": "structural ledger rules — the green IS the rule colour"
+    }
+  },
+  "accent": {
+    "$type": "color",
+    "$description": "One colour, one job. Widening this set is the documented failure mode; add a role here only with a recorded decision.",
+    "action": {
+      "$value": "{red.600}",
+      "$description": "primary CTA fill, and the eyebrow/flag mark"
+    },
+    "mark": {
+      "$value": "{red.600}",
+      "$description": "the hand-drawn gestural stroke"
+    },
+    "highlight": {
+      "$value": "{red.alpha26}",
+      "$description": "the text wash behind an emphasised phrase"
+    }
+  },
+  "state": {
+    "$type": "color",
+    "attention": {
+      "$value": "{red.600}",
+      "$description": "needs-review flags in data surfaces"
+    }
+  }
+}

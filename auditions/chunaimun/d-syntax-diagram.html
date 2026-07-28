@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>D · 구문 도해 — 천AI문</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@400;500;600;700;900&family=Gothic+A1:wght@400;500;700;900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* D — 구문 도해 (SYNTAX DIAGRAM)
+   Homage: LEAN IN — but to the *method*, not the cover.
+   What 천일문 actually left behind is not a book jacket, it is a way of marking a sentence:
+   S / V / O labels, slashes at clause breaks, brackets around modifiers, red pen over black
+   print. This direction promotes that annotation layer to the whole visual system. The hero
+   sentence is genuinely diagrammed, and the four levels are four depths of nesting.
+   Refused: gradient, glass, icon row, stock art, centered hero. */
+:root{
+  --paper:#F4F2EC;
+  --paper-2:#EAE7DE;
+  --navy:#14213D;
+  --navy-2:#33405F;
+  --ink-3:#8B8878;
+  --pen:#C42B1C;
+  --hair:#CBC6B7;
+  --serif:"Hahmlet",serif;
+  --sans:"Gothic A1",system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  background:var(--paper);color:var(--navy);font-family:var(--sans);
+  word-break:keep-all;line-height:1.7;-webkit-font-smoothing:antialiased;
+}
+.mono{font-family:var(--mono);font-size:11px;letter-spacing:.09em;color:var(--ink-3)}
+
+/* --- head ------------------------------------------------------------ */
+.head{display:flex;justify-content:space-between;align-items:baseline;padding:18px 56px;border-bottom:2px solid var(--navy)}
+.head .bm{font-family:var(--serif);font-weight:900;font-size:21px;letter-spacing:-.01em}
+.head .bm i{font-style:normal;color:var(--pen)}
+
+/* --- hero: the diagrammed sentence ---------------------------------- */
+.hero{padding:66px 56px 0}
+.kicker{display:inline-block;font-family:var(--mono);font-size:11px;letter-spacing:.1em;
+  border:1px solid var(--navy);padding:5px 11px;margin-bottom:40px}
+.diagram{max-width:24ch}
+.dline{font-family:var(--serif);font-weight:700;font-size:66px;line-height:1.56;letter-spacing:-.035em}
+/* annotation marks */
+.seg{position:relative;display:inline-block}
+.seg::after{
+  content:attr(data-l);position:absolute;left:0;top:-.42em;
+  font-family:var(--mono);font-size:12px;letter-spacing:.08em;color:var(--pen);
+}
+.seg.u{box-shadow:inset 0 -3px 0 var(--pen)}
+.seg.b::before{content:"[";color:var(--pen);font-weight:400;margin-right:.04em}
+.seg.b::after{content:attr(data-l);position:absolute;right:-.1em;top:-.42em}
+.slash{color:var(--pen);font-weight:400;margin:0 .12em}
+.gloss{margin-top:36px;display:grid;grid-template-columns:auto 1fr;gap:0 20px;max-width:56ch}
+.gloss dt{font-family:var(--mono);font-size:11px;color:var(--pen);letter-spacing:.08em;padding-top:6px}
+.gloss dd{font-size:16px;color:var(--navy-2);line-height:1.75;padding-bottom:9px;border-bottom:1px solid var(--hair)}
+.gloss dd b{color:var(--navy);font-weight:700}
+
+/* --- figure block ---------------------------------------------------- */
+.side{position:absolute}
+.hero-grid{display:grid;grid-template-columns:1fr 330px;gap:70px;align-items:start}
+.fig{border:2px solid var(--navy);background:var(--paper-2)}
+.fig .top{padding:20px 22px 14px;border-bottom:1px solid var(--navy)}
+.fig .top .n{font-family:var(--serif);font-weight:900;font-size:64px;line-height:1;letter-spacing:-.03em}
+.fig .top .n sup{font-family:var(--mono);font-size:13px;font-weight:400;color:var(--pen);vertical-align:super}
+.fig .top p{margin-top:10px;font-size:14px;color:var(--navy-2);line-height:1.65}
+.fig .rows div{display:flex;justify-content:space-between;padding:10px 22px;font-family:var(--mono);font-size:12px;border-bottom:1px solid var(--hair)}
+.fig .rows div:last-child{border-bottom:none}
+.fig .rows b{font-weight:600}
+
+/* --- CTA ------------------------------------------------------------- */
+.acts{padding:48px 56px 0;display:flex;gap:12px;align-items:center}
+.acts .buy{background:var(--navy);color:var(--paper);border:none;border-radius:1px;
+  font-family:var(--sans);font-weight:700;font-size:16px;padding:16px 30px;cursor:pointer}
+.acts .peek{background:none;border:2px solid var(--navy);border-radius:1px;
+  font-family:var(--sans);font-weight:700;font-size:16px;padding:14px 24px;color:var(--navy);cursor:pointer}
+.acts .fine{margin-left:8px;font-size:13px;color:var(--ink-3)}
+
+/* --- nested lineup --------------------------------------------------- */
+.lineup{margin:96px 56px 0;border-top:2px solid var(--navy);padding-top:18px}
+.lineup .cap{display:flex;justify-content:space-between;margin-bottom:30px}
+.nest{border-left:2px solid var(--navy)}
+.lv{position:relative;padding:22px 0 22px 30px;border-bottom:1px solid var(--hair);display:grid;
+  grid-template-columns:220px 1fr 96px;gap:30px;align-items:baseline}
+.lv:last-child{border-bottom:none}
+.lv::before{content:"";position:absolute;left:0;top:34px;width:18px;height:2px;background:var(--navy)}
+.lv:nth-child(1){margin-left:0}
+.lv:nth-child(2){margin-left:26px}
+.lv:nth-child(3){margin-left:52px}
+.lv:nth-child(4){margin-left:78px}
+.lv .name{font-family:var(--serif);font-weight:700;font-size:34px;letter-spacing:-.025em;display:flex;align-items:baseline;gap:12px}
+.lv .name span{font-family:var(--mono);font-size:11px;color:var(--ink-3);letter-spacing:.08em}
+.lv p{font-size:15px;color:var(--navy-2);line-height:1.7;max-width:46ch}
+.lv .n{font-family:var(--mono);font-size:19px;font-weight:500;text-align:right;font-variant-numeric:tabular-nums}
+.lv:nth-child(4) .n{color:var(--pen)}
+.lv .tag{position:absolute;left:-2px;top:-9px;font-family:var(--mono);font-size:10px;letter-spacing:.08em;
+  background:var(--paper);color:var(--pen);padding:0 6px}
+
+/* --- spec rail ------------------------------------------------------- */
+.rail{margin:88px 0 0;border-top:2px solid var(--navy);background:var(--paper-2);padding:20px 56px 30px;display:grid;grid-template-columns:150px 1fr;gap:38px}
+.rail dt{font-family:var(--mono);font-size:11px;letter-spacing:.08em;color:var(--ink-3);text-transform:uppercase}
+.rail dd{font-size:14px;color:var(--navy-2);line-height:1.7;margin-bottom:9px}
+.rail dd b{color:var(--navy)}
+</style>
+</head>
+<body>
+
+<div class="head">
+  <span class="bm">천<i>AI</i>문</span>
+  <span class="mono">학원 · 교육자용 AI 실무서 · VOL 1–4 · 2026 개정</span>
+</div>
+
+<header class="hero">
+  <span class="kicker">구문을 뗀 방식 그대로, 프롬프트를</span>
+  <div class="hero-grid">
+    <div>
+      <h1 class="diagram dline"><span class="seg u" data-l="S">선생님이</span> <span class="slash">/</span> <span class="seg u" data-l="V">쓰는</span> <span class="seg b" data-l="M">문장</span><span class="slash">,</span><br>1,001개를 <span class="seg u" data-l="O">그대로</span> 옮겼다</h1>
+      <dl class="gloss">
+        <dt>S</dt><dd>사는 사람은 <b>학원 원장과 강사</b>. 개발자도 학생도 아니다.</dd>
+        <dt>V</dt><dd>읽는 책이 아니라 <b>여는 책</b>. 붙여 넣으면 결과가 나온다.</dd>
+        <dt>M</dt><dd>운영 중인 학원에서 <b>실제로 돌려보고 결과를 확인한 것만</b> 실었다.</dd>
+      </dl>
+    </div>
+    <div class="fig">
+      <div class="top">
+        <div class="n">1,001<sup>개</sup></div>
+        <p>천일문이 문장 1,001개로 구문을 뗐다. 천AI문은 같은 수의 프롬프트로 학원 업무를 뗀다.</p>
+      </div>
+      <div class="rows">
+        <div><span>구성</span><b>4권</b></div>
+        <div><span>전권</span><b>68,000원</b></div>
+        <div><span>개정</span><b>2026</b></div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="acts">
+  <button class="buy">전권 구매</button>
+  <button class="peek">입문 40쪽 미리보기</button>
+  <span class="fine">결제는 외부 스토어에서 진행됩니다</span>
+</div>
+
+<section class="lineup">
+  <div class="cap"><span class="mono">레벨 구성</span><span class="mono">단계가 깊어질수록 문장이 품는 절이 늘어난다</span></div>
+  <div class="nest">
+    <article class="lv">
+      <span class="tag">주절</span>
+      <div class="name">입문 <span>VOL.1</span></div>
+      <p>계정과 모델을 고르고 첫 문장을 넣는다. 아직 한 번도 안 켜 본 사람 기준으로 쓰였다.</p>
+      <div class="n">180</div>
+    </article>
+    <article class="lv">
+      <span class="tag">+ 목적어</span>
+      <div class="name">기본 <span>VOL.2</span></div>
+      <p>교재·시험지·문항을 만든다. 다음 수업에 그대로 들고 들어가는 산출물 중심.</p>
+      <div class="n">260</div>
+    </article>
+    <article class="lv">
+      <span class="tag">+ 수식절</span>
+      <div class="name">심화 <span>VOL.3</span></div>
+      <p>학생 데이터를 붙인다. 성적 분석, 학부모 리포트, 상담 준비까지 이어진다.</p>
+      <div class="n">300</div>
+    </article>
+    <article class="lv">
+      <span class="tag">전체 문장</span>
+      <div class="name">완성 <span>VOL.4</span></div>
+      <p>학원 운영 전체를 하나로 잇는다. 반복 업무를 사람 손에서 떼는 단계.</p>
+      <div class="n">261</div>
+    </article>
+  </div>
+</section>
+
+<dl class="rail">
+  <dt>주장</dt>
+  <dd>천일문이 남긴 건 표지가 아니라 <b>문장에 표시를 다는 방법</b>이다 — S/V/O 라벨, 절 경계 슬래시, 수식어 대괄호, 검은 인쇄 위 빨간 펜. 그 주석 층을 통째로 시각 시스템으로 승격시킨다.</dd>
+  <dt>레벨 인코딩</dt>
+  <dd>들여쓰기 깊이 = 문장이 품는 절의 수. 레벨이 오를수록 안으로 파고든다. 색 없이 <b>구조만으로</b> 위계가 성립.</dd>
+  <dt>오마주 거리</dt>
+  <dd><b>밀기.</b> 단 표지 코스프레가 아니라 방법론 인용이라, 카테고리의 나쁜 인쇄 습관을 하나도 안 상속함.</dd>
+  <dt>타입 / 팔레트</dt>
+  <dd>Hahmlet 700/900 · Gothic A1 · IBM Plex Mono / 종이 #F4F2EC · 네이비 #14213D · 빨간 펜 #C42B1C</dd>
+  <dt>위험</dt>
+  <dd>세리프 + 주석 문법이라 <b>에디토리얼로 미끄러질 여지가 5안 중 가장 큼</b> — 사용자가 배제한 방향. 도해가 장식이 되는 순간 그냥 예쁜 잡지가 된다. 반대로 성공하면 5안 중 유일하게 인쇄 내지로 그대로 내려간다.</dd>
+</dl>
+
+</body>
+</html>

@@ -1,0 +1,40 @@
+{
+  "ground": {
+    "$type": "color",
+    "$description": "The sheet the form is printed on. Cool, chroma at or near zero. Named `ground` and not paper/bone/cream deliberately: those names are themselves the tell, and the warm near-white they describe is the coordinate S0 §4.6 closed and the revoked lock sat on.",
+    "000": { "$value": "#FFFFFF", "$description": "the blank itself — the one place with nothing printed on it" },
+    "100": { "$value": "#F6F7F8", "$description": "the page" },
+    "200": { "$value": "#ECEEF0", "$description": "a panel set into the page" },
+    "300": { "$value": "#E2E5E8", "$description": "pressed / held" },
+    "400": { "$value": "#D6DADE", "$description": "hairline" }
+  },
+
+  "ink": {
+    "$type": "color",
+    "$description": "Printed matter. 500 is the floor: anything lighter fails AA at the sizes metadata is actually set in, which is exactly how all four S1 boards shipped 3.2–3.5:1 captions.",
+    "900": { "$value": "#0E1216" },
+    "700": { "$value": "#2B3238" },
+    "600": { "$value": "#444C55" },
+    "500": { "$value": "#5D666F", "$description": "tertiary floor — 5.45:1 on ground.100. There is no 400, and adding one reopens the defect." },
+    "inverse": { "$value": "#EDF0F3", "$description": "type set on ink.900" }
+  },
+
+  "pen": {
+    "$type": "color",
+    "$description": "Ballpoint blue: the mark a 원장 makes on a sheet that is already printed. It is an ink, not a brand accent, and it is painted only where something gets filled in.",
+    "700": { "$value": "#14309A", "$description": "pressed" },
+    "600": { "$value": "#1B3FBF", "$description": "the stroke" },
+    "500": { "$value": "#3A5CD8", "$description": "hover" },
+    "300": { "$value": "#9DB2F5", "$description": "the stroke lifted to read on ink.900" },
+    "100": { "$value": "#E4E9FA", "$description": "a filled blank seen from across the page" }
+  },
+
+  "output": {
+    "$type": "color",
+    "$description": "One ink per kind of thing the book produces. These are roles, not decoration: a colour here names a document type, so a fifth colour requires a fifth document type. They exist because the hero claims the output is not one thing.",
+    "exam": { "$value": "#1B3FBF", "$description": "시험지 한 부 — the default output; shares the pen's ink rather than inventing a second blue" },
+    "drill": { "$value": "#B32127", "$description": "단어 테스트" },
+    "analysis": { "$value": "#8A5A00", "$description": "시험 분석지" },
+    "mock": { "$value": "#116A3B", "$description": "동형 모의고사" }
+  }
+}

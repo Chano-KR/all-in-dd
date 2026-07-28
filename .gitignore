@@ -1,3 +1,11 @@
 node_modules/
 brands/*/dist/
 fonts/
+
+# Renders, screenshots, and generated proofs are evidence, not source —
+# they live in the workspace doc trail, never in this repo.
+**/_shots/
+**/_img/
+**/.impeccable/
+*.png
+*.pdf

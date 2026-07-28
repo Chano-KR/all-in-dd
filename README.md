@@ -12,11 +12,11 @@ claims a chain, the printed interior claims a page you write on.
 
 ## New machine
 
-The workspace repo brings everything except binaries. In order:
+This repo is standalone — clone it wherever the workspace lives, then:
 
 ```
-git clone <workspace-remote> D:\01.Coding
-cd D:\01.Coding\_design-system
+git clone https://github.com/Chano-KR/house-design-system _design-system
+cd _design-system
 npm install                 # style-dictionary, playwright
 npm run fetch:fonts         # downloads the house type pool (gitignored, ~50M) — needs gh auth
 npm run install:fonts       # registers user-scope, idempotent, no admin
@@ -25,6 +25,10 @@ npm run build:tokens && npm run print:chunaimun   # proves the whole chain
 ```
 
 Both font scripts skip whatever is already present; re-run them any time.
+
+The stage machine that drives this system (`design-system` skill) lives in the
+workspace harness, not here — this repo is the values and the gates; the process
+travels with the agent config.
 
 ## Layout
 

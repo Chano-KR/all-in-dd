@@ -29,6 +29,7 @@ const SKILLS = [
   ['S1', 'design-taste-frontend',       true,  'Leonxlnx/taste-skill'],
   ['S1', 'imagegen-frontend-web',       true,  'Leonxlnx/taste-skill'],
   ['S1', 'image-to-code',               true,  'Leonxlnx/taste-skill'],
+  ['S2', 'impeccable',                  true,  'https://github.com/pbakaus/impeccable --skill impeccable'],
   ['S4', 'apple-design',                true,  'emilkowalski/skills'],
   ['S4', 'emil-design-eng',             true,  'emilkowalski/skills'],
   ['S5', 'find-animation-opportunities',true,  'emilkowalski/skills'],
@@ -64,8 +65,8 @@ for (const tier of [true, false]) {
   }
 }
 
-console.log('\nAudit role (S2 · S5): bring your own — see SKILLS.md');
-console.log('Canvas tool: pen.dev, installed separately (ENGINE §2.4)');
+console.log('\nCharts: dataviz ships with Claude Code — nothing to install');
+console.log('Canvas: pen.dev, a separate MCP tool (ENGINE §2.4)');
 
 if (missing.length) {
   const sources = [...new Set(missing.map(m => m[1]))];

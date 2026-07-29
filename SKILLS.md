@@ -18,6 +18,17 @@ Codex, Cursor, Amp, Antigravity, and others):
 npx skills add <source>
 ```
 
+Every source below is the author's own repository — install from there rather than
+from a mirror, so updates and fixes reach you:
+
+| Source | Maintainer | Covers |
+|---|---|---|
+| [`Leonxlnx/taste-skill`](https://github.com/Leonxlnx/taste-skill) | Leon | the S1 authors, imagegen, image-to-code, brandkit |
+| [`emilkowalski/skills`](https://github.com/emilkowalski/skills) | Emil Kowalski | motion + component craft, animation passes |
+| [`pbakaus/impeccable`](https://github.com/pbakaus/impeccable) | Paul Bakaus | interface audit and slop detection |
+| [`mattpocock/skills`](https://github.com/mattpocock/skills) | Matt Pocock | prototype, grill-me |
+| [`remotion-dev/skills`](https://github.com/remotion-dev/skills) | Remotion | video deliverables |
+
 ## Required
 
 Without these the stage machine has holes. The S1 row is the important one: **each
@@ -29,16 +40,17 @@ the set.
 | S1 | `high-end-visual-design`<br>`gpt-taste`<br>`minimalist-ui`<br>`industrial-brutalist-ui`<br>`design-taste-frontend` | five distinct visual authors — one per direction, never the same twice | `npx skills add Leonxlnx/taste-skill` |
 | S1 | `imagegen-frontend-web` | renders a direction as sectioned images before any code exists | ↑ same source |
 | S1 | `image-to-code` | implements a rendered design faithfully instead of approximately | ↑ same source |
-| S2 · S5 | *an interface-audit skill* | critiques a set or a built surface without authoring it | see **Audit** below |
+| S2 · S5 | `impeccable` | interface audit and critique — a detector for AI-slop tells and general design defects, plus `/audit`, `/polish`, `/distill` | `npx skills add https://github.com/pbakaus/impeccable --skill impeccable` |
 | S4 · S5 | `apple-design` | motion physics, gesture behavior, interruptible transitions | `npx skills add emilkowalski/skills` |
 | S4 · S5 | `emil-design-eng` | component detail — the invisible work that separates working from good | ↑ same source |
 | S5 | `find-animation-opportunities`<br>`improve-animations` | find what should move and does not, then implement it with real values | ↑ same source |
 
-One install line covers most of it:
+Three lines cover everything required:
 
 ```bash
 npx skills add Leonxlnx/taste-skill
 npx skills add emilkowalski/skills
+npx skills add https://github.com/pbakaus/impeccable --skill impeccable
 ```
 
 ## Recommended
@@ -55,19 +67,17 @@ npx skills add emilkowalski/skills
 | S5 | `animation-vocabulary` | reverse-lookup: a described effect → its real name | `npx skills add emilkowalski/skills` |
 | S4 | `remotion-best-practices` | only when the deliverable is video | `npx skills add remotion-dev/skills` |
 
-## Audit skill — bring your own
+## The audit role
 
-S2 and S5 both need something that critiques without authoring. There is no single
-public skill this repo can point at, so use whatever your setup has:
+S2 and S5 both need something that critiques without authoring, and `impeccable`
+([pbakaus/impeccable](https://github.com/pbakaus/impeccable)) is the house default. It
+overlaps this repo's gate 0 deliberately — its detector catches slop tells at the
+component level (side-tab accent borders, purple gradients, bounce easing, dark glows)
+while gate 0 works at the page level, and the two disagree often enough to be worth
+running both.
 
-- a dedicated interface-audit or design-review skill, if you have one;
-- otherwise, a plain sub-agent prompt works: *"audit this against hierarchy, cognitive
-  load, contrast, spacing rhythm, and state coverage; report findings ranked by
-  severity; do not edit."*
-
-The requirement is the **role**, not a particular package: something that produces
-arguments instead of pixels, run before you commit to a direction and again after the
-surface exists.
+If you use something else, the requirement is the **role**: produces arguments instead
+of pixels, run once before committing to a direction and again after the surface exists.
 
 ## Charts
 

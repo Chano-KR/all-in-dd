@@ -45,6 +45,7 @@ npm run check:skills --strict # exit 1 if anything REQUIRED is absent
 ```bash
 npx skills add Leonxlnx/taste-skill    # the five S1 authors + imagegen + image-to-code
 npx skills add emilkowalski/skills     # apple-design, emil-design-eng, motion passes
+npx skills add https://github.com/pbakaus/impeccable --skill impeccable   # audit
 ```
 
 Skills sort into four kinds, and the kind is what decides where a skill may run:
@@ -53,7 +54,7 @@ Skills sort into four kinds, and the kind is what decides where a skill may run:
 |---|---|---|---|
 | **taste** | imposes a look — type, palette, composition | **S1 only**, one per direction | `high-end-visual-design`, `gpt-taste`, `minimalist-ui`, `industrial-brutalist-ui`, `design-taste-frontend` |
 | **craft** | imposes technique; style-neutral | S4, S5 | `apple-design`, `emil-design-eng` |
-| **audit** | judges without authoring | S2, S5 | bring your own — see SKILLS.md |
+| **audit** | judges without authoring | S2, S5 | `impeccable` |
 | **make** | produces artifacts | wherever a stage calls | `imagegen-frontend-web`, `image-to-code`, `brandkit`, `prototype` |
 
 **Required means loaded, not obeyed.** The failure these lists fix was skills never being
@@ -117,9 +118,8 @@ Lock three things: tone, the signature device, and the encoding scheme. Grafting
 board's device onto another's tone is a normal outcome; picking a whole board is not
 required.
 
-**Skills** — required: an audit skill over the whole set before recommending anything
-(SKILLS.md explains the bring-your-own situation). Optional: `grill-me` when the lock
-needs stress-testing.
+**Skills** — required: `impeccable` over the whole set before recommending anything.
+Optional: `grill-me` when the lock needs stress-testing.
 
 Write the lock down — what is locked **and what it forecloses**, most importantly which
 enforcement layer (ENGINE §1) the tone lands in, because a layer-3 tone cannot later
@@ -168,7 +168,7 @@ underspecified — that is an S3 return, not a skill call.
 
 ## S5 — refine
 
-Audit → critique → iterate → verify, on something that already exists. **Skills** — required: an audit skill, now pointed at a built surface; and the motion
+Audit → critique → iterate → verify, on something that already exists. **Skills** — required: `impeccable`, now pointed at a built surface; and the motion
 pass, `find-animation-opportunities` then `improve-animations`, whenever motion is in
 scope. Optional: `review-animations` on a motion diff, `redesign-existing-projects` for a
 surface inherited from before the system, `animation-vocabulary` to name an effect you can

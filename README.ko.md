@@ -48,6 +48,7 @@ npm run check:skills
 
 npx skills add Leonxlnx/taste-skill    # S1 저자 5종, imagegen, image-to-code
 npx skills add emilkowalski/skills     # apple-design, emil-design-eng, 모션 패스
+npx skills add https://github.com/pbakaus/impeccable --skill impeccable   # 감사
 ```
 
 [`SKILLS.md`](SKILLS.md)에 전부 — 뭘 하는지, 어느 단계가 필요로 하는지. 스킬이 없다고

@@ -53,6 +53,7 @@ npm run gate:drift       # vocabulary-level default check
 npm run print:example    # proves the print pipeline end to end
 npm run fetch:fonts      # Windows; macOS/Linux: bash scripts/fonts.sh
 npm run install:fonts    # Windows; macOS/Linux: bash scripts/fonts.sh
+npm run check:skills     # which workflow skills are installed, and how to get the rest
 ```
 
 Run `check:tokens` before compiling any Typst document. A gate failure returns
@@ -73,6 +74,7 @@ needs it, and its install source. The short version:
 ```bash
 npx skills add Leonxlnx/taste-skill    # S1 authors, imagegen, image-to-code
 npx skills add emilkowalski/skills     # S4/S5 craft + motion
+npx skills add https://github.com/pbakaus/impeccable --skill impeccable
 npx skills add mattpocock/skills       # prototype, grill-me  (recommended)
 ```
 
@@ -85,7 +87,7 @@ Skills sort into four kinds, and the kind decides where it may run:
 |---|---|---|
 | taste — imposes a look | **S1 only**, one per direction | `high-end-visual-design`, `gpt-taste`, `minimalist-ui`, `industrial-brutalist-ui`, `design-taste-frontend` |
 | craft — imposes technique | S4, S5 | `apple-design`, `emil-design-eng` |
-| audit — judges, doesn't author | S2, S5 | bring your own; see SKILLS.md |
+| audit — judges, doesn't author | S2, S5 | `impeccable` |
 | make — produces artifacts | wherever the stage calls | `imagegen-frontend-web`, `image-to-code`, `brandkit`, `prototype` |
 
 Two rules that are not preferences:

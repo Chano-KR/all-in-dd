@@ -53,6 +53,7 @@ npm run check:skills
 
 npx skills add Leonxlnx/taste-skill    # the five S1 authors, imagegen, image-to-code
 npx skills add emilkowalski/skills     # apple-design, emil-design-eng, motion passes
+npx skills add https://github.com/pbakaus/impeccable --skill impeccable   # audit
 ```
 
 [`SKILLS.md`](SKILLS.md) lists every one with what it does and which stage needs it.

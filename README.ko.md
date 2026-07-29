@@ -76,6 +76,11 @@ npx skills add https://github.com/pbakaus/impeccable --skill impeccable   # 감�
 | 렌더 | `shoot.mjs` | 실제 타깃 치수로 찍은 스크린샷 |
 | 인터랙션 | `check-interactions.mjs` | hover·focus·모션·reduced-motion. 스크린샷에 안 보이는 것 |
 
+`npm test`는 게이트 스크립트에 오염 입력을 먹입니다. 모든 케이스가 양방향을 검사합니다.
+정상 입력은 통과하고, 망가진 입력은 실패하며, **명시한 사유로** 실패해야 합니다. 이게 있는
+이유는 하루에 나온 결함 넷이 전부 같은 형태였기 때문입니다. 아무것도 검사하지 않고 성공을
+보고하는 검사였습니다.
+
 통과했다는 것은 슬롭이 아니라는 뜻이지, 좋다는 뜻이 아닙니다. 게이트는 바닥이지 목표가
 아닙니다.
 

@@ -57,6 +57,7 @@ npm run print:example    # proves the print pipeline end to end
 npm run fetch:fonts      # Windows; macOS/Linux: bash scripts/fonts.sh
 npm run install:fonts    # Windows; macOS/Linux: bash scripts/fonts.sh
 npm run check:skills     # which workflow skills are installed, and how to get the rest
+npm test                 # poisoned fixtures for the gates — run after touching any gate rule
 ```
 
 Run `check:tokens` before compiling any Typst document. A gate failure returns

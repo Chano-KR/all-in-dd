@@ -77,6 +77,11 @@ shipped wrong once.
 | render | `shoot.mjs` | screenshots at real target dimensions |
 | interaction | `check-interactions.mjs` | hover, focus, motion, reduced-motion — invisible to a screenshot |
 
+`npm test` runs poisoned fixtures against the gate scripts. Every case asserts both
+directions — clean input passes, broken input fails, *and* fails for the stated reason.
+It exists because four defects in one afternoon were the same shape: a check that
+examined nothing and reported success.
+
 Passing them means the work is not slop. It does not mean the work is good —
 gates are a floor, not a target.
 

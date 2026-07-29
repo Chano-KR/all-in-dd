@@ -24,3 +24,6 @@ skills-lock*
 # The anti-slop corpus is private research; the public path is the uiux-pro-max
 # skill plus your own sweep. See WORKFLOW.md S0.
 research/
+
+# test-gates.mjs writes and removes this; never commit a stray run.
+brands/__fixture__/

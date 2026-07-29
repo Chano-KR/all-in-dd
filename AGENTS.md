@@ -69,7 +69,12 @@ the work; it is not waived.
 ```bash
 npm run check:skills          # what is installed, and the install line for what isn't
 npm run check:skills --strict # exit 1 if a REQUIRED skill is missing
+npm run skills -- --stage S1 "<brief>"   # which of the ~130 installed ones fit this work
 ```
+
+Most of the pool is set to `"name-only"`, so its descriptions are not in context. That is
+a context-budget decision, not a lock: every one of them is still invokable by name. The
+recommender is where the descriptions live now.
 
 `SKILLS.md` is the manifest — every skill by name, what it does, which stage
 needs it, and its install source. The short version:

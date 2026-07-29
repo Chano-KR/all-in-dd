@@ -30,6 +30,34 @@ from a mirror, so updates and fixes reach you:
 | [`mattpocock/skills`](https://github.com/mattpocock/skills) | Matt Pocock | prototype, grill-me |
 | [`remotion-dev/skills`](https://github.com/remotion-dev/skills) | Remotion | video deliverables |
 
+## Keeping ~130 skills without paying for them
+
+Only `name` and `description` sit in context; a skill's body loads on invocation. With a
+pool this size the descriptions alone run to roughly **10,000 tokens in every context
+window**, which is a real cost for something used a few times per stage.
+
+The fix is two halves, and the second is what keeps it from becoming a lock:
+
+1. **Set the pool to `"name-only"`** in `~/.claude/settings.json` under `skillOverrides`.
+   The name stays listed and stays invokable, by you and by the agent; only the
+   description is dropped. Do **not** use `"off"` — that hides a skill from the `/` menu
+   too and makes it uninvokable by anyone.
+2. **Use the recommender as the index the descriptions used to be.** It reads them from
+   disk on demand, so they cost nothing until asked for:
+
+```bash
+npm run skills -- --stage S1 --n 8 "dark editorial landing, heavy scroll motion"
+npm run skills -- --stage S5 "3d hero drops frames on mobile"
+npm run skills -- --list-stages
+```
+
+Ranking is IDF-weighted term overlap with a stage bias. It narrows ~160 skills to a
+shortlist; it does not choose. It also cannot resolve polysemy — read the shortlist
+rather than taking the top hit.
+
+Keep the stage-required skills at `"on"`: the ones a stage cannot run without should
+still announce themselves.
+
 ## Required
 
 Without these the stage machine has holes. The S1 row is the important one: **each

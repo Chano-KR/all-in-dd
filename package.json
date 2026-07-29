@@ -10,6 +10,7 @@
     "gate:tokens": "node scripts/check-tokens.mjs",
     "gate:drift": "node scripts/check-drift.mjs",
     "check:skills": "node scripts/check-skills.mjs",
+    "skills": "node scripts/suggest-skills.mjs",
     "shoot": "node scripts/shoot.mjs",
     "print:example": "npm run check:tokens && typst compile --root brands/example brands/example/print/proof.typ",
     "fetch:fonts": "pwsh -NoProfile -ExecutionPolicy Bypass -File scripts/fetch-fonts.ps1",

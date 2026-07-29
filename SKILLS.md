@@ -42,6 +42,12 @@ The fix is two halves, and the second is what keeps it from becoming a lock:
    The name stays listed and stays invokable, by you and by the agent; only the
    description is dropped. Do **not** use `"off"` — that hides a skill from the `/` menu
    too and makes it uninvokable by anyone.
+
+   Applied here on 2026-07-29: **89 skills set to `name-only`, about 6,100 tokens out of
+   every context window.** Skills already carrying an explicit override were left alone —
+   a prior decision to switch something off is not this change's business. The stage-
+   required set stays `"on"`, because a skill a stage cannot run without should announce
+   itself. Reverting is one file: `~/.claude/settings.json.bak-260729`.
 2. **Use the recommender as the index the descriptions used to be.** It reads them from
    disk on demand, so they cost nothing until asked for:
 

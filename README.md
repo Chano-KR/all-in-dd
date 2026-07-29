@@ -44,8 +44,20 @@ gets a **different** author, because one voice converges no matter how different
 the briefs claim to be; and at S4 look-imposing tools are barred, because the look
 is already locked and a second authority just argues with the tokens.
 
-The stages name *kinds* of tool — taste, craft, audit, make — rather than any one
-agent harness's skill names, so map them onto whatever you run.
+
+The stages name real skills, not abstractions. Install them first — the check tells
+you what is missing and prints the line to fix it:
+
+```bash
+npm run check:skills
+
+npx skills add Leonxlnx/taste-skill    # the five S1 authors, imagegen, image-to-code
+npx skills add emilkowalski/skills     # apple-design, emil-design-eng, motion passes
+```
+
+[`SKILLS.md`](SKILLS.md) lists every one with what it does and which stage needs it.
+Missing a skill is not fatal, but say so out loud — a thinner set of S1 authors gives
+you four variations of one idea instead of four ideas.
 
 ## Gates
 
@@ -68,6 +80,7 @@ gates are a floor, not a target.
 all-in-dd/
 ├── ENGINE.md            brand-agnostic rules: layers, media, gates, motion, Korean text
 ├── WORKFLOW.md          the S0–S5 stage machine: what loads at each stage
+├── SKILLS.md            every skill by name, what it does, how to install it
 ├── AGENTS.md            instructions for coding agents (CLAUDE.md points here)
 ├── brands/
 │   └── example/         the template you copy to start a brand

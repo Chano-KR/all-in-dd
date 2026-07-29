@@ -14,7 +14,8 @@ Three documents, three jobs — read the one your task is in:
 | File | Answers |
 |---|---|
 | `ENGINE.md` | what is true of the values — layers, media, styling per genre, the canvas layer, gates, motion, Korean text |
-| `WORKFLOW.md` | how work proceeds — the S0–S5 stage machine, what kind of tool loads at each stage, where each gate runs |
+| `WORKFLOW.md` | how work proceeds — the S0–S5 stage machine, what loads at each stage, where each gate runs |
+| `SKILLS.md` | which skills each stage needs, what they do, how to install them |
 | `brands/<brand>/DESIGN.md` | what this brand argues — claim, signature device, voice |
 
 Precedence: explicit user instruction → the brand's `DESIGN.md` → `ENGINE.md` →
@@ -59,15 +60,33 @@ the work; it is not waived.
 
 ## Skills
 
-`WORKFLOW.md` names a **kind** of tool per stage rather than any harness's skill
-names. Map the four kinds onto whatever your setup has:
+**Check before starting any visual stage:**
 
-| Kind | Belongs to | Examples of the shape |
+```bash
+npm run check:skills          # what is installed, and the install line for what isn't
+npm run check:skills --strict # exit 1 if a REQUIRED skill is missing
+```
+
+`SKILLS.md` is the manifest — every skill by name, what it does, which stage
+needs it, and its install source. The short version:
+
+```bash
+npx skills add Leonxlnx/taste-skill    # S1 authors, imagegen, image-to-code
+npx skills add emilkowalski/skills     # S4/S5 craft + motion
+npx skills add mattpocock/skills       # prototype, grill-me  (recommended)
+```
+
+If a skill is missing, **say so and name what is lost** — do not silently
+continue as if the stage ran complete.
+
+Skills sort into four kinds, and the kind decides where it may run:
+
+| Kind | Belongs to | Examples |
 |---|---|---|
-| taste — imposes a look | **S1 only**, one per direction | a skill that has opinions about type, palette, composition |
-| craft — imposes technique | S4, S5 | motion physics, component detail, a11y behavior; style-neutral |
-| audit — judges, doesn't author | S2, S5 | interface critique, adversarial grilling, diff review |
-| make — produces artifacts | wherever the stage calls | image generation, prototypes, identity boards, chart systems |
+| taste — imposes a look | **S1 only**, one per direction | `high-end-visual-design`, `gpt-taste`, `minimalist-ui`, `industrial-brutalist-ui`, `design-taste-frontend` |
+| craft — imposes technique | S4, S5 | `apple-design`, `emil-design-eng` |
+| audit — judges, doesn't author | S2, S5 | bring your own; see SKILLS.md |
+| make — produces artifacts | wherever the stage calls | `imagegen-frontend-web`, `image-to-code`, `brandkit`, `prototype` |
 
 Two rules that are not preferences:
 

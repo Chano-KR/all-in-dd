@@ -328,6 +328,25 @@ try {
         script: 'check-interactions.mjs', args: [url('reflow-shift.html')],
         expect: 'fail', because: 'moved',
       });
+
+      /* The declaration half and the evidence half, joined. check-drift proves a brand
+         SAID every section carries its device; this proves the device is in the render.
+         Before they were wired together, a brand could declare the marker, ship a surface
+         with the device gone, and collect a pass from one gate and a skip from the other —
+         the shape the ledger exists to prevent. The fixture brand declares it; the
+         compliant page has no [data-blank] at all, so the absence must now be a failure. */
+      mkdirSync(brandDir, { recursive: true });
+      writeDrift({ sectionMarker: 'data-blank' });
+      check('a declared device missing from the render fails', {
+        script: 'check-interactions.mjs',
+        args: [url('compliant.html'), '--brand', BRAND],
+        expect: 'fail', because: 'declares "data-blank"',
+      });
+      writeDrift(null);
+      check('the same page passes when no device is declared', {
+        script: 'check-interactions.mjs',
+        args: [url('compliant.html'), '--brand', BRAND], expect: 'pass',
+      });
     }
   }
 

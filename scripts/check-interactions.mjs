@@ -12,13 +12,23 @@
 
      universal — the §4 minimum. Runs everywhere, fails everywhere.
      brand     — the signature device. Runs only where the page declares its hooks, and
-                 says out loud when it skipped. Silence would let a page that quietly
-                 dropped the device report the same clean run as one that never had it.
+                 says out loud when it skipped.
+
+   Skipping is right for a surface that never carried the device and wrong for one that
+   dropped it, and the two look identical from here — so the answer comes from the brand
+   rather than the page. check-drift.mjs already owns that declaration
+   (`brands/<brand>/drift.json`, `sectionMarker`) and its own comment says the evidence
+   half belongs to this file, with both required to pass. Pass --brand and that is what
+   happens: a declared marker makes the device mandatory, and its absence from the render
+   is a failure instead of a skip. Without --brand nothing is claimed, because nothing
+   was declared.
 
    Rebuilt at S4 for direction N3 「연쇄」; universal tier split out 2026-07-29.
-   Usage: node scripts/check-interactions.mjs [baseUrl]                                  */
+   Usage: node scripts/check-interactions.mjs [baseUrl] [--brand <name>] [--sample N]    */
 
 import { chromium } from 'playwright';
+import { existsSync, readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 
 const base = process.argv.slice(2).find(a => !a.startsWith('--')) ?? 'http://localhost:3000';
 
@@ -39,6 +49,31 @@ let failures = 0;
 const check = (name, pass, detail = '') => {
   if (!pass) failures++;
   console.log(`${pass ? 'pass' : 'FAIL'}  ${name}${detail ? `  — ${detail}` : ''}`);
+};
+/* The brand's declaration, read from the same file check-drift reads. A marker here turns
+   every `skip` in the brand tier into a failure: the brand promised the device, so a render
+   without it is drift, not absence. */
+const brandName = (() => {
+  const i = process.argv.indexOf('--brand');
+  return i >= 0 ? process.argv[i + 1] : null;
+})();
+const declared = (() => {
+  if (!brandName) return null;
+  const p = resolve(import.meta.dirname, '..', 'brands', brandName, 'drift.json');
+  if (!existsSync(p)) return null;
+  try { return JSON.parse(readFileSync(p, 'utf8')).sectionMarker ?? null; } catch { return null; }
+})();
+if (brandName) {
+  console.log(declared
+    ? `brand ${brandName} declares "${declared}" — the signature device is required here\n`
+    : `brand ${brandName} declares no sectionMarker — device checks stay advisory\n`);
+}
+
+/* One entry point for "the page does not have this hook", so the declaration decides once
+   rather than at each call site. */
+const absent = (name, why) => {
+  if (declared) check(name, false, `${why} — but ${brandName}/drift.json declares "${declared}"`);
+  else console.log(`skip  ${name}  — ${why}`);
 };
 const skip = (name, why) => console.log(`skip  ${name}  — ${why}`);
 
@@ -63,7 +98,7 @@ const browser = await chromium.launch();
         has: !!s.querySelector('.blank, .cycle, .row'),
       })));
     const naked = report.filter((r) => !r.has);
-    if (!report.length) skip('blank ledger — rendered', 'page declares no [data-blank] section');
+    if (!report.length) absent('blank ledger — rendered', 'page declares no [data-blank] section');
     else check('blank ledger — rendered', naked.length === 0,
       naked.length ? `no blank device in: ${naked.map((r) => r.id).join(', ')}` : `${report.length} sections`);
   }
@@ -225,7 +260,7 @@ const browser = await chromium.launch();
   }
 
   /* The button responds to the press itself, not to the release. */
-  if (!(await page.locator('.btn').count())) skip('button responds on press', 'no .btn on the page');
+  if (!(await page.locator('.btn').count())) absent('button responds on press', 'no .btn on the page');
   else {
     const btn = page.locator('.btn').first();
     await btn.scrollIntoViewIfNeeded();
@@ -240,7 +275,7 @@ const browser = await chromium.launch();
 
   /* Scroll drives the chain, and driving it backwards un-fills it. Reversibility is the
      difference between an instrument and a video, and it is the whole claim of N3. */
-  if (!(await page.locator('#chain').count())) skip('scroll fills the blanks', 'no #chain section');
+  if (!(await page.locator('#chain').count())) absent('scroll fills the blanks', 'no #chain section');
   else {
     const filled = () => page.evaluate(() =>
       document.querySelectorAll('.blank[data-filled="true"]').length);
@@ -263,7 +298,7 @@ const browser = await chromium.launch();
   /* The sentence must light up as the reader reaches it, not sit dimmed while its blanks
      fill. That is what the first S4 build shipped — the words never brightened, so the
      sentence read as a rendering fault. Asserted so it cannot regress quietly. */
-  if (!(await page.locator('#chain .sentence').count())) skip('scroll lights the sentence', 'no #chain .sentence');
+  if (!(await page.locator('#chain .sentence').count())) absent('scroll lights the sentence', 'no #chain .sentence');
   else {
     const litCount = () => page.evaluate(() =>
       document.querySelectorAll('.sentence .w[data-lit="true"]').length);
@@ -281,7 +316,7 @@ const browser = await chromium.launch();
 
   /* The output word cycles, and the text after it tracks its width. */
   if (!(await page.locator('.cycle__tail').count())) {
-    skip('the output word cycles', 'no .cycle__tail on the page');
+    absent('the output word cycles', 'no .cycle__tail on the page');
   } else {
     const read = () => page.evaluate(() => {
       const on = document.querySelector('.cycle__word[data-on="true"]');
@@ -326,9 +361,9 @@ const browser = await chromium.launch();
   check('reduced motion: nothing left invisible', r.hidden === 0, `${r.hidden} hidden`);
 
   /* brand */
-  if (!r.driven) skip('reduced motion: blanks are already filled', 'no scroll-driven blank');
+  if (!r.driven) absent('reduced motion: blanks are already filled', 'no scroll-driven blank');
   else check('reduced motion: blanks are already filled', r.unfilled === 0, `${r.unfilled} unfilled`);
-  if (!r.words) skip('reduced motion: one output word, statically', 'no .cycle__word');
+  if (!r.words) absent('reduced motion: one output word, statically', 'no .cycle__word');
   else check('reduced motion: one output word, statically', r.shown === 1, `${r.shown} of ${r.words} visible`);
 
   await ctx.close();

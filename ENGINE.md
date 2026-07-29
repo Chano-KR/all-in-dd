@@ -323,7 +323,13 @@ Run on every substantial deliverable. Skip only for micro-tweaks.
    brand's project 2026-07-29; adapt per project, keep this copy canonical). It runs in two
    tiers: the minimum above is universal and fails on any surface, while a brand's signature
    device is asserted only where the page declares its hooks and reports `skip` where it does
-   not. Adapting the file means adding to the brand tier — a universal check that a page can
+   not. Whether that skip is acceptable is the brand's call, not the page's: pass
+   `--brand <name>` and a `sectionMarker` in `brands/<name>/drift.json` makes the device
+   mandatory, so a render that dropped it fails here instead of skipping. That is the
+   evidence half of the ledger — check-drift proves the brand *said* every section carries
+   the device, this proves it is in the render, and both must pass. Wired apart, a brand
+   could declare the marker, ship the device missing, and collect a pass from one gate and
+   a skip from the other. Adapting the file means adding to the brand tier — a universal check that a page can
    dodge by not having the markup is not a gate. Both tiers sample the elements they judge
    rather than the first match: judging one made the verdict a property of document order,
    and a page whose skip link kept its focus ring passed while every button had lost one.

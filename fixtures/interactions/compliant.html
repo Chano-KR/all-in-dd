@@ -1,0 +1,33 @@
+<!doctype html>
+<!-- Gate 4 fixture — the universal minimum, done right. No brand device: this page also
+     proves the brand tier skips rather than crashes on a surface that never had one.
+     Literal values are deliberate. A fixture is not a surface; it must not depend on a
+     brand's dist/tokens.css, or the gate's own test would break when a token moved. -->
+<meta charset="utf-8">
+<title>gate 4 — compliant</title>
+<style>
+  body { background: #101014; color: #e8e8ee; font: 16px/1.6 system-ui, sans-serif; padding: 3rem; }
+  .btn {
+    background: #24242e; color: inherit; border: 1px solid #3a3a48;
+    padding: .7rem 1.2rem; border-radius: .4rem; font: inherit; cursor: pointer;
+    transition: background-color .18s ease, transform .12s ease;
+  }
+  .btn:hover { background: #33333f; }
+  .btn:active { transform: translateY(1px); }
+  /* :focus-visible, never :focus — a ring on every mouse click is the failure gate 4 names */
+  .btn:focus { outline: none; }
+  .btn:focus-visible { outline: 2px solid #7aa2ff; outline-offset: 2px; }
+  a { color: #9ec1ff; text-decoration-line: none; transition: color .18s ease; }
+  a:hover { color: #cfe0ff; text-decoration-line: underline; }
+  a:focus { outline: none; }
+  a:focus-visible { outline: 2px solid #7aa2ff; outline-offset: 2px; }
+  @media (prefers-reduced-motion: reduce) {
+    * { transition-duration: 0s !important; animation-duration: 0s !important; }
+  }
+</style>
+
+<header><a href="#main">skip to content</a></header>
+<section id="main">
+  <h1>compliant</h1>
+  <button class="btn" type="button">act</button>
+</section>

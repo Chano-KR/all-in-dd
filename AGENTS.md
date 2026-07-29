@@ -54,6 +54,7 @@ npm run build:tokens     # DTCG JSON -> dist/tokens.css + dist/tokens.typ, all b
 npm run check:tokens     # staleness gate: fails if dist doesn't match source
 npm run gate:tokens      # hardcode / unknown-token scan   (args: <brand> <file...>)
 npm run gate:drift       # vocabulary-level default check
+npm run gate:interactions # drives the page: hover, focus, reduced motion  (args: [baseUrl])
 npm run print:example    # proves the print pipeline end to end
 npm run fetch:fonts      # Windows; macOS/Linux: bash scripts/fonts.sh
 npm run install:fonts    # Windows; macOS/Linux: bash scripts/fonts.sh

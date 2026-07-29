@@ -309,7 +309,14 @@ Run on every substantial deliverable. Skip only for micro-tweaks.
    promised motion actually runs and does not reflow what is under it;
    `prefers-reduced-motion` removes the motion while the state changes survive.
    Reference implementation: `scripts/check-interactions.mjs` (promoted from the first
-   brand's project 2026-07-29; adapt per project, keep this copy canonical).
+   brand's project 2026-07-29; adapt per project, keep this copy canonical). It runs in two
+   tiers: the minimum above is universal and fails on any surface, while a brand's signature
+   device is asserted only where the page declares its hooks and reports `skip` where it does
+   not. Adapting the file means adding to the brand tier — a universal check that a page can
+   dodge by not having the markup is not a gate. Both tiers sample the elements they judge
+   rather than the first match: judging one made the verdict a property of document order,
+   and a page whose skip link kept its focus ring passed while every button had lost one.
+   `npm run gate:interactions [baseUrl]`; poisoned fixtures live in `fixtures/interactions/`.
 
 Failing a gate returns the work to S4. It does not get waived.
 

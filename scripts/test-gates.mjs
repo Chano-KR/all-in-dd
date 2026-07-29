@@ -240,6 +240,53 @@ try {
       { script: 'check-tokens.mjs', args: ['nosuchbrand', mq], expect: 'fail', because: 'no built tokens' });
   }
   /* ---------------- skill catalog consistency ---------------- */
+  /* ---------------- gate 4: interaction ---------------- */
+  if (group('interactions')) {
+    console.log('\ngate 4 — interaction');
+    const fixtures = join(root, 'fixtures', 'interactions');
+    const url = f => `file://${join(fixtures, f)}`;
+
+    /* The browser binary is machine state, not a repo rule — the same class of dependency
+       that made the catalog group fail on a fresh checkout. Say so and move on rather than
+       reporting a red suite for a download nobody has run yet. */
+    let browserReady = false;
+    try {
+      const { chromium } = await import('playwright');
+      browserReady = existsSync(chromium.executablePath());
+    } catch { /* package absent; handled the same way */ }
+
+    if (!browserReady) {
+      console.log('  skip  gate 4 fixtures — no chromium binary; run `npm run preflight -- --fix`');
+    } else {
+      check('a compliant surface passes', {
+        script: 'check-interactions.mjs', args: [url('compliant.html')], expect: 'pass',
+      });
+      /* One poison per file, and `because` pins each failure to its own cause: the first
+         version of this group passed on two fixtures that the gate never actually caught,
+         because only the exit code was read. */
+      check('a dead hover fails', {
+        script: 'check-interactions.mjs', args: [url('dead-hover.html')],
+        expect: 'fail', because: 'dead on hover',
+      });
+      check('an unpainted focus ring fails', {
+        script: 'check-interactions.mjs', args: [url('no-focus-ring.html')],
+        expect: 'fail', because: 'no ring on',
+      });
+      check('a ring painted by the mouse fails', {
+        script: 'check-interactions.mjs', args: [url('ring-on-click.html')],
+        expect: 'fail', because: 'ring after click',
+      });
+      check('motion surviving reduced-motion fails', {
+        script: 'check-interactions.mjs', args: [url('motion-alive.html')],
+        expect: 'fail', because: 'transitions suppressed',
+      });
+      check('a section left invisible fails', {
+        script: 'check-interactions.mjs', args: [url('invisible-section.html')],
+        expect: 'fail', because: 'nothing left invisible',
+      });
+    }
+  }
+
   if (group('skills')) {
     console.log('\ncatalog — taste-only invariant');
     const catPath = join(root, 'catalog', 'authors.json');

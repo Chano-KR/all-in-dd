@@ -14,6 +14,7 @@
  */
 import { readFileSync, existsSync } from 'node:fs';
 import { resolve } from 'node:path';
+import { parseOklch, oklchToHex } from './lib/color.mjs';
 
 const [brand, ...files] = process.argv.slice(2);
 if (!brand) {
@@ -73,9 +74,27 @@ const oklch = hex => {
 const tokens = new Map(
   [...css.matchAll(/--ds-([\w-]+):\s*([^;]+);/g)].map(m => [m[1], m[2].trim()]),
 );
-const colorTokens = [...tokens].filter(([, v]) => /^#[0-9a-fA-F]{3,8}$/.test(v));
+/* Colours may be authored as hex OR as oklch() — ENGINE §2.3 makes oklch() the default
+   for new brands, and this line used to match hex only. On an OKLCH brand every colour
+   rule below then passed while examining nothing: the drift gate's own "a gate that
+   skips silently is worse than one that fails" defect, found by a clone test 2026-07-29.
+   oklch() is normalised to hex here, and zero colours is now itself a failure. */
+const colorTokens = [...tokens]
+  .map(([k, v]) => {
+    if (/^#[0-9a-fA-F]{3,8}$/.test(v)) return [k, v];
+    const ok = parseOklch(v);
+    return ok ? [k, oklchToHex(ok)] : null;
+  })
+  .filter(Boolean);
 
 console.log(`\ndrift check — ${brand}  (${tokens.size} tokens, ${colorTokens.length} colours)\n`);
+
+if (colorTokens.length === 0) {
+  fail('the colour rules have something to check',
+    'zero colour tokens parsed from tokens.css — either the brand declares none, or a ' +
+    'notation this script cannot read reached the build. The colour rules below would ' +
+    'pass vacuously, so this counts as a failure.');
+}
 
 /* 1. The cream / sand / bone band.
    impeccable calls the warm near-white the saturated AI default; S0 §4.6 names it as
@@ -132,17 +151,23 @@ console.log(`\ndrift check — ${brand}  (${tokens.size} tokens, ${colorTokens.l
    Every S1 board failed AA on its tertiary ink; catching that in a browser is one
    stage too late, because by then the value is already written into four files. */
 {
-  const grounds = [...tokens].filter(([k]) => /^surface-/.test(k) && /^#/.test(tokens.get(k)));
-  const inks = [...tokens].filter(([k]) => /^text-/.test(k) && /^#/.test(tokens.get(k)));
+  /* Read from the normalised map, not the raw one: an oklch() ground is still a
+     ground. Filtering on /^#/ here was the second half of the same silent-skip bug. */
+  const hexOf = new Map(colorTokens);
+  const grounds = [...hexOf].filter(([k]) => /^surface-/.test(k));
+  const inks = [...hexOf].filter(([k]) => /^text-/.test(k));
   const pairs = [
     ...inks.filter(([k]) => !/on-inverse/.test(k)).map(([k, v]) => [k, v, 'surface-page']),
     ...inks.filter(([k]) => /on-inverse/.test(k)).map(([k, v]) => [k, v, 'surface-inverse']),
   ];
   const bad = pairs
-    .filter(([, , g]) => tokens.has(g))
-    .map(([k, v, g]) => [k, g, contrast(v, tokens.get(g))])
+    .filter(([, , g]) => hexOf.has(g))
+    .map(([k, v, g]) => [k, g, contrast(v, hexOf.get(g))])
     .filter(([, , r]) => r < 4.5);
-  if (!grounds.length || !inks.length) pass('token-level contrast', 'no text/surface roles to pair');
+  if (!grounds.length || !inks.length) fail('text and surface roles exist to pair',
+    `found ${grounds.length} surface-* and ${inks.length} text-* colour roles. A brand ` +
+    'with no pairable roles cannot have its contrast judged here, which is the exact ' +
+    'thing this rule exists to prevent.');
   else bad.length
     ? fail('every text role must clear 4.5:1 on its ground',
         bad.map(([k, g, r]) => `--ds-${k} on --ds-${g} = ${r.toFixed(2)}`).join(', '))

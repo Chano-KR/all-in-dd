@@ -27,15 +27,24 @@ release() { # repo asset check
   local repo="$1" asset="$2" check="$3"
   if have "$check"; then echo "  = $repo"; return; fi
   echo "  + $repo ($asset)"
+  # Download into a DIRECTORY: asset patterns carry wildcards, so a fixed -O path
+  # would contain a literal '*'. Same bug the PowerShell twin had.
+  local dl="$tmp/${repo//\//_}"
+  mkdir -p "$dl"
   if command -v gh >/dev/null 2>&1; then
-    gh release download -R "$repo" -p "$asset" -O "$tmp/$asset" --clobber
+    gh release download -R "$repo" -p "$asset" -D "$dl" --clobber
   else
-    local tag
+    local tag url
     tag="$(curl -sL "https://api.github.com/repos/$repo/releases/latest" | grep -m1 '"tag_name"' | cut -d'"' -f4)"
-    curl -sL -o "$tmp/$asset" "https://github.com/$repo/releases/download/$tag/$asset"
+    # resolve the real asset name from the API — the pattern may be a glob
+    url="$(curl -sL "https://api.github.com/repos/$repo/releases/latest" \
+      | grep '"browser_download_url"' | cut -d'"' -f4 \
+      | grep -E "/${asset//\*/.*}$" | head -1)"
+    [ -n "$url" ] || { echo "no asset matching $asset in $repo $tag" >&2; exit 1; }
+    curl -sL -o "$dl/$(basename "$url")" "$url"
   fi
-  unzip -qo "$tmp/$asset" -d "$tmp/${asset%.zip}"
-  find "$tmp/${asset%.zip}" -name '*.ttf' ! -name '._*' -exec cp {} "$pool/" \;
+  for z in "$dl"/*.zip; do unzip -qo "$z" -d "$dl/x"; done
+  find "$dl/x" -name '*.ttf' ! -name '._*' -exec cp {} "$pool/" \;
 }
 
 gfont() { # family file... — google/fonts raws, with a 404 size guard

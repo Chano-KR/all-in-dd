@@ -21,11 +21,16 @@ function Have([string]$pattern) {
 function FromRelease([string]$repo, [string]$tagPattern, [string]$asset, [string]$check) {
     if (Have $check) { Write-Host "  = $repo already present"; return }
     Write-Host "  + $repo ($asset)"
-    $zip = Join-Path $tmp $asset
-    gh release download -R $repo -p $asset -O $zip --clobber
+    # Download into a DIRECTORY (-D), never to a fixed path (-O): asset patterns carry
+    # wildcards, and a wildcard inside an output filename is invalid on Windows. gh
+    # keeps each asset's real name under -D. (Found by a fresh-clone test 2026-07-29 —
+    # the local runs had always skipped this branch because the fonts were present.)
+    $dl = Join-Path $tmp ($repo -replace '[/\\]', '_')
+    New-Item -ItemType Directory -Force $dl | Out-Null
+    gh release download -R $repo -p $asset -D $dl --clobber
     if ($LASTEXITCODE -ne 0) { throw "gh release download failed for $repo" }
-    $ex = Join-Path $tmp ([IO.Path]::GetFileNameWithoutExtension($asset))
-    Expand-Archive $zip $ex -Force
+    $ex = Join-Path $dl 'x'
+    Get-ChildItem $dl -Filter '*.zip' | ForEach-Object { Expand-Archive $_.FullName $ex -Force }
     # -notlike '._*': macOS AppleDouble junk ships inside some release zips
     Get-ChildItem $ex -Recurse -Include '*.ttf' | Where-Object { $_.Name -notlike '._*' } | ForEach-Object {
         Copy-Item $_.FullName (Join-Path $fonts $_.Name) -Force

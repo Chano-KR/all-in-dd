@@ -16,6 +16,6 @@
     "700": { "$value": "oklch(48% 0.13 42)" },
     "600": { "$value": "oklch(56% 0.15 42)" },
     "500": { "$value": "oklch(63% 0.14 42)" },
-    "200": { "$value": "oklch(90% 0.05 42)" }
+    "200": { "$value": "oklch(86% 0.07 42)", "$description": "the accent at wash strength. Chroma is deliberately kept up: a pale warm tint below ~0.06 lands in the cream band gate 0b bans, and reads as beige rather than as the accent." }
   }
 }

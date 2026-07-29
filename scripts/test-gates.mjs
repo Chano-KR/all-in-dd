@@ -240,6 +240,39 @@ try {
       { script: 'check-tokens.mjs', args: ['nosuchbrand', mq], expect: 'fail', because: 'no built tokens' });
   }
   /* ---------------- skill catalog consistency ---------------- */
+  /* ---------------- gate 3: render-verify ---------------- */
+  if (group('render')) {
+    console.log('\ngate 3 — render-verify');
+    const fixtures = join(root, 'fixtures', 'render');
+    const shots = join(fixtures, '_shots');
+
+    let browserReady = false;
+    try {
+      const { chromium } = await import('playwright');
+      browserReady = existsSync(chromium.executablePath());
+    } catch { /* same handling as gate 4 */ }
+
+    if (!browserReady) {
+      console.log('  skip  gate 3 fixtures — no chromium binary; run `npm run preflight -- --fix`');
+    } else {
+      const args = f => [join(fixtures, f), '--medium', 'desktop', '--out', shots];
+      /* Gate 3's verdict is a person looking at the image, so what is asserted here is
+         everything that decides whether the image is worth looking at. A screenshot
+         always succeeds — that is precisely why "it rendered" needed saying out loud. */
+      check('a renderable page captures cleanly', {
+        script: 'shoot.mjs', args: args('renderable.html'), expect: 'pass',
+      });
+      check('an empty first viewport fails', {
+        script: 'shoot.mjs', args: args('blank.html'),
+        expect: 'fail', because: 'nothing visible to photograph',
+      });
+      check('a shot taken mid-animation fails', {
+        script: 'shoot.mjs', args: args('animating.html'),
+        expect: 'fail', because: 'mid-flight',
+      });
+    }
+  }
+
   /* ---------------- gate 4: interaction ---------------- */
   if (group('interactions')) {
     console.log('\ngate 4 — interaction');

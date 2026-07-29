@@ -295,7 +295,18 @@ Run on every substantial deliverable. Skip only for micro-tweaks.
 2. **Accessibility** — axe-core; contrast verified against the actual rendered surface,
    not the intended one.
 3. **Render-verify** — screenshot at real target dimensions (1920×1080 slides,
-   1080×1080 cards, A4 PDF, 375px + 1440px web), review, fix, re-render.
+   1080×1080 cards, A4 PDF, 375px + 1440px web), review, fix, re-render. The browser
+   targets are presets in `scripts/shoot.mjs` (`--medium slides|cards|mobile|desktop|all`);
+   dimensions kept as folk knowledge are not a rule anyone can follow. A4 is Typst's
+   output, so `print:example` proves that one instead.
+
+   The verdict is a person looking at the image, which is why the capture is checked by
+   something else: a screenshot always succeeds. A page that never laid out, a webfont that
+   had not arrived, an animation still mid-flight — each yields a PNG, and the PNG is what
+   gets handed over for review. So `shoot.mjs` fails rather than delivers when the frame is
+   blank, the fonts are unresolved, an animation is still running, or the image came out at
+   a size nobody asked for. Looking at the picture is still the gate; this only guarantees
+   the picture is of the work.
 
 4. **Interaction check** — *added 2026-07-28.* Gates 0–3 are all things you can see in a still
    frame, and a still frame cannot see a hover state, a focus ring, a clipboard write, or a

@@ -74,7 +74,7 @@ shipped wrong once.
 | hardcode | `check-tokens.mjs` | hex / px literals in source, undefined `var(--ds-*)` |
 | staleness | `build-tokens.mjs --check` | a dist that no longer matches its source |
 | accessibility | axe-core | contrast against the rendered surface, not the intended one |
-| render | `shoot.mjs` | screenshots at real target dimensions |
+| render | `shoot.mjs` | screenshots at real target dimensions — and refuses a blank, unsettled, or mis-sized frame |
 | interaction | `check-interactions.mjs` | hover, focus, motion, reduced-motion — invisible to a screenshot |
 
 `npm test` runs poisoned fixtures against the gate scripts. Every case asserts both

@@ -4,10 +4,10 @@
 
 <p align="right"><a href="README.ko.md">한국어</a></p>
 
-**all-in-dd** — *all in direct design*, an homage to all-in-bb — is a design-system
-skeleton for working with coding agents. One brand keeps its values in one set of
-DTCG token JSON, and a single build fans them out to four media: web, slide decks,
-card-news images, and print.
+**all-in-dd** — *all in direct design* — is a design-system skeleton for working
+with coding agents. One brand keeps its values in one set of DTCG token JSON, and
+a single build fans them out to four media: web, slide decks, card-news images,
+and print.
 
 The other half of the repo is a set of gates. Ask a capable model for a landing
 page and you get the median of its training data — gradient hero, centered stack,
@@ -25,6 +25,27 @@ build-converted sRGB:
 tokens/*.json ──▶ npm run build:tokens ──▶ dist/tokens.css   web · slides · cards
                                       └──▶ dist/tokens.typ   print (Typst)
 ```
+
+## Workflow
+
+Values and gates are half the repo. The other half is the order you do things in
+— [`WORKFLOW.md`](WORKFLOW.md) is a six-stage machine, and each stage names what
+loads inside it:
+
+```
+S0 research ─▶ S1 diverge ─▶ S2 lock ─▶ S3 tokenize ─▶ S4 produce ─▶ S5 refine
+                                            ▲                            │
+                                            └──── needs a new value ─────┘
+```
+
+It exists because a run that skipped it produced work that passed every check and
+still read as generated. Two rules carry most of the weight: at S1 every direction
+gets a **different** author, because one voice converges no matter how different
+the briefs claim to be; and at S4 look-imposing tools are barred, because the look
+is already locked and a second authority just argues with the tokens.
+
+The stages name *kinds* of tool — taste, craft, audit, make — rather than any one
+agent harness's skill names, so map them onto whatever you run.
 
 ## Gates
 
@@ -46,6 +67,7 @@ gates are a floor, not a target.
 ```
 all-in-dd/
 ├── ENGINE.md            brand-agnostic rules: layers, media, gates, motion, Korean text
+├── WORKFLOW.md          the S0–S5 stage machine: what loads at each stage
 ├── AGENTS.md            instructions for coding agents (CLAUDE.md points here)
 ├── brands/
 │   └── example/         the template you copy to start a brand
@@ -56,8 +78,9 @@ all-in-dd/
 └── fonts/               (generated) the type pool — never in git
 ```
 
-Values live in `tokens/`, character in `DESIGN.md`, rules in `ENGINE.md`. When
-those three start leaking into each other, the system is dying.
+Values live in `tokens/`, character in `DESIGN.md`, rules in `ENGINE.md`, and
+order in `WORKFLOW.md`. When those start leaking into each other, the system is
+dying.
 
 ## Install
 

@@ -48,6 +48,41 @@ Any stack that can read a CSS variable satisfies it — React, Svelte, Vue, Astr
 Print splits to Typst because page breaks, hyphenation, widow/orphan control, running
 heads, auto TOC, and footnotes are first-class there and absent from CSS by concept.
 
+### 2.1 The medium fork
+
+*Amended 2026-07-28 during the `chunaimun` S3. Before this, §2 said the media differ only in
+output format. That held for `classhift`, whose print work had not started. It broke the
+moment one brand had to ship a web surface and an ebook interior from one identity.*
+
+A brand **may** fork its semantic layer by medium. Most do not need to. The rule is narrow on
+purpose, because "this should differ per medium" is an argument that will be made about every
+token eventually.
+
+**What may fork.** Only a role whose value is bound to the physics of the medium: reading
+distance, page versus viewport, ink on stock versus light through glass. In practice that is
+type size, leading, tracking, measure, and page geometry. Nothing else has qualified yet.
+
+**What must not fork.**
+
+- **Primitives never fork.** A brand has one palette and one set of faces. If the primitives
+  differ, it is two brands — say so and split.
+- **Colour never forks.** A role that means one thing on screen and another on paper is not
+  one role, it is two roles sharing a name. Rename instead.
+- **Components never fork.** They reference shared roles. When a component needs a
+  medium-bound number, the *surface* supplies it from its own namespace. This is what keeps
+  the fork inside one file rather than spreading through every component.
+
+**Shape.** Forked roles live under `semantic/medium.json`, namespaced `web.*` and `print.*`,
+and build to `--ds-web-…` / `--ds-print-…`. A consumer picks one namespace and never mixes.
+A role present under only one namespace is not forked — it is medium-specific, which is also
+allowed (`print.frame.page-w` has no web counterpart).
+
+**Cost of not forking.** The alternative is pushing every difference into component tokens,
+where the same distinction gets restated once per component and drifts. The alternative to
+*that* is two brands, which costs the shared identity the system exists to hold.
+
+Reference implementation: `brands/chunaimun/tokens/semantic/medium.json`.
+
 ### 2.2 Styling by web genre
 
 *Added 2026-07-29.* One styling technology for all web work forced every genre through the
@@ -134,41 +169,6 @@ Two policies, both ours rather than the tool's:
 
 pen.dev is early-access software. If it fails or is unavailable, fall back to the image
 path (generate → implement to image) — the stages do not block on the tool.
-
-### 2.1 The medium fork
-
-*Amended 2026-07-28 during the `chunaimun` S3. Before this, §2 said the media differ only in
-output format. That held for `classhift`, whose print work had not started. It broke the
-moment one brand had to ship a web surface and an ebook interior from one identity.*
-
-A brand **may** fork its semantic layer by medium. Most do not need to. The rule is narrow on
-purpose, because "this should differ per medium" is an argument that will be made about every
-token eventually.
-
-**What may fork.** Only a role whose value is bound to the physics of the medium: reading
-distance, page versus viewport, ink on stock versus light through glass. In practice that is
-type size, leading, tracking, measure, and page geometry. Nothing else has qualified yet.
-
-**What must not fork.**
-
-- **Primitives never fork.** A brand has one palette and one set of faces. If the primitives
-  differ, it is two brands — say so and split.
-- **Colour never forks.** A role that means one thing on screen and another on paper is not
-  one role, it is two roles sharing a name. Rename instead.
-- **Components never fork.** They reference shared roles. When a component needs a
-  medium-bound number, the *surface* supplies it from its own namespace. This is what keeps
-  the fork inside one file rather than spreading through every component.
-
-**Shape.** Forked roles live under `semantic/medium.json`, namespaced `web.*` and `print.*`,
-and build to `--ds-web-…` / `--ds-print-…`. A consumer picks one namespace and never mixes.
-A role present under only one namespace is not forked — it is medium-specific, which is also
-allowed (`print.frame.page-w` has no web counterpart).
-
-**Cost of not forking.** The alternative is pushing every difference into component tokens,
-where the same distinction gets restated once per component and drifts. The alternative to
-*that* is two brands, which costs the shared identity the system exists to hold.
-
-Reference implementation: `brands/chunaimun/tokens/semantic/medium.json`.
 
 ## 3. Motion
 

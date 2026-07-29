@@ -10,10 +10,11 @@ a single build fans them out to four media: web, slide decks, card-news images,
 and print.
 
 The other half of the repo is a set of gates. Ask a capable model for a landing
-page and you get the median of its training data — gradient hero, centered stack,
-three identical cards. Ban lists don't hold up under deadline pressure, so the
-gates here attack the vocabulary instead: a token set that cannot say *blur*,
-*gradient*, or *glass* has no shortcut back to them.
+page and you get the median of its training data. The tempting fix is a blacklist
+— no gradients, no glass, no dark mode — and it does not work, because slop is a
+completion problem rather than a vocabulary one. A glass interface built with care
+is not slop; an editorial layout built without decisions is. So the gates ask a
+different question: **was a decision made here, or did a default arrive?**
 
 This page was typeset from `brands/example` tokens alone. No literal values in
 the source. The same JSON ships to the web as raw `oklch()` and to print as
@@ -69,7 +70,7 @@ shipped wrong once.
 | Gate | Script | Catches |
 |---|---|---|
 | hardcode | `check-tokens.mjs` | hex / px literals in source, undefined `var(--ds-*)` |
-| drift | `check-drift.mjs` | defaults at the vocabulary level — banned OKLCH bands, missing state tokens |
+| token readiness | `check-drift.mjs` | a token set missing states, contrast, or differentiated scales |
 | staleness | `build-tokens.mjs --check` | a dist that no longer matches its source |
 | render | `shoot.mjs` | screenshots at real target dimensions |
 

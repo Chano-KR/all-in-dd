@@ -52,8 +52,8 @@ Skills sort into four kinds, and the kind is what decides where a skill may run:
 
 | Kind | What it does | Belongs to | Named examples |
 |---|---|---|---|
-| **taste** | imposes a look — type, palette, composition | **S1 only**, one per direction | `high-end-visual-design`, `gpt-taste`, `minimalist-ui`, `industrial-brutalist-ui`, `design-taste-frontend` |
-| **craft** | imposes technique; style-neutral | S4, S5 | `apple-design`, `emil-design-eng` |
+| **taste** | imposes a look — type, palette, composition | **S1 only**, one per direction | the core five plus the author pool in `SKILLS.md` |
+| **craft** | imposes technique; style-neutral | S4, S5 | `apple-design`, `emil-design-eng`, the technique pool in `SKILLS.md` |
 | **audit** | judges without authoring | S2, S5 | `impeccable` |
 | **make** | produces artifacts | wherever a stage calls | `imagegen-frontend-web`, `image-to-code`, `brandkit`, `prototype` |
 
@@ -71,9 +71,10 @@ noticed — that is why every stage below names its skills instead of trusting m
 Assemble the evidence S1 diverges from. Choose no direction; an early favorite quietly
 kills divergence at S1.
 
-- **Read the standing checks first**, before any web search: `ENGINE.md` §4 gate 0 is the
-  list of tells this system already knows. The reverse order lets fresh search results
-  contaminate that list with whatever the genre currently overproduces.
+- **Read the standing checks first**, before any web search: `ENGINE.md` §4 gate 0 is what
+  this system checks for. It is a craft checklist, not a blacklist of looks — the same
+  visual language can be excellent or slop depending on whether decisions were made, so the
+  gate asks about decisions rather than about ingredients.
 - **Genre presets** come from `ui-ux-pro-max` (`npx skills add nextlevelbuilder/ui-ux-pro-max-skill`),
   used **for reference only, at S0 only**. It is a large dataset of per-genre patterns,
   typography pairings, motion recipes and anti-patterns, and that is worth reading before you
@@ -100,11 +101,15 @@ impressions to avoid, the sweep, language constraints, open questions.
 Four to six fully rendered directions. **This is the stage that decides whether the brand
 is any good**; everything downstream just executes it well.
 
-**Skills** — required: one taste skill per board, drawn from `high-end-visual-design`,
-`gpt-taste`, `minimalist-ui`, `industrial-brutalist-ui`, `design-taste-frontend`; plus
-`imagegen-frontend-web` (or `image-to-code`) to render before building. Optional:
-`brandkit` for identity boards, `prototype` for state questions,
-`imagegen-frontend-mobile` when the target is app screens.
+**Skills** — required: one taste skill per board, plus `imagegen-frontend-web` (or
+`image-to-code`) to render before building. The core five are `high-end-visual-design`,
+`gpt-taste`, `minimalist-ui`, `industrial-brutalist-ui` and `design-taste-frontend`; the
+**author pool in `SKILLS.md` adds about thirty more**, and the size of that pool is the
+ceiling on how far a board set can diverge. Optional: `brandkit` for identity boards,
+`prototype` for state questions, `imagegen-frontend-mobile` for app screens.
+
+Pick authors that genuinely disagree with each other. Two editorial voices produce two
+editorial boards; an editorial voice against an atmospheric one produces a real choice.
 
 - **One taste skill per direction, never the same one twice.** Directions authored by one
   voice converge no matter how different their briefs claim to be. Different authors are
@@ -167,7 +172,10 @@ layer-3 surface inherits primitives only:
 | taste skills | **barred** | at most **one**, declared before work starts, tokens still untouchable |
 
 Optional here: `pick-ui-library` for a hard widget, `image-to-code` to implement a
-rendered design faithfully, `remotion-best-practices` when the deliverable is video.
+rendered design faithfully, `remotion-best-practices` when the deliverable is video, and the
+technique pool in `SKILLS.md` — motion, surface detail, ambient and WebGL. On an expressive
+3D surface the borrowed game-development skills apply too: `optimize-threejs-games`,
+`create-game-vfx`, `build-game-camera-controls`.
 
 **Taste skills are barred on layer 1+2 surfaces**, and this is not a preference. At S1 a
 taste skill is the engine of divergence. At S4 the look is already locked, so invoking one
@@ -192,8 +200,8 @@ Full text in `ENGINE.md` §4. Where they run:
 
 | Gate | Runs at | Catches |
 |---|---|---|
-| 0 anti-slop | S1 · S4 | the model's distributional default, before anyone sees the work |
-| 0b drift | **S3** | whether the brand's vocabulary can express the default at all |
+| 0 craft | S1 · S4 | defaults arriving where decisions should have been made |
+| 0b token readiness | **S3** | a token set missing the decisions a surface will need |
 | 1 hardcode | S4 · S5 | literals in source, including Tailwind arbitrary values |
 | 2 accessibility | S4 · S5 | contrast against the rendered surface, not the intended one |
 | 3 render | S4 · S5 | what it actually looks like at target sizes |

@@ -45,7 +45,14 @@ const SKILLS = [
   ['S5', 'redesign-existing-projects',  false, 'Leonxlnx/taste-skill'],
   ['S5', 'animation-vocabulary',        false, 'emilkowalski/skills'],
   ['S4', 'remotion-best-practices',     false, 'remotion-dev/skills'],
+
+  /* The author and technique pools are deliberately NOT enumerated here. They are
+     open-ended (about seventy skills and growing), and a checklist that long stops
+     being read. SKILLS.md lists them; this file checks the ones a stage cannot run
+     without. What it does check is that the pool is not empty. */
 ];
+
+const POOL_MARKERS = ['editorial-tech', 'glass-dark-ui', 'animation-systems', 'beautiful-shadows'];
 
 const present = new Set();
 for (const root of ROOTS) {
@@ -66,7 +73,10 @@ for (const tier of [true, false]) {
   }
 }
 
-console.log('\nCharts: dataviz ships with Claude Code — nothing to install');
+const poolFound = POOL_MARKERS.filter(n => present.has(n)).length;
+console.log(`\nAuthor/technique pool: ${poolFound}/${POOL_MARKERS.length} probes present` +
+  (poolFound ? '' : ' — see SKILLS.md; a thin author pool caps how far S1 can diverge'));
+console.log('Charts: dataviz ships with Claude Code — nothing to install');
 console.log('Canvas: pen.dev, a separate MCP tool (ENGINE §2.4)');
 
 if (missing.length) {

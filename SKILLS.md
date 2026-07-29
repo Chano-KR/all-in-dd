@@ -69,6 +69,78 @@ npx skills add https://github.com/pbakaus/impeccable --skill impeccable
 | S5 | `animation-vocabulary` | reverse-lookup: a described effect → its real name | `npx skills add emilkowalski/skills` |
 | S4 | `remotion-best-practices` | only when the deliverable is video | `npx skills add remotion-dev/skills` |
 
+## The S1 author pool
+
+S1 needs a different author per direction, so the size of this pool is the ceiling on how
+far a set of boards can actually diverge. Five authors means five directions at most before
+you start repeating a voice.
+
+[MengTo/Skills](https://github.com/MengTo/Skills) supplies about thirty more, each a
+committed visual position rather than a general-purpose taste engine. Install individually:
+
+```bash
+npx skills add https://github.com/MengTo/Skills --skill <name>
+```
+
+**Editorial and structural** — `editorial-tech`, `editorial-portfolio-chapters`,
+`editorial-service-booking`, `documentary-brutalist-agency`, `book-serif-index`,
+`agency-grid-layout-minimal`, `split-layout-technical`, `technical-wireframe-info-layout`,
+`framed-grid-layout`, `image-first-grid-layout`, `nested-container-clean-agency`,
+`nested-container-frames`, `light-mode-paper-technical`, `clean-minimal-beige-light-mode`,
+`orange-clean-paper-saas`, `solar-duotone-bold`, `high-contrast-skeuomorphic-clean`,
+`skeuomorphic-ui`, `operational-enterprise-ai`, `product-proof-saas`.
+
+**Atmospheric and effect-led** — `glass-dark-ui`, `dark-glass-clean-layout`,
+`blue-laser-clean-glass-layout`, `mesh-gradient-dark-blue-clean`,
+`funky-purple-container-tech`, `dark-blue-contrasting-clean`, `tech-green-dark-mode-modern`,
+`blue-cloudy-clean-modern`, `dither-laser-dark-mode`, `glass-dark-mode-clock`.
+
+The second group builds in exactly the vocabulary an ingredient blacklist would have banned:
+glass, gradient, glow, permanent dark, saturated purple. **That is not a reason to exclude
+them.** Gate 0 was rewritten in July 2026 precisely because slop is a completion problem
+rather than a vocabulary one — a glass interface built with care is not slop, and an
+editorial layout built without decisions is. These authors pass or fail the craft check on
+the same terms as every other one.
+
+**Page-type and reference** — `landing-page`, `pricing-page`, `build-awwwards-quality-sites`,
+`company-logos`.
+
+## Technique skills (S4 · S5)
+
+Craft, not taste: they impose a method and hold no opinion about the look, so they never
+argue with a locked direction. Same install form.
+
+**Motion and scroll** — `animation-systems`, `animation-on-scroll`,
+`cinematic-gsap-lenis-motion-system`, `gsap-scrolltrigger-storytelling`,
+`cinematic-scroll-storytelling`, `scroll-progress-timeline`, `scroll-scrubbed-word-reveal`,
+`scroll-scrubbed-visual-sequence`, `scroll-world-storytelling`, `staggered-word-reveal`,
+`masked-reveal`, `marquee-loop`, `reveal-hover-effect`.
+
+**Surface and detail** — `beautiful-shadows`, `css-alpha-masking`, `css-border-gradient`,
+`progressive-blur`, `container-lines`, `corner-diagonals`, `corner-lasers`, `number-details`,
+`beam-glow-states`, `liquid-metal-border`.
+
+**Ambient and WebGL** — `ambient-section-particles`, `atmosphere-background`,
+`gooey-blob-system`, `thinking-orbs`, `globe-particles`, `dither-background`,
+`add-shader-cursor-trail`, `shaders-cursor-ripples`, `webgl-landing-steering`,
+`bright-green-tech-system-webgl`.
+
+**Imagery** — `unsplash-asset-images`, `aura-asset-images`. Sourced photography is a
+legitimate material; whether a particular image is a decision or a placeholder is what gate 0
+asks, and that question does not depend on where the file came from.
+
+## Borrowed from game development
+
+Four skills from the same repo's game section cover ground this system had listed as open
+gaps. Expressive layer-3 surfaces are real-time rendering, so the techniques transfer.
+
+| Skill | Fills |
+|---|---|
+| `optimize-threejs-games` | the missing performance gate — frame time, draw calls, texture budgets, adaptive quality, mobile |
+| `test-playable-web-games` | how to make gate 4's "driven, not photographed" reproducible: deterministic fixtures plus real browser evidence |
+| `build-game-camera-controls` | camera behaviour on 3D surfaces, which ENGINE says tokens cannot hold but which still needs principles |
+| `create-game-vfx` | effects that stay readable *and* performance-safe, including reduced-motion alternatives |
+
 ## ui-ux-pro-max, and its two limits
 
 It earns its place at S0 because a large, current dataset of what each genre actually does is

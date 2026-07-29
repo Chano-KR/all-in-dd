@@ -2,11 +2,12 @@
  * Gate 0b — drift check. Brand-level, runs on the built token set and, when given
  * surface files, on those too.
  *
- * Written at chunaimun S3, 2026-07-28, because the four S1 boards all passed every
- * gate and three of the four still needed correcting. Gates 0–4 ask "is this the
- * model's distributional default?" one artefact at a time. This one asks a narrower
- * and more useful question: **can this brand's vocabulary even express the default?**
- * A token set that cannot say "soft warm blur" cannot drift there under deadline.
+ * Reframed 2026-07-29. It used to ask whether a brand's vocabulary could *express*
+ * blur, gradient or glass, and fail it if so. That was backwards: slop is a completion
+ * problem, not a vocabulary problem, and a token set that cannot express an effect has
+ * only been made smaller. What it asks now is whether the set carries the decisions a
+ * surface will need — states, contrast, differentiated scales — before any surface
+ * exists. Brand-specific forbidden regions are opt-in via brands/<brand>/drift.json.
  *
  *   node scripts/check-drift.mjs <brand> [file...]
  *
@@ -96,55 +97,65 @@ if (colorTokens.length === 0) {
     'pass vacuously, so this counts as a failure.');
 }
 
-/* 1. The cream / sand / bone band.
-   impeccable calls the warm near-white the saturated AI default; S0 §4.6 names it as
-   this specific process's own default, and the revoked chunaimun lock sat on it. It is
-   a measurable region, so it is measured rather than trusted to taste. */
+/* 1. Per-brand forbidden regions — OPT-IN, declared in brands/<brand>/drift.json.
+   A brand that rejected a coordinate at S1/S2 can have a return to it caught under a
+   new name. There is no house-wide banned band: what one brand revoked is not a law
+   for the next. Shape:
+     { "forbid": [ { "name": "the revoked warm ground",
+                     "L": [0.84, 0.97], "C": [0.004, 0.06], "H": [40, 100] } ] }   */
 {
-  /* No lower bound on chroma. The first version required C > 0.012 to avoid flagging
-     true neutrals, and #E6E3DC — the revoked lock's own ground — slipped straight
-     through it: the warm near-white is warm by hue, not by saturation. Pure neutrals
-     are excluded by hue instead, which is what actually distinguishes them. */
-  const band = colorTokens.filter(([, v]) => {
-    const { L, C, H } = oklch(v);
-    /* C > 0.004 only to drop the arithmetic noise: at chroma zero the hue is an
-       arbitrary atan2 of two near-zero numbers, so a pure grey reports as "warm".
-       The revoked ground sits at C 0.010, comfortably above this floor. */
-    return L >= 0.84 && L <= 0.97 && C > 0.004 && C < 0.06 && H >= 40 && H <= 100;
-  });
-  band.length
-    ? fail('no colour in the cream/sand band (OKLCH L .84–.97, C < .06, H 40–100)',
-        band.map(([k, v]) => `--ds-${k} ${v} → ${(({ L, C, H }) => `L${L.toFixed(2)} C${C.toFixed(3)} H${H.toFixed(0)}`)(oklch(v))}`).join(', '))
-    : pass('no colour in the cream/sand band');
+  const cfgPath = resolve(root, `brands/${brand}/drift.json`);
+  const cfg = existsSync(cfgPath) ? JSON.parse(readFileSync(cfgPath, 'utf8')) : {};
+  const regions = cfg.forbid ?? [];
+  if (!regions.length) pass('no forbidden colour regions declared', 'brands/' + brand + '/drift.json absent');
+  else {
+    const within = (v, [lo, hi]) => v >= lo && v <= hi;
+    for (const r of regions) {
+      const hits = colorTokens.filter(([, v]) => {
+        const c = oklch(v);
+        return within(c.L, r.L ?? [0, 1]) && within(c.C, r.C ?? [0, 1]) && within(c.H, r.H ?? [0, 360]);
+      });
+      hits.length
+        ? fail(`no colour inside "${r.name}"`,
+            hits.map(([k, v]) => `--ds-${k} ${v} → ${(({ L, C, H }) => `L${L.toFixed(2)} C${C.toFixed(3)} H${H.toFixed(0)}`)(oklch(v))}`).join(', '))
+        : pass(`no colour inside "${r.name}"`);
+    }
+  }
 }
 
-/* 2. Names that are tells in themselves. Renaming the value is not enough if the
-   vocabulary still reaches for the idea. */
+/* 2. Per-brand forbidden token NAMES, same opt-in file: { "forbidNames": ["cream"] }.
+   Renaming a value is not enough if the vocabulary still reaches for the idea — but
+   which ideas are off-limits is a brand's decision, not this file's.               */
 {
-  const banned = /(^|-)(paper|cream|sand|bone|flour|linen|parchment|wheat|biscuit|ivory|beige)(-|$)/;
-  const hits = [...tokens.keys()].filter(k => banned.test(k));
-  hits.length
-    ? fail('no token named paper/cream/sand/bone/…', hits.join(', '))
-    : pass('no warm-neutral token names');
+  const cfgPath = resolve(root, `brands/${brand}/drift.json`);
+  const cfg = existsSync(cfgPath) ? JSON.parse(readFileSync(cfgPath, 'utf8')) : {};
+  const words = cfg.forbidNames ?? [];
+  if (!words.length) pass('no forbidden token names declared');
+  else {
+    const re = new RegExp(`(^|-)(${words.join('|')})(-|$)`);
+    const hits = [...tokens.keys()].filter(k => re.test(k));
+    hits.length ? fail(`no token named ${words.join('/')}`, hits.join(', '))
+                : pass(`no token named ${words.join('/')}`);
+  }
 }
 
-/* 3. Vocabulary restriction. The brand cannot own words for the three effects that
-   carry most AI-default surfaces. If the token set has no way to say them, a surface
-   under deadline has no shortcut to them either. */
+/* 3. Differentiated scales. A surface cannot encode hierarchy with a vocabulary that
+   has none. This replaces the old blur/gradient/glass ban, which policed which effects
+   a brand could name rather than whether it could make distinctions.                */
 {
-  const forbidden = [
-    [/blur/, 'blur'],
-    [/gradient/, 'gradient'],
-    [/(^|-)shadow(-|$)/, 'shadow'],
-    [/glass|frost/, 'glass'],
-  ];
-  const hits = forbidden
-    .map(([re, name]) => [name, [...tokens.keys()].filter(k => re.test(k))])
-    .filter(([, ks]) => ks.length);
-  hits.length
-    ? fail('the token set must not be able to express blur / gradient / shadow / glass',
-        hits.map(([n, ks]) => `${n}: ${ks.join(' ')}`).join(' | '))
-    : pass('vocabulary cannot express blur, gradient, shadow or glass');
+  const stepsOf = re => [...tokens.keys()].filter(k => re.test(k)).length;
+  const scales = [
+    ['radius', stepsOf(/(^|-)radius(-|$)/)],
+    ['spacing', stepsOf(/(^|-)space(-|$)/)],
+    ['font weight', stepsOf(/(^|-)font-weight(-|$)/)],
+  ].filter(([, n]) => n > 0);
+  const thin = scales.filter(([, n]) => n < 2);
+  if (!scales.length) pass('scale differentiation', 'no radius/space/weight scales to judge');
+  else thin.length
+    ? fail('every scale needs at least two usable steps',
+        thin.map(([n]) => `${n} has ${scales.find(s2 => s2[0] === n)[1]}`).join(', ') +
+        ' — one step everywhere is the uniformity gate 0 looks for')
+    : pass('scale differentiation', scales.map(([n, c]) => `${n} ${c}`).join(', '));
 }
 
 /* 4. Contrast, decided at the token layer rather than discovered on a rendered page.

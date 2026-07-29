@@ -40,7 +40,7 @@ Any stack that can read a CSS variable satisfies it — React, Svelte, Vue, Astr
 
 | Medium | Output | Default implementation | Token access |
 |---|---|---|---|
-| Web / app | screens, dashboards, landings | per-genre, see §2.2 | `dist/tokens.css` (Tailwind: via `@theme inline` aliases) |
+| Web / app | screens, dashboards, landings | per-genre, see §2.2 | `dist/tokens.css`; tool-type additionally builds `dist/astryx.theme.ts` |
 | Slides | 16:9 decks → PDF | HTML deck → headless capture | `dist/tokens.css` directly (slides are HTML) |
 | Card news | 1080×1080 PNG | HTML → Playwright screenshot | `dist/tokens.css` directly |
 | Print | A4 exams, workbooks, reports | **Typst → PDF** | `tokens.typ` (see §2.3) |
@@ -91,7 +91,7 @@ in styling default. This is a **house rule**, not an industry citation.
 
 | Web genre | Layers (§1) | Styling default | Why |
 |---|---|---|---|
-| Tool-type (dashboards, admin, forms) | 1 + 2 | Tailwind v4 + component library | speed and consistency outrank look |
+| Tool-type (dashboards, admin, forms) | 1 + 2 | **Astryx** (React + StyleX) | speed and consistency outrank look; a maintained component set beats a forked one |
 | Content-type (blog, docs, ordinary landing) | 1 + layer-2 tokens | **scoped CSS + token variables** | token discipline outranks speed |
 | Expressive (portfolio, one-pager, interactive hero) | 1 only | **scoped CSS + token variables** | the signature device lives outside any utility vocabulary |
 
@@ -105,9 +105,36 @@ default is unspeakable rather than merely forbidden. It also makes gate 1 a one-
 and it is the natural home of signature devices (mask-image, blend modes, `::before`
 layering, scroll-driven animation) that fight utility syntax.
 
-Where Tailwind is used, **arbitrary values (`w-[347px]`, `text-[#1a2b3c]`) are a gate-1
-failure**, identical to a hardcode in CSS. They accumulate as an undocumented parallel scale
-that breaks "change the token, change the product." Extend `@theme` instead.
+Where Tailwind is used for layout alongside either column, **arbitrary values
+(`w-[347px]`, `text-[#1a2b3c]`) are a gate-1 failure**, identical to a hardcode in CSS. They
+accumulate as an undocumented parallel scale that breaks "change the token, change the
+product." Extend the theme instead.
+
+**Astryx replaced shadcn/ui as the tool-type default on 2026-07-29.** The reason is
+ownership of maintenance: shadcn is copied into the project, so every component becomes a
+fork you own forever, while Astryx ships as a versioned npm library with its own
+accessibility and behaviour guarantees. It is also agent-legible, exposing a JSON manifest
+of its CLI so an agent can read component props instead of guessing them.
+
+That choice costs something, and the cost is stated rather than discovered later:
+
+- **Astryx does not read `dist/tokens.css`.** Its components read variables its own
+  `defineTheme()` sets, and no supported path injects external custom properties. The build
+  therefore emits `dist/astryx.theme.ts` as well — every token verbatim under `--ds-*`, plus
+  a conventional mapping of our roles onto the ones its components read. A brand whose roles
+  are named differently gets a `TODO` line rather than a wrong guess. **Token ownership stays
+  at the value level; the pipeline level is conceded.**
+- **It is React-only.** Slides, card news and print cannot use its components at all, and
+  are unaffected by this change — they keep consuming `tokens.css` and `tokens.typ` directly.
+- **It is pre-1.0** and has shipped breaking theme and prop renames every few weeks, each
+  with a codemod. Re-run `build:tokens` and re-read the theme file after any upgrade.
+- **Its own MCP server is under-documented.** Treat it as unverified until you can point at
+  the package.
+
+For the scoped-CSS column, Astryx is **reference only**. Read its component behaviour and
+accessibility decisions if useful; do not import it. Content and expressive surfaces stay
+fully free inside the token contract, which is the entire point of putting them in a
+different column.
 
 ### 2.3 Print pipeline
 
@@ -187,42 +214,77 @@ token, but it holds fine as one line of prose.
 
 Run on every substantial deliverable. Skip only for micro-tweaks.
 
-0. **Anti-slop binary gates** — run *before* anything is shown to the user, at S1 as well as
-   S4. Each is answerable yes/no; any "yes" is a failure, not a preference. They catch the
-   model's distributional default, which is the median of the training data rather than a
-   choice anyone made.
+0. **Craft check** — run *before* anything is shown to the user, at S1 as well as S4.
 
-   **Web** — gradient hero; everything centred in one column; three equal cards; identical
-   top-icon feature tiles; glassmorphism; one radius everywhere; large coloured glow shadows;
-   a coloured accent border on one edge of a card (the single most recognisable tell); a pill
-   badge sitting above the H1; stock photography; emoji as section markers; numbered 1-2-3
-   step rows that encode no real sequence; a stat banner row; permanent dark mode as the
-   default; a lavender-to-blue palette; a serif-italic accent word inside a sans headline.
+   *Rewritten 2026-07-29. The previous version was a blacklist of visual ingredients:
+   gradients, glass, dark mode, stock photography, a coloured card edge. It was wrong, and
+   the way it was wrong matters more than the list did. **Slop is a completion problem, not
+   a vocabulary problem.** A glass interface built with care is not slop; an editorial
+   layout built without decisions is. Banning ingredients cannot tell those apart, and it
+   quietly forbids whole legitimate design languages to catch a defect that lives somewhere
+   else entirely.*
 
-   **Korean** — a line break inside a word; body leading under 1.5; Hangul rendered by an OS
-   fallback because the stack names no Korean face; faux bold synthesised from a single
-   weight; Latin-first sizing with Hangul riding along; punctuation spaced by Latin rules.
+   So this gate asks one question, from six angles: **was a decision made here, or did a
+   default arrive?**
 
-   Gate 0 is a floor list and stays open: when a sweep turns up a new tell, add it here rather
-   than remembering it. A private corpus of per-genre presets may extend this list — see
-   `WORKFLOW.md` S0 for how a research pass feeds it.
+   1. **Values look chosen, not inherited.** The palette, type scale, radii and spacing read
+      as a system somebody set, not as framework defaults left in place. Neutrals have a
+      declared relationship to the accent rather than being pure grey by omission.
+   2. **Hierarchy is encoded, not implied.** Things of different importance differ in more
+      than one dimension. Equal treatment appears only where the content is genuinely equal.
+   3. **Structure is true.** Numbering, eyebrows, dividers, badges and step rows encode
+      something real about the content. A badge that labels nothing and a 1-2-3 that is not a
+      sequence are decoration wearing the costume of information.
+   4. **States are complete.** Hover changes something, `:focus-visible` paints a ring where
+      a mouse click does not, and the surface has an answer for empty, loading and error.
+   5. **The optical pass happened.** Text wrapping is controlled, headings are balanced, no
+      orphans in a hero, alignment is optical where mathematical alignment reads wrong,
+      shadows share one light direction, radii sit on a scale.
+   6. **There is a second read.** Something rewards looking twice — a detail, a transition, a
+      relationship visible only on closer inspection. Work with nothing underneath the first
+      impression is the most reliable slop signal there is.
 
-0b. **Drift check** — *added 2026-07-28 during the `chunaimun` S3.* Gate 0 asks whether a
-   given artefact is the model's default. This asks whether the brand's **vocabulary can
-   express** the default at all, which is the only version of the question that survives a
-   deadline. A token set that cannot say blur, gradient, shadow or glass has no shortcut to
-   them; one whose colours cannot land in the cream/sand OKLCH band cannot drift there while
-   being renamed. It also decides contrast at the token layer rather than discovering it on a
-   rendered page, and requires hover/press/focus to exist before any component does.
+   **Korean typesetting** stays binary, because these are correctness failures rather than
+   taste: a line break inside a word; body leading under 1.5; Hangul rendered by an OS
+   fallback because the stack names no Korean face; faux bold synthesised from one weight;
+   Latin-first sizing with Hangul riding along; punctuation spaced by Latin rules.
 
-   Given surface files it runs the brand's **blank ledger** in two halves: the source half
-   checks that every section *declares* the brand's signature device, and the evidence half
-   (in the project's own interaction script) checks that the device is actually in the
-   rendered DOM. A declaration is a promise; only the render is evidence.
+   **The common defaults are a prompt, not a prohibition.** Gradient hero, centred stack,
+   three identical cards, glassmorphism, one radius everywhere, coloured glow shadows, a
+   card-edge accent border, badge-above-H1, stock photography, emoji section markers, stat
+   banner rows, permanent dark mode, lavender-to-blue palettes, a serif-italic accent word.
+   Each of these is *frequently* a default rather than a choice, so each is worth a question:
+   **is this here because the brand argues for it?** A yes with a reason passes. A yes with a
+   shrug fails, and it would have failed under any other ingredient too.
+
+0b. **Token readiness** — runs at S3, on the token set rather than on any artefact.
+   *Reframed 2026-07-29 alongside gate 0.* Its original premise was that a brand should be
+   unable to **say** blur, gradient or glass, and that a house-wide forbidden colour band
+   should exist. That was the vocabulary fallacy again, one layer down. A token set that
+   cannot express an effect has not been made tasteful; it has been made smaller.
+
+   What survives is the part that was never about vocabulary: **does this token set carry
+   the decisions a surface will need before any surface exists?**
+
+   - **Interaction states are declared.** hover, press and focus exist as tokens. A surface
+     built from a set without them ships dead while passing every screenshot check.
+   - **Contrast is settled here, not discovered in a browser.** Every text role clears its
+     ground. Finding this on a rendered page is one stage too late — the value is already
+     written into four files by then.
+   - **Scales are differentiated.** Radii, spacing and weight have more than one usable step,
+     because a surface cannot encode hierarchy with a vocabulary that has none.
+   - **The colour rules have something to check.** Zero parsed colours is a failure, not a
+     pass. A gate that skips silently is worse than one that fails.
+
+   **Per-brand forbidden regions are opt-in.** A brand that rejected a specific coordinate
+   during S1 or S2 may declare it, and the check will catch a return to it under a new name.
+   That is a memory of one brand's decision, not a house law. `brands/<brand>/drift.json`
+   holds it; absent the file, no region is forbidden.
 
    Implementation: `scripts/check-drift.mjs`. **Verify any rule of this shape in both
-   directions** — the first cream-band test was written for `#E6E3DC` and let it through,
-   because a warm near-white is warm by hue, not by saturation.
+   directions** — run it against deliberately poisoned input as well as good, because the
+   first colour-band test was written for one specific off-white and let a different one
+   through.
 
 1. **Hardcode check** — a literal color (`#2563EB`) or arbitrary spacing (`17px`) in
    source is a failure. Layer-2 and below must reference semantic tokens, not primitives.
@@ -294,7 +356,8 @@ system change, ask first.
 - **Font licensing.** §5 requires a matched Korean face but no gate checks embed/self-host
   rights for commercial deliverables.
 - **Performance gate.** Expressive surfaces (scroll-driven, 3D) are exactly where jank
-  ships; gate 3 could carry a CLS/LCP smoke check.
+  ships. `optimize-threejs-games` and `test-playable-web-games` (SKILLS.md) now cover the
+  method; what is still missing is a gate that *runs* it rather than leaving it optional.
 - **Accessibility depth.** Gate 2 is axe-core only (~30% coverage); a keyboard-traversal
   scenario belongs in gate 4.
 - **Empty / error / loading states.** Half of tool-type surfaces; no gate photographs them.

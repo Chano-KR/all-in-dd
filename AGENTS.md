@@ -24,6 +24,9 @@ Precedence: explicit user instruction → the brand's `DESIGN.md` → `ENGINE.md
 ## Hard rules
 
 - **Never edit `dist/`.** It is generated. Change `tokens/` and rebuild.
+- **Gate 0 is a craft check, not a blacklist.** No visual language is banned. Glass,
+  gradients, dark mode and sourced photography are all legitimate; what fails is a
+  default arriving where a decision should have been made. See ENGINE §4.
 - **No literals in surface code.** Colors and dimensions come from `var(--ds-*)`
   (web) or `ds.*` (Typst). A hex or px in source is a gate-1 failure, and so is a
   Tailwind arbitrary value (`w-[347px]`).
@@ -85,8 +88,8 @@ Skills sort into four kinds, and the kind decides where it may run:
 
 | Kind | Belongs to | Examples |
 |---|---|---|
-| taste — imposes a look | **S1 only**, one per direction | `high-end-visual-design`, `gpt-taste`, `minimalist-ui`, `industrial-brutalist-ui`, `design-taste-frontend` |
-| craft — imposes technique | S4, S5 | `apple-design`, `emil-design-eng` |
+| taste — imposes a look | **S1 only**, one per direction | the core five, plus ~30 in the author pool (SKILLS.md) |
+| craft — imposes technique | S4, S5 | `apple-design`, `emil-design-eng`, plus the technique pool |
 | audit — judges, doesn't author | S2, S5 | `impeccable` |
 | make — produces artifacts | wherever the stage calls | `imagegen-frontend-web`, `image-to-code`, `brandkit`, `prototype` |
 

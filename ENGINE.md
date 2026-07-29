@@ -188,19 +188,24 @@ token, but it holds fine as one line of prose.
 Run on every substantial deliverable. Skip only for micro-tweaks.
 
 0. **Anti-slop binary gates** — run *before* anything is shown to the user, at S1 as well as
-   S4. 12 web checks plus 6 Korean checks, each answerable yes/no; any "yes" is a failure, not
-   a preference. They catch the model's distributional default (gradient hero, centred stack,
-   three equal cards, glassmorphism, uniform radius, stock imagery, pill badge; and on the
-   Korean side mid-word breaks, sub-1.5 leading, OS fallback Hangul, faux bold).
-   Source: `research/03-anti-slop.md` §1 and §6, with per-genre presets in
-   `research/02-uiux-promax-and-genres.md` PART 2. *(Relocated into this repo 2026-07-29 with
-   user approval; the corpus previously sat orphaned in the deleted v1 system's bucket, which
-   is why the first S0 ran without it.)*
+   S4. Each is answerable yes/no; any "yes" is a failure, not a preference. They catch the
+   model's distributional default, which is the median of the training data rather than a
+   choice anyone made.
 
-   Known tells beyond the corpus list, from the 2026 external sweep — fold into the checks:
-   badge-above-H1, colored card-edge borders (the single most recognizable tell), permanent
-   dark mode as default, lavender/"VibeCode purple" palettes, serif-italic hero accent word,
-   stat banner rows, identical top-icon feature cards, emoji section markers.
+   **Web** — gradient hero; everything centred in one column; three equal cards; identical
+   top-icon feature tiles; glassmorphism; one radius everywhere; large coloured glow shadows;
+   a coloured accent border on one edge of a card (the single most recognisable tell); a pill
+   badge sitting above the H1; stock photography; emoji as section markers; numbered 1-2-3
+   step rows that encode no real sequence; a stat banner row; permanent dark mode as the
+   default; a lavender-to-blue palette; a serif-italic accent word inside a sans headline.
+
+   **Korean** — a line break inside a word; body leading under 1.5; Hangul rendered by an OS
+   fallback because the stack names no Korean face; faux bold synthesised from a single
+   weight; Latin-first sizing with Hangul riding along; punctuation spaced by Latin rules.
+
+   Gate 0 is a floor list and stays open: when a sweep turns up a new tell, add it here rather
+   than remembering it. A private corpus of per-genre presets may extend this list — see
+   `WORKFLOW.md` S0 for how a research pass feeds it.
 
 0b. **Drift check** — *added 2026-07-28 during the `chunaimun` S3.* Gate 0 asks whether a
    given artefact is the model's default. This asks whether the brand's **vocabulary can

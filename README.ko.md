@@ -52,6 +52,7 @@ S0 리서치 ─▶ S1 발산 ─▶ S2 락 ─▶ S3 토큰화 ─▶ S4 제작
 ```bash
 npm run check:skills
 
+npx skills add nextlevelbuilder/ui-ux-pro-max-skill   # S0 장르 프리셋 (참고용)
 npx skills add Leonxlnx/taste-skill    # S1 저자 5종, imagegen, image-to-code
 npx skills add emilkowalski/skills     # apple-design, emil-design-eng, 모션 패스
 npx skills add https://github.com/pbakaus/impeccable --skill impeccable   # 감사

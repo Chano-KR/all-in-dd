@@ -71,9 +71,18 @@ noticed — that is why every stage below names its skills instead of trusting m
 Assemble the evidence S1 diverges from. Choose no direction; an early favorite quietly
 kills divergence at S1.
 
-- Read `research/` first — `03-anti-slop.md` (the checks), `02-uiux-promax-and-genres.md`
-  (genre presets). **Always before any web search**: the reverse order lets search results
-  contaminate the gate-0 list.
+- **Read the standing checks first**, before any web search: `ENGINE.md` §4 gate 0 is the
+  list of tells this system already knows. The reverse order lets fresh search results
+  contaminate that list with whatever the genre currently overproduces.
+- **Genre presets** come from `ui-ux-pro-max` (`npx skills add nextlevelbuilder/ui-ux-pro-max-skill`),
+  used **for reference only, at S0 only**. It is a large dataset of per-genre patterns,
+  typography pairings, motion recipes and anti-patterns, and that is worth reading before you
+  diverge. Two hard limits, both from an evaluation that originally rejected installing it:
+  its `--design-system` generator wants to write a `MASTER.md` and be the project's design
+  source of truth, which is the one role the tokens hold exclusively — never run it; and its
+  industry-to-style mapping is reductive by construction (Linear, Stripe and Notion are all
+  "SaaS" and look nothing alike), so treat a preset as a description of what a genre
+  currently does, never as an instruction for what this brand should do.
 - **The web reference sweep is mandatory**, and it is worth delegating to a cheaper model
   in a subagent — the main thread's context is for judgment, not result dumps. It must
   return **8+ named references with URLs** (individual entries, never a summary), **at

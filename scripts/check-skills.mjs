@@ -22,6 +22,7 @@ const ROOTS = [
 
 const SKILLS = [
   // stage, name, required, source
+  ['S0', 'ui-ux-pro-max',               false, 'nextlevelbuilder/ui-ux-pro-max-skill'],
   ['S1', 'high-end-visual-design',      true,  'Leonxlnx/taste-skill'],
   ['S1', 'gpt-taste',                   true,  'Leonxlnx/taste-skill'],
   ['S1', 'minimalist-ui',               true,  'Leonxlnx/taste-skill'],

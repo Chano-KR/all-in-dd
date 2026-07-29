@@ -23,6 +23,7 @@ from a mirror, so updates and fixes reach you:
 
 | Source | Maintainer | Covers |
 |---|---|---|
+| [`nextlevelbuilder/ui-ux-pro-max-skill`](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill) | nextlevelbuilder | S0 genre presets and anti-pattern data |
 | [`Leonxlnx/taste-skill`](https://github.com/Leonxlnx/taste-skill) | Leon | the S1 authors, imagegen, image-to-code, brandkit |
 | [`emilkowalski/skills`](https://github.com/emilkowalski/skills) | Emil Kowalski | motion + component craft, animation passes |
 | [`pbakaus/impeccable`](https://github.com/pbakaus/impeccable) | Paul Bakaus | interface audit and slop detection |
@@ -37,6 +38,7 @@ the set.
 
 | Stage | Skill | Does | Install |
 |---|---|---|---|
+| S0 | `ui-ux-pro-max` | per-genre pattern presets, typography pairings, motion recipes, anti-pattern lists — reference reading before you diverge | `npx skills add nextlevelbuilder/ui-ux-pro-max-skill` |
 | S1 | `high-end-visual-design`<br>`gpt-taste`<br>`minimalist-ui`<br>`industrial-brutalist-ui`<br>`design-taste-frontend` | five distinct visual authors — one per direction, never the same twice | `npx skills add Leonxlnx/taste-skill` |
 | S1 | `imagegen-frontend-web` | renders a direction as sectioned images before any code exists | ↑ same source |
 | S1 | `image-to-code` | implements a rendered design faithfully instead of approximately | ↑ same source |
@@ -66,6 +68,22 @@ npx skills add https://github.com/pbakaus/impeccable --skill impeccable
 | S5 | `redesign-existing-projects` | for a surface inherited from before the system | `npx skills add Leonxlnx/taste-skill` |
 | S5 | `animation-vocabulary` | reverse-lookup: a described effect → its real name | `npx skills add emilkowalski/skills` |
 | S4 | `remotion-best-practices` | only when the deliverable is video | `npx skills add remotion-dev/skills` |
+
+## ui-ux-pro-max, and its two limits
+
+It earns its place at S0 because a large, current dataset of what each genre actually does is
+exactly the evidence divergence needs. It is also the one skill here with a documented reason
+*not* to install, and both halves of that reason survive:
+
+- **Never run its `--design-system` generator.** It writes a `design-system/MASTER.md` and
+  positions that file as the project's source of truth. That role belongs to `tokens/` and
+  cannot be shared. Read the data; do not let the tool own the system.
+- **Its industry-to-style mapping is reductive.** Linear, Stripe and Notion are all "SaaS"
+  and look nothing alike. A preset describes what a genre currently overproduces, which makes
+  it useful as a map of the slop trap and dangerous as a brief.
+
+Read it at S0. Do not carry it into S1, where it would become a sixth author with the blandest
+possible opinions, or into S4, where it competes with the lock.
 
 ## The audit role
 

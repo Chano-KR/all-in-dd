@@ -108,9 +108,14 @@ if (existsSync(catPath)) {
     console.log(`  ✗ classified as craft/audit/utility elsewhere: ${contradicted.join(', ')}`);
     missing.push(['(fix the catalog)', 'catalog/authors.json', true]);
   }
+  /* The catalog invariant and the install state are two different claims, and only the
+     first is a property of this repo. Printing them on one line made the success string
+     depend on ~/.agents/skills, so a fresh checkout — which by definition has nothing
+     installed — read as a broken catalog to anything matching on that line. */
+  if (!undeclared.length && !contradicted.length)
+    console.log('  ✓ catalog invariant holds — all declared taste, none contradicted');
   if (uninstalled.length) console.log(`  ~ catalogued but not installed: ${uninstalled.join(', ')}`);
-  if (!undeclared.length && !contradicted.length && !uninstalled.length)
-    console.log('  ✓ all declared taste, none contradicted, all installed');
+  else console.log('  ✓ every catalogued author is installed');
 }
 
 const poolFound = POOL_MARKERS.filter(n => present.has(n)).length;

@@ -248,9 +248,14 @@ try {
       /* --strict also fails on a missing INSTALLED skill, which is machine state: a
          fresh checkout has none of them, so asserting `pass` here made the suite depend
          on the developer's ~/.agents/skills. The catalog invariant is what this group
-         tests, so it reads the report rather than the exit code. */
+         tests, so it reads the report rather than the exit code.
+
+         Reading the report is only half the fix. The first attempt matched the combined
+         success line, which check-skills printed only once nothing was uninstalled — so
+         the machine dependency survived the rewrite and a fresh checkout still failed
+         here. The invariant now prints on its own line, and this matches that line. */
       const base = run('check-skills.mjs', []);
-      const catalogClean = /✓ all declared taste/.test(base.out);
+      const catalogClean = /✓ catalog invariant holds/.test(base.out);
       if (catalogClean) { passed++; console.log('  ok    the real catalog reports clean'); }
       else {
         failures.push('the real catalog reports clean');

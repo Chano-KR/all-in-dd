@@ -187,11 +187,21 @@ console.log('\nfonts');
     else if (platform() === 'win32') {
       report('bad', 'type pool', `missing: ${absent.join(', ')} — \`npm run fetch:fonts && npm run install:fonts\``);
     } else {
-      console.log(`  … fetching ${absent.length} missing face(s): ${absent.join(', ')}`);
+      /* Say which of the two things is about to happen. fonts.sh downloads only what is
+         not already in the pool, so with a warm pool — a restored CI cache, a second run
+         on a workstation — this is a copy and an fc-cache, not a 50 MB fetch. Reporting
+         it as "fetching" either way is the same class of untruth as an unstated sampling
+         cap: the line stops describing what the run did. */
+      const pool = join(root, 'fonts');
+      const warm = existsSync(pool) && readdirSync(pool).length > 0;
+      console.log(warm
+        ? `  … installing ${absent.length} face(s) from the local pool: ${absent.join(', ')}`
+        : `  … fetching ${absent.length} missing face(s): ${absent.join(', ')}`);
       const r = sh('bash', [join(root, 'scripts', 'fonts.sh')]);
       const still = resolves();
       report(still.length ? 'bad' : 'ok', 'type pool',
-        still.length ? `still missing after fetch: ${still.join(', ')}` : `fetched; ${wanted.size} face(s) resolve`);
+        still.length ? `still missing after ${warm ? 'install' : 'fetch'}: ${still.join(', ')}`
+          : `${warm ? 'installed' : 'fetched'}; ${wanted.size} face(s) resolve`);
       if (still.length) console.log(`      ${r.out.split('\n').filter(Boolean).slice(-1)[0] ?? ''}`);
     }
   }

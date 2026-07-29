@@ -66,12 +66,15 @@ npx skills add https://github.com/pbakaus/impeccable --skill impeccable   # 감�
 
 모두 실행 가능한 스크립트이고, 하나하나가 실제로 무언가 잘못 나간 뒤에 생겼습니다.
 
-| 게이트 | 스크립트 | 잡는 것 |
+| 게이트 | 실행 방식 | 잡는 것 |
 |---|---|---|
-| 하드코딩 | `check-tokens.mjs` | 소스에 직접 적힌 hex와 px, 정의되지 않은 `var(--ds-*)` |
+| 크래프트 | 판단, S1과 S4에서 | 결정이 있어야 할 자리에 도착한 기본값 |
 | 토큰 준비도 | `check-drift.mjs` | 상태·대비·스케일 분화가 빠진 토큰셋 |
+| 하드코딩 | `check-tokens.mjs` | 소스에 직접 적힌 hex와 px, 정의되지 않은 `var(--ds-*)` |
 | 스테일 | `build-tokens.mjs --check` | 소스와 어긋난 채로 남아 있는 dist |
+| 접근성 | axe-core | 의도한 표면이 아니라 실제 렌더된 표면 기준 대비 |
 | 렌더 | `shoot.mjs` | 실제 타깃 치수로 찍은 스크린샷 |
+| 인터랙션 | `check-interactions.mjs` | hover·focus·모션·reduced-motion. 스크린샷에 안 보이는 것 |
 
 통과했다는 것은 슬롭이 아니라는 뜻이지, 좋다는 뜻이 아닙니다. 게이트는 바닥이지 목표가
 아닙니다.

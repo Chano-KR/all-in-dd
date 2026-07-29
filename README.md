@@ -67,12 +67,15 @@ you four variations of one idea instead of four ideas.
 Every check is an executable script, and each one exists because something
 shipped wrong once.
 
-| Gate | Script | Catches |
+| Gate | How it runs | Catches |
 |---|---|---|
-| hardcode | `check-tokens.mjs` | hex / px literals in source, undefined `var(--ds-*)` |
+| craft | judgement, at S1 and S4 | a default arriving where a decision should have been made |
 | token readiness | `check-drift.mjs` | a token set missing states, contrast, or differentiated scales |
+| hardcode | `check-tokens.mjs` | hex / px literals in source, undefined `var(--ds-*)` |
 | staleness | `build-tokens.mjs --check` | a dist that no longer matches its source |
+| accessibility | axe-core | contrast against the rendered surface, not the intended one |
 | render | `shoot.mjs` | screenshots at real target dimensions |
+| interaction | `check-interactions.mjs` | hover, focus, motion, reduced-motion — invisible to a screenshot |
 
 Passing them means the work is not slop. It does not mean the work is good —
 gates are a floor, not a target.

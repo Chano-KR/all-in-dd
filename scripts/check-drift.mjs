@@ -30,6 +30,10 @@ if (!existsSync(cssPath)) {
 }
 const css = readFileSync(cssPath, 'utf8');
 
+/* Brand-declared, opt-in rules. Absent file = nothing forbidden. */
+const driftPath = resolve(root, `brands/${brand}/drift.json`);
+const drift = existsSync(driftPath) ? JSON.parse(readFileSync(driftPath, 'utf8')) : {};
+
 let fails = 0;
 const fail = (rule, detail) => { console.log(`  FAIL  ${rule}\n        ${detail}`); fails++; };
 const pass = (rule, detail = '') => console.log(`  pass  ${rule}${detail ? `  — ${detail}` : ''}`);
@@ -104,9 +108,7 @@ if (colorTokens.length === 0) {
      { "forbid": [ { "name": "the revoked warm ground",
                      "L": [0.84, 0.97], "C": [0.004, 0.06], "H": [40, 100] } ] }   */
 {
-  const cfgPath = resolve(root, `brands/${brand}/drift.json`);
-  const cfg = existsSync(cfgPath) ? JSON.parse(readFileSync(cfgPath, 'utf8')) : {};
-  const regions = cfg.forbid ?? [];
+  const regions = drift.forbid ?? [];
   if (!regions.length) pass('no forbidden colour regions declared', 'brands/' + brand + '/drift.json absent');
   else {
     const within = (v, [lo, hi]) => v >= lo && v <= hi;
@@ -127,9 +129,7 @@ if (colorTokens.length === 0) {
    Renaming a value is not enough if the vocabulary still reaches for the idea — but
    which ideas are off-limits is a brand's decision, not this file's.               */
 {
-  const cfgPath = resolve(root, `brands/${brand}/drift.json`);
-  const cfg = existsSync(cfgPath) ? JSON.parse(readFileSync(cfgPath, 'utf8')) : {};
-  const words = cfg.forbidNames ?? [];
+  const words = drift.forbidNames ?? [];
   if (!words.length) pass('no forbidden token names declared');
   else {
     const re = new RegExp(`(^|-)(${words.join('|')})(-|$)`);
@@ -203,42 +203,45 @@ for (const f of files) {
   const src = readFileSync(path, 'utf8');
   console.log(`\n  ${f}`);
 
-  /* 6. The effects themselves, in case a surface writes them literally rather than
-     reaching for a token that does not exist. */
+  /* 6. Brand-declared surface rules, from the same opt-in drift.json.
+     What used to sit here was a house-wide ban on backdrop-filter, gradient fills and
+     box-shadow — the vocabulary fallacy again, surviving in the surface half after the
+     token half was fixed (found by an audit 2026-07-29). Effects are not defects. A
+     brand that decided against one may still say so:
+       { "forbidCss": [ { "name": "no gradient fills", "pattern": "background[^;]*gradient\(" } ] }  */
   {
-    const hits = [
-      [/backdrop-filter\s*:(?!\s*none)/, 'backdrop-filter'],
-      [/filter\s*:[^;]*blur\(/, 'filter: blur()'],
-      /* A gradient used as a FILL is the tell — the two-hue hero wash, the mesh, the
-         tinted card. A gradient used as a mask is not a fill at all; it is how an image
-         is faded into the page instead of being pasted onto it as a rectangle. The rule
-         is narrowed to what it was aimed at rather than waived. */
-      [/background(-image|-color)?\s*:[^;]*gradient\(/, 'gradient fill'],
-      [/border-image\s*:[^;]*gradient\(/, 'gradient border'],
-      [/box-shadow\s*:(?!\s*none)/, 'box-shadow'],
-    ].filter(([re]) => re.test(src)).map(([, n]) => n);
-    hits.length
-      ? fail('surface must not use blur, gradient or shadow', hits.join(', '))
-      : pass('no blur, gradient or shadow in the surface');
+    const rules = drift.forbidCss ?? [];
+    if (!rules.length) pass('no surface CSS rules declared');
+    else for (const r of rules) {
+      new RegExp(r.pattern).test(src)
+        ? fail(`surface breaks "${r.name}"`, r.pattern)
+        : pass(`surface honours "${r.name}"`);
+    }
   }
 
-  /* 7. The blank ledger, source half — the S2 lock's countermeasure made mechanical.
-     The lock says a section with no blank being filled, drawn, or waiting has drifted
-     to the default; prose cannot enforce that, a required marker can.
-
-     This half only checks that every section *declares* a blank. A declaration is a
-     promise, not evidence — the device itself usually lives inside a component and is
-     not textually present here. The evidence half runs against the rendered DOM in
-     chunaimun-site/scripts/check-interactions.mjs, and both have to pass. */
-  if (/<section|<header/.test(src)) {
-    const opens = [...src.matchAll(/<(section|header)\b([^>]*)>/g)];
+  /* 7. Signature-device ledger, source half — OPT-IN per brand.
+     A brand whose S2 lock names a device can require every section to declare it, so
+     "this section drifted to the default" becomes mechanical rather than a matter of
+     memory. The marker is the brand's own; `data-blank` was one brand's, and hardcoding
+     it here made every other brand fail a rule it had never agreed to.
+       { "sectionMarker": "data-blank" }
+     A declaration is a promise, not evidence. The evidence half belongs in the project's
+     own interaction check, against the rendered DOM, and both must pass. */
+  if (drift.sectionMarker && /<section|<header/.test(src)) {
+    const attr = drift.sectionMarker;
+    const opens = [...src.matchAll(/<(section|header)([^>]*)>/g)];
     const naked = opens
-      .map((m, i) => [i, m[0].slice(0, 90).replace(/\s+/g, ' '), /data-blank\s*=\s*["'{][^"'}]+/.test(m[2])])
+      .map((m, i) => [i, m[0].slice(0, 90).replace(/\s+/g, ' '),
+        new RegExp(`${attr}\\s*=`).test(m[2])])
       .filter(([, , has]) => !has);
-    naked.length
-      ? fail('every section must declare data-blank (the ledger, source half)',
+    if (!opens.length)
+      fail(`the ${attr} ledger found sections to check`,
+        'the file contains <section>/<header> text but the scan matched none — a check ' +
+        'that silently examines nothing is a failure, not a pass');
+    else naked.length
+      ? fail(`every section must declare ${attr} (ledger, source half)`,
           naked.map(([i, head]) => `#${i} ${head}…`).join('\n        '))
-      : pass('blank ledger — declared', `${opens.length} sections`);
+      : pass(`${attr} ledger — declared`, `${opens.length} sections`);
   }
 }
 

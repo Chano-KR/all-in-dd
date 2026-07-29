@@ -1,0 +1,19 @@
+{
+  "button": {
+    "$description": "The third layer, and the one to use most sparingly. A component token exists only where a component needs a value the semantic layer has no honest name for. Everything here that could have been `{action.base}` should have been.",
+    "bg": {
+      "$type": "color",
+      "rest": { "$value": "{action.base}" },
+      "hover": { "$value": "{action.hover}" },
+      "press": { "$value": "{action.press}" }
+    },
+    "label": {
+      "$type": "color",
+      "$value": "{surface.page}",
+      "$description": "type on the accent, not the accent on the page — the inverse pair the semantic layer does not carry"
+    },
+    "pad-x": { "$type": "dimension", "$value": "{space.4}" },
+    "pad-y": { "$type": "dimension", "$value": "{space.2}" },
+    "radius": { "$type": "dimension", "$value": "{radius.small}" }
+  }
+}

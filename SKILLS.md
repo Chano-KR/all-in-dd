@@ -141,7 +141,7 @@ npx skills add https://github.com/MengTo/Skills --skill <name>
 `agency-grid-layout-minimal`, `split-layout-technical`, `technical-wireframe-info-layout`,
 `framed-grid-layout`, `image-first-grid-layout`, `nested-container-clean-agency`,
 `nested-container-frames`, `light-mode-paper-technical`, `clean-minimal-beige-light-mode`,
-`orange-clean-paper-saas`, `solar-duotone-bold`, `high-contrast-skeuomorphic-clean`,
+`orange-clean-paper-saas`, `high-contrast-skeuomorphic-clean`,
 `skeuomorphic-ui`, `operational-enterprise-ai`, `product-proof-saas`.
 
 **Atmospheric and effect-led** — `glass-dark-ui`, `dark-glass-clean-layout`,
@@ -156,8 +156,12 @@ rather than a vocabulary one — a glass interface built with care is not slop, 
 editorial layout built without decisions is. These authors pass or fail the craft check on
 the same terms as every other one.
 
-**Page-type and reference** — `landing-page`, `pricing-page`, `build-awwwards-quality-sites`,
-`company-logos`.
+**Page-type playbooks** — `landing-page`, `pricing-page` (conversion structure and
+copywriting, not a visual position), `build-awwwards-quality-sites`.
+
+**Asset utilities, not authors** — `company-logos` (Iconify Simple Icons instead of text
+logos), `solar-duotone-bold` (an Iconify icon style). These pick an asset set; they hold no
+opinion about layout, so they never belong in the S1 author rotation.
 
 ## Technique skills (S4 · S5)
 

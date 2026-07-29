@@ -82,7 +82,7 @@ library. It is the template: nothing brand-specific is downloaded on its behalf.
 
 ```bash
 npm run check:skills          # what is installed, and the install line for what isn't
-npm run check:skills --strict # exit 1 if a REQUIRED skill is missing
+npm run check:skills -- --strict # exit 1 if a REQUIRED skill is missing
 npm run skills -- --stage S1 "<brief>"   # which of the ~130 installed ones fit this work
 ```
 

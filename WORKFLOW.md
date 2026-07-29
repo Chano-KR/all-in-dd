@@ -37,7 +37,7 @@ Check what is installed, and install what is not:
 
 ```bash
 npm run check:skills          # ✓/✗ per skill, plus the install line for the missing
-npm run check:skills --strict # exit 1 if anything REQUIRED is absent
+npm run check:skills -- --strict # exit 1 if anything REQUIRED is absent
 ```
 
 `SKILLS.md` is the full manifest. Most of it is two lines:

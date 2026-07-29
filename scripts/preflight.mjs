@@ -140,6 +140,62 @@ console.log('\nexternal tools');
   }
 }
 
+/* ----------------------------------------------------------------- canvas
+   ENGINE §2.4 puts pen.dev inside S1, S3 and S4 rather than beside them, so the default is
+   that it is here. It is also the one dependency this script cannot simply install —
+   a desktop app, early-access, with an account behind it — and §2.4 already grants the
+   fallback: without the canvas the stages run through the image path instead.
+
+   That combination is why this asks rather than decides. Failing would block work the repo
+   explicitly says is not blocked; passing quietly would let a workspace drift into the
+   image path permanently without anyone choosing it. So: present is silent, absent is a
+   question, and a non-interactive run answers "skip" and says so. */
+
+console.log('\ncanvas');
+{
+  /* Pen registers its MCP server against the AppImage's mount path
+     (/tmp/.mount_Pen.<random>/…), which is recreated per launch and gone on quit — so the
+     registration works once and then fails with ENOENT. A registration pointing into /tmp
+     is therefore reported as broken, not as present. */
+  const hosts = [
+    ['claude', join(homedir(), '.claude.json'), s => JSON.parse(s).mcpServers?.pencil?.command],
+    ['codex', join(homedir(), '.codex', 'config.toml'),
+      s => /\[mcp_servers\.pencil\][^[]*command\s*=\s*"([^"]+)"/.exec(s)?.[1]],
+    ['gemini', join(homedir(), '.gemini', 'settings.json'),
+      s => JSON.parse(s).mcpServers?.pencil?.command],
+  ];
+  const wired = [], stale = [];
+  for (const [name, file, read] of hosts) {
+    if (!existsSync(file)) continue;
+    let cmd = null;
+    try { cmd = read(readFileSync(file, 'utf8')); } catch { /* unparseable: treat as unwired */ }
+    if (!cmd) continue;
+    (cmd.startsWith('/tmp/') ? stale : wired).push(name);
+  }
+
+  if (stale.length) {
+    report('bad', 'pen.dev canvas',
+      `${stale.join(', ')} point at an AppImage mount under /tmp — re-register against a stable path`);
+  } else if (wired.length) {
+    report('ok', 'pen.dev canvas', `MCP server registered for ${wired.join(', ')}`);
+  } else if (CI || !process.stdin.isTTY) {
+    report('warn', 'pen.dev canvas',
+      'not registered — skipped; S1/S3/S4 fall back to the image path (ENGINE §2.4)');
+  } else {
+    const { createInterface } = await import('node:readline/promises');
+    const rl = createInterface({ input: process.stdin, output: process.stdout });
+    console.log('  pen.dev is the canvas ENGINE §2.4 expects at S1, S3 and S4, and it is not registered here.');
+    const answer = (await rl.question('  install it now, or skip and use the image path? [install/skip] ')).trim().toLowerCase();
+    rl.close();
+    if (answer.startsWith('i')) {
+      report('bad', 'pen.dev canvas',
+        'install from https://pen.dev, then enable the CLI integration in the app and re-run preflight');
+    } else {
+      report('warn', 'pen.dev canvas', 'skipped by choice — S1/S3/S4 use the image path (ENGINE §2.4)');
+    }
+  }
+}
+
 /* ------------------------------------------------------------------ fonts
    The type pool is toolchain, at the same layer as typst, and it is required whether or
    not a brand of your own exists yet. Scoping it to shipping brands was wrong in the way

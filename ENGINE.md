@@ -197,6 +197,19 @@ Two policies, both ours rather than the tool's:
 pen.dev is early-access software. If it fails or is unavailable, fall back to the image
 path (generate → implement to image) — the stages do not block on the tool.
 
+Having it is the default, so `npm run preflight` checks for the MCP registration and, when
+it is missing, asks rather than decides: install, or skip and take the image path. Failing
+would block work this section says is not blocked; passing in silence would let a
+workspace slide onto the image path permanently without anyone choosing it. A
+non-interactive run answers skip and prints that it did.
+
+One trap is worth naming, because it presents as the tool being broken rather than
+misconfigured. The desktop app registers its MCP server against the path its AppImage is
+mounted at — `/tmp/.mount_Pen.<random>/…` — which is recreated on every launch and removed
+on quit. The registration therefore works once and fails with ENOENT ever after. Point the
+host config at a stable wrapper that resolves the binary at start-up instead; preflight
+reports a command under `/tmp` as broken, not as present.
+
 ## 3. Motion
 
 Split in two. Only one half can be a token.

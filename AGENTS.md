@@ -49,6 +49,7 @@ Precedence: explicit user instruction → the brand's `DESIGN.md` → `ENGINE.md
 ## Commands
 
 ```
+npm run preflight        # deps present? do they load? --fix installs only what is missing
 npm run build:tokens     # DTCG JSON -> dist/tokens.css + dist/tokens.typ, all brands
 npm run check:tokens     # staleness gate: fails if dist doesn't match source
 npm run gate:tokens      # hardcode / unknown-token scan   (args: <brand> <file...>)
@@ -62,6 +63,12 @@ npm test                 # poisoned fixtures for the gates — run after touchin
 
 Run `check:tokens` before compiling any Typst document. A gate failure returns
 the work; it is not waived.
+
+`preflight` answers present → loads → missing, in that order, and fetches only
+the last. `brands/example` sits outside every fetch decision: it is the template,
+so nothing is downloaded on its behalf and its Typst proof compiles with whatever
+faces the system already has. A brand that ships paper needs the type pool
+(`bash scripts/fonts.sh`); the template does not.
 
 ## Skills
 

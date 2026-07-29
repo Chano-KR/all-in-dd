@@ -147,10 +147,16 @@ The font scripts are idempotent — run them again any time, they skip what's
 already there. One line verifies the whole chain:
 
 ```bash
-npm run build:tokens && npm run print:example
+npm run preflight && npm run build:tokens && npm run print:example
 ```
 
 If `brands/example/print/proof.pdf` comes out, everything works.
+
+`preflight` asks, per dependency: is it present, does it actually load, and only
+then does it fetch. `--fix` installs the missing ones and nothing else. It never
+fetches anything for `brands/example` — the template is not a brand someone is
+shipping, so it renders with the faces the system already has, and the type pool
+is a real requirement only once you start a brand of your own.
 
 ## Starting a brand
 

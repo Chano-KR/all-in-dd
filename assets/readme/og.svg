@@ -1,0 +1,58 @@
+<svg viewBox="0 0 1280 640" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="all-in-dd — one token source, four media">
+  <title>all-in-dd — one token source, four media</title>
+  <desc>Social preview: a token declaration on the left, a build node, and four media rails leaving to the right.</desc>
+  <defs>
+    <style>
+      .label { font: 600 17px ui-monospace, "Cascadia Mono", Consolas, monospace; fill: #BA4F1F; letter-spacing: 6px; }
+      .name  { font: 700 96px ui-monospace, "Cascadia Mono", Consolas, monospace; fill: #FBFCFD; letter-spacing: -4px; }
+      .tag   { font: 400 25px system-ui, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; fill: #A9B6B6; }
+      .code  { font: 400 17px ui-monospace, Consolas, monospace; fill: #C6D0CF; }
+      .codek { fill: #E08877; }
+      .rail  { stroke: #4A5A5C; stroke-width: 1.5; fill: none; }
+      .media { font: 600 17px ui-monospace, Consolas, monospace; fill: #E7ECEB; }
+      .sub   { font: 400 14px system-ui, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; fill: #8B9A9A; }
+    </style>
+  </defs>
+
+  <rect width="1280" height="640" fill="#0D1315"/>
+  <rect x="0" y="0" width="1280" height="5" fill="#BA4F1F"/>
+
+  <text x="88" y="150" class="label">ALL IN DIRECT DESIGN</text>
+  <text x="82" y="252" class="name">all-in-dd</text>
+  <text x="88" y="308" class="tag">One token source, four media.</text>
+  <text x="88" y="344" class="tag">Drawn direct, held by gates.</text>
+
+  <rect x="88" y="412" width="392" height="86" rx="4" fill="#141C1F" stroke="#29373A"/>
+  <text x="112" y="448" class="code">"action": {</text>
+  <text x="112" y="476" class="code">  "base": <tspan class="codek">"oklch(56% 0.15 42)"</tspan> }</text>
+
+  <line x1="480" y1="455" x2="612" y2="455" class="rail"/>
+  <rect x="612" y="428" width="122" height="54" rx="4" fill="#E7ECEB"/>
+  <text x="638" y="462" style="font:600 17px ui-monospace,Consolas,monospace" fill="#0D1315">build</text>
+  <circle cx="734" cy="455" r="6" fill="#E08877"/>
+
+  <path d="M 740 455 C 830 455 830 176 920 176" class="rail"/>
+  <path d="M 740 455 C 830 455 830 269 920 269" class="rail"/>
+  <path d="M 740 455 C 830 455 830 362 920 362" class="rail"/>
+  <line x1="740" y1="455" x2="920" y2="455" class="rail"/>
+
+  <g>
+    <circle cx="928" cy="172" r="5" fill="#E08877"/>
+    <text x="950" y="171" class="media">tokens.css</text>
+    <text x="950" y="194" class="sub">web &amp; app</text>
+
+    <circle cx="928" cy="265" r="5" fill="#E08877"/>
+    <text x="950" y="264" class="media">slides</text>
+    <text x="950" y="287" class="sub">16:9 deck → PDF</text>
+
+    <circle cx="928" cy="358" r="5" fill="#E08877"/>
+    <text x="950" y="357" class="media">cards</text>
+    <text x="950" y="380" class="sub">1080×1080</text>
+
+    <circle cx="928" cy="451" r="5" fill="#E08877"/>
+    <text x="950" y="450" class="media">tokens.typ</text>
+    <text x="950" y="473" class="sub">print A4, Typst</text>
+  </g>
+
+  <text x="88" y="576" class="sub">github.com/Chano-KR/all-in-dd</text>
+</svg>

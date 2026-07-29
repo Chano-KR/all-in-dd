@@ -1,22 +1,25 @@
-<p align="center"><img src="assets/readme/logo.png" width="220" alt="all-in-dd — DD 모노그램 로고" /></p>
+<p align="center"><img src="assets/readme/logo.png" width="220" alt="all-in-dd DD 모노그램 로고" /></p>
 
-<img src="assets/readme/hero.svg" width="100%" alt="all-in-dd — 토큰 하나에서 웹, 슬라이드, 카드뉴스, 인쇄로 뻗는 파이프라인" />
+<img src="assets/readme/hero.svg" width="100%" alt="all-in-dd. 토큰 하나에서 웹, 슬라이드, 카드뉴스, 인쇄로 뻗는 파이프라인" />
 
 <p align="right"><a href="README.md">English</a></p>
 
-**all-in-dd**는 *all in direct design*, 코딩 에이전트와 비주얼 작업을 하기 위한
-디자인 시스템 골격이다. 브랜드 하나의 값을 DTCG 토큰 JSON 한 곳에 두고 빌드 한 번으로
-네 매체에 뿌린다 — 웹, 슬라이드 덱, 카드뉴스, 인쇄.
+**all-in-dd**는 *all in direct design*의 줄임말로, 코딩 에이전트와 함께 비주얼 작업을 하기 위한
+디자인 시스템 골격입니다. 브랜드 하나가 쓰는 모든 값을 DTCG 토큰 JSON 한 곳에 모아두고, 빌드를
+한 번 돌리면 네 가지 매체로 동시에 뻗어 나갑니다. 웹 화면, 슬라이드 덱, 카드뉴스 이미지,
+그리고 인쇄물입니다.
 
-나머지 절반은 게이트다. 모델한테 랜딩 페이지를 시키면 학습 데이터의 중앙값이
-나온다. 그라디언트 히어로, 가운데 정렬, 똑같은 카드 세 장. 금지 목록은 마감 앞에서
-버티지 못하니까, 여기 게이트들은 어휘를 공격한다 — *blur*, *gradient*, *glass*를
-발음할 수 없는 토큰셋에는 그리로 돌아갈 지름길이 없다.
+나머지 절반은 게이트입니다. 능력 있는 모델에게 랜딩 페이지를 맡기면 학습 데이터의 중앙값이
+나옵니다. 그라디언트 히어로, 가운데 정렬된 스택, 크기가 똑같은 카드 세 장 같은 것들입니다.
+"이런 건 하지 마라"는 금지 목록은 마감이 닥치면 힘을 잃습니다. 그래서 여기 게이트들은 결과물이
+아니라 어휘를 겨냥합니다. `blur`, `gradient`, `glass`를 아예 발음할 수 없는 토큰셋에는 그런
+표현으로 돌아갈 지름길 자체가 없기 때문입니다.
 
-아래 페이지는 `brands/example` 토큰만으로 조판했다. 소스에 리터럴 값이 없다.
-같은 JSON이 웹에는 `oklch()` 그대로, 인쇄에는 빌드가 변환한 sRGB로 나간다:
+아래 이미지는 `brands/example`의 토큰만으로 조판한 A4 페이지입니다. 문서 소스에는 색이나 크기를
+직접 적은 값이 한 군데도 없습니다. 같은 JSON이 웹으로는 `oklch()` 그대로 나가고, 인쇄로는
+빌드가 변환한 sRGB로 나갑니다.
 
-<p align="center"><img src="assets/readme/specimen.png" width="560" alt="example 브랜드 토큰만으로 조판한 A4 스페시먼 — 색 역할, 상태, 타입 스케일" /></p>
+<p align="center"><img src="assets/readme/specimen.png" width="560" alt="example 브랜드 토큰만으로 조판한 A4 스페시먼. 색 역할, 상태, 타입 스케일이 보인다" /></p>
 
 ```
 tokens/*.json ──▶ npm run build:tokens ──▶ dist/tokens.css   웹 · 슬라이드 · 카드뉴스
@@ -25,8 +28,9 @@ tokens/*.json ──▶ npm run build:tokens ──▶ dist/tokens.css   웹 · 
 
 ## 워크플로
 
-값과 게이트는 절반이다. 나머지 절반은 순서 — [`WORKFLOW.md`](WORKFLOW.md)는 6단계
-머신이고, 각 단계가 그 안에서 뭘 로드하는지 직접 지정한다.
+값과 게이트만으로는 절반입니다. 나머지 절반은 어떤 순서로 일하느냐입니다.
+[`WORKFLOW.md`](WORKFLOW.md)에 6단계 머신이 정의되어 있고, 각 단계는 자기 안에서 무엇을 불러
+쓸지 직접 지정합니다.
 
 ```
 S0 리서치 ─▶ S1 발산 ─▶ S2 락 ─▶ S3 토큰화 ─▶ S4 제작 ─▶ S5 정제
@@ -34,14 +38,16 @@ S0 리서치 ─▶ S1 발산 ─▶ S2 락 ─▶ S3 토큰화 ─▶ S4 제작
                                     └──── 없는 값이 필요 ────┘
 ```
 
-이게 있는 이유는, 이걸 건너뛴 실행이 모든 검사를 통과하고도 생성물 티가 나는
-결과를 냈기 때문이다. 무게를 지는 규칙 둘: S1에서는 방향마다 **다른** 저자를 쓴다.
-한 목소리는 브리프가 아무리 달라도 수렴한다. 그리고 S4에서는 룩을 강제하는 도구를
-막는다. 룩은 이미 잠겼고, 두 번째 권위는 토큰과 다툴 뿐이다.
+이 순서가 문서로 남아 있는 이유는, 이 과정을 건너뛴 실행이 모든 검사를 통과하고도 결국 "AI가
+만든 티가 나는" 결과를 냈기 때문입니다. 그중 무게를 가장 많이 지는 규칙이 둘 있습니다.
 
+첫째, S1에서는 방향마다 서로 다른 저자를 씁니다. 한 목소리가 만든 시안들은 브리프를 아무리
+다르게 줘도 결국 비슷한 곳으로 수렴하기 때문입니다. 둘째, S4에서는 룩을 강제하는 도구를
+막습니다. 이 시점에는 룩이 이미 잠겨 있어서, 그런 도구를 부르면 토큰과 다투는 두 번째 권위가
+생길 뿐입니다.
 
-단계들은 추상 분류가 아니라 실제 스킬명을 지정한다. 먼저 설치할 것 — 체크가 뭐가
-없는지 알려주고 고치는 줄까지 찍어준다:
+각 단계는 추상적인 분류가 아니라 실제 스킬 이름을 지정합니다. 먼저 설치하세요. 아래 체크 명령이
+무엇이 빠졌는지 알려주고, 그것을 채우는 설치 줄까지 출력해 줍니다.
 
 ```bash
 npm run check:skills
@@ -51,47 +57,47 @@ npx skills add emilkowalski/skills     # apple-design, emil-design-eng, 모션 �
 npx skills add https://github.com/pbakaus/impeccable --skill impeccable   # 감사
 ```
 
-[`SKILLS.md`](SKILLS.md)에 전부 — 뭘 하는지, 어느 단계가 필요로 하는지. 스킬이 없다고
-치명적이진 않지만 반드시 소리 내서 말할 것. S1 저자가 얇으면 아이디어 넷이 아니라 한
-아이디어의 변주 넷이 나온다.
+[`SKILLS.md`](SKILLS.md)에 전체 목록이 있습니다. 각각이 무엇을 하고 어느 단계가 필요로 하는지
+정리해 두었습니다. 스킬이 없다고 작업이 막히지는 않지만, 없다는 사실은 반드시 소리 내어 말해야
+합니다. 특히 S1의 저자가 얇으면 아이디어 넷이 아니라 한 아이디어의 변주 넷이 나옵니다.
 
 ## 게이트
 
-전부 실행 가능한 스크립트고, 하나하나가 뭔가 잘못 나간 적이 있어서 생겼다.
+모두 실행 가능한 스크립트이고, 하나하나가 실제로 무언가 잘못 나간 뒤에 생겼습니다.
 
 | 게이트 | 스크립트 | 잡는 것 |
 |---|---|---|
-| 하드코딩 | `check-tokens.mjs` | 소스의 hex·px 리터럴, 미정의 `var(--ds-*)` |
-| 드리프트 | `check-drift.mjs` | 어휘 층위의 기본값 — 금지 OKLCH 대역, 상태 토큰 부재 |
-| 스테일 | `build-tokens.mjs --check` | 소스와 어긋난 dist |
-| 렌더 | `shoot.mjs` | 실제 타깃 치수 스크린샷 |
+| 하드코딩 | `check-tokens.mjs` | 소스에 직접 적힌 hex와 px, 정의되지 않은 `var(--ds-*)` |
+| 드리프트 | `check-drift.mjs` | 어휘 층위의 기본값. 금지된 OKLCH 대역, 상태 토큰 누락 |
+| 스테일 | `build-tokens.mjs --check` | 소스와 어긋난 채로 남아 있는 dist |
+| 렌더 | `shoot.mjs` | 실제 타깃 치수로 찍은 스크린샷 |
 
-통과했다는 건 슬롭이 아니라는 뜻이다. 좋다는 뜻이 아니다 — 게이트는 바닥이지
-목표가 아니다.
+통과했다는 것은 슬롭이 아니라는 뜻이지, 좋다는 뜻이 아닙니다. 게이트는 바닥이지 목표가
+아닙니다.
 
 ## 구조
 
 ```
 all-in-dd/
-├── ENGINE.md            브랜드 무관 규칙 — 레이어, 매체, 게이트, 모션, 한글 조판
-├── WORKFLOW.md          S0–S5 스테이지 머신 — 각 단계에 뭐가 로드되는가
-├── SKILLS.md            스킬 전체 목록 — 뭘 하는지, 어떻게 설치하는지
-├── AGENTS.md            코딩 에이전트용 지침 (CLAUDE.md가 여길 가리킴)
+├── ENGINE.md            브랜드 무관 규칙. 레이어, 매체, 게이트, 모션, 한글 조판
+├── WORKFLOW.md          S0~S5 스테이지 머신. 각 단계에 무엇이 로드되는가
+├── SKILLS.md            스킬 전체 목록. 무엇을 하고 어떻게 설치하는가
+├── AGENTS.md            코딩 에이전트용 지침 (CLAUDE.md가 여기를 가리킴)
 ├── brands/
 │   └── example/         복사해서 시작하는 템플릿 브랜드
-│       ├── DESIGN.md    브랜드 성격 — 값이 아니라 논지
-│       ├── tokens/      primitive → semantic → component, DTCG JSON
+│       ├── DESIGN.md    브랜드 성격. 값이 아니라 논지를 적는 곳
+│       ├── tokens/      primitive → semantic → component 순서의 DTCG JSON
 │       └── print/       토큰만으로 조판되는 검증 문서
-├── scripts/             빌드 + 게이트 + 폰트 설치
-└── fonts/               (생성됨) 서체 풀 — git에는 안 들어감
+├── scripts/             빌드, 게이트, 폰트 설치
+└── fonts/               (생성됨) 서체 풀. git에는 올라가지 않음
 ```
 
-값은 `tokens/`에, 성격은 `DESIGN.md`에, 규칙은 `ENGINE.md`에, 순서는
-`WORKFLOW.md`에 산다. 서로 새기 시작하면 시스템이 죽어가는 중인 거다.
+값은 `tokens/`에, 성격은 `DESIGN.md`에, 규칙은 `ENGINE.md`에, 순서는 `WORKFLOW.md`에 삽니다.
+이것들이 서로에게 새어 들어가기 시작하면 시스템이 죽어가고 있다는 신호입니다.
 
 ## 설치
 
-공통으로 Node 20+, 인쇄를 쓰면 [Typst](https://typst.app).
+공통으로 Node 20 이상이 필요하고, 인쇄를 쓴다면 [Typst](https://typst.app)도 있어야 합니다.
 
 **Windows**
 
@@ -99,8 +105,8 @@ all-in-dd/
 git clone https://github.com/Chano-KR/all-in-dd
 cd all-in-dd
 npm install
-npm run fetch:fonts      # 서체 풀 다운로드 (~50 MB, 전부 OFL)
-npm run install:fonts    # 사용자 스코프 등록, 관리자 권한 불필요
+npm run fetch:fonts      # 서체 풀 다운로드 (약 50 MB, 전부 OFL)
+npm run install:fonts    # 사용자 스코프 등록. 관리자 권한이 필요 없습니다
 winget install Typst.Typst
 ```
 
@@ -110,7 +116,7 @@ winget install Typst.Typst
 git clone https://github.com/Chano-KR/all-in-dd
 cd all-in-dd
 npm install
-bash scripts/fonts.sh    # 다운로드 + ~/Library/Fonts 설치
+bash scripts/fonts.sh    # 다운로드 후 ~/Library/Fonts에 설치
 brew install typst
 ```
 
@@ -120,51 +126,55 @@ brew install typst
 git clone https://github.com/Chano-KR/all-in-dd
 cd all-in-dd
 npm install
-bash scripts/fonts.sh    # 다운로드 + ~/.local/share/fonts 설치, fc-cache 실행
-# typst: 배포판 패키지 또는 https://github.com/typst/typst/releases
+bash scripts/fonts.sh    # 다운로드 후 ~/.local/share/fonts에 설치하고 fc-cache 실행
+# typst는 배포판 패키지 또는 https://github.com/typst/typst/releases 에서 받습니다
 ```
 
-폰트 스크립트는 멱등이라 몇 번을 다시 돌려도 있는 건 건너뛴다. 확인은 한 줄:
+폰트 스크립트는 멱등이라 몇 번을 다시 돌려도 이미 있는 것은 건너뜁니다. 전체가 제대로
+설치됐는지는 한 줄로 확인할 수 있습니다.
 
 ```bash
 npm run build:tokens && npm run print:example
 ```
 
-`brands/example/print/proof.pdf`가 나오면 전부 살아 있는 것.
+`brands/example/print/proof.pdf`가 만들어지면 파이프라인 전체가 살아 있는 것입니다.
 
-## 새 브랜드 시작
+## 새 브랜드 시작하기
 
 ```bash
 cp -r brands/example brands/mybrand
 ```
 
-순서가 생각보다 중요하다.
+작업 순서가 생각보다 중요합니다.
 
-1. `tokens/primitive/` — 팔레트, 서체, 스케일. 색은 `oklch()`로 저작한다. 웹은
-   그대로 읽고, 인쇄 변환은 빌드가 책임진다 (`scripts/lib/color.mjs`).
-2. `tokens/semantic/` — 역할. hover / press / focus를 **컴포넌트가 생기기 전에**
-   정의할 것. 상태 토큰 없는 표면은 스크린샷 게이트를 전부 통과하고도 죽은 채
-   출고된다. 실제로 그렇게 나간 적이 있다.
-3. `DESIGN.md` — 클레임과 시그니처 장치. 여기가 비어 있으면 토큰은 그냥 색
-   목록이다.
-4. `npm run build:tokens` — dist가 생기고, 이후는 게이트가 지킨다.
+1. **`tokens/primitive/`** 부터 채웁니다. 팔레트, 서체, 스케일입니다. 색은 `oklch()`로
+   저작하기를 권합니다. 웹은 그 값을 그대로 읽고, 인쇄용 변환은 빌드가 책임집니다
+   (`scripts/lib/color.mjs`).
+2. **`tokens/semantic/`** 에서 역할을 정의합니다. hover, press, focus 상태를 **컴포넌트가
+   생기기 전에** 만들어 두세요. 상태 토큰이 없는 표면은 스크린샷 게이트를 전부 통과하고도
+   반응이 죽은 채로 출고됩니다. 실제로 그렇게 내보낸 적이 있어서 드리는 말씀입니다.
+3. **`DESIGN.md`** 에 클레임과 시그니처 장치를 적습니다. 이 문서가 비어 있으면 토큰은 그냥
+   색 목록에 지나지 않습니다.
+4. **`npm run build:tokens`** 를 돌리면 `dist/`가 생기고, 그 뒤로는 게이트가 지켜 줍니다.
 
-브랜드별 규칙과 매체 분기 — 화면과 지면에서 갈라도 되는 값, 절대 안 되는 값 —
-는 `ENGINE.md`에 있다. 길지만, 규칙마다 그걸 만들게 한 실패가 붙어 있다.
+브랜드별 규칙과 매체 분기, 즉 화면과 지면에서 달라져도 되는 값과 절대 달라지면 안 되는 값은
+`ENGINE.md`에 정리되어 있습니다. 분량이 적지는 않지만, 규칙마다 그것을 만들게 한 실패가 함께
+적혀 있습니다.
 
 ## 서체
 
-하우스 풀은 전부 OFL이다. Wanted Sans · SUITE · SUIT · IBM Plex Sans KR
-(산세리프), Hahmlet (세리프), [Jetendard](https://github.com/kuskhan/jetendard)
-(모노 — JetBrains Mono에 Pretendard 한글). 셀프호스팅도 인쇄 임베드도 깨끗하다.
+하우스 풀은 전부 OFL 라이선스입니다. 산세리프는 Wanted Sans, SUITE, SUIT, IBM Plex Sans KR을
+쓰고, 세리프는 Hahmlet, 모노는 [Jetendard](https://github.com/kuskhan/jetendard)를 씁니다.
+Jetendard는 JetBrains Mono에 Pretendard 한글을 얹은 서체입니다. 셀프호스팅도 인쇄 임베드도
+라이선스 문제가 없습니다.
 
-한글 조판 규칙은 `ENGINE.md` §5. `word-break: keep-all`, 한글 우선 행간 바닥,
-그리고 라틴 서체에 OS 폴백 한글을 얹는 건 폴백이 아니라 실패다.
+한글 조판 규칙은 `ENGINE.md` 5절에 있습니다. `word-break: keep-all`을 걸고, 행간 바닥을 한글
+기준으로 잡으며, 라틴 서체에 OS 기본 한글 폴백을 얹는 것은 폴백이 아니라 실패로 봅니다.
 
 ## 에이전트
 
-이 레포에서 에이전트를 돌린다면 [`AGENTS.md`](AGENTS.md)부터 — 불변 규칙, 커맨드,
-그리고 취향·크래프트·감사 스킬이 워크플로 어디에 속하는지가 있다.
+이 저장소에서 에이전트를 돌린다면 [`AGENTS.md`](AGENTS.md)를 먼저 읽히세요. 불변 규칙, 커맨드
+목록, 그리고 취향·크래프트·감사 스킬이 워크플로 어디에 속하는지가 정리되어 있습니다.
 
 ---
 

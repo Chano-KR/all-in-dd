@@ -20,10 +20,23 @@ import { join, resolve } from 'node:path';
 import { homedir, platform } from 'node:os';
 
 const FIX = process.argv.includes('--fix');
+/* A runner is not a workstation. Checks about what a person has installed are suppressed
+   there rather than failed, so CI stays a statement about the repo. */
+const CI = !!process.env.CI || process.argv.includes('--ci');
 const root = resolve(import.meta.dirname, '..');
 
 /* The template. Excluded from font resolution and from every fetch this script performs. */
 const TEMPLATE_BRAND = 'example';
+
+/* Every brand except the template — the set whose needs are real requirements. */
+const shippingBrands = () => {
+  const dir = join(root, 'brands');
+  return existsSync(dir)
+    ? readdirSync(dir)
+      .filter(b => statSync(join(dir, b)).isDirectory())
+      .filter(b => b !== TEMPLATE_BRAND)
+    : [];
+};
 
 const rows = [];
 let required = 0;
@@ -88,18 +101,24 @@ console.log('\nnpm packages');
 
 console.log('\nexternal tools');
 {
-  /* typst is required only by the print medium, but the print gate is not optional once a
-     brand ships paper, so a missing binary is a hard failure rather than a note. */
+  /* typst is required by the print medium and by nothing else, so the requirement follows
+     the brands on disk: paper shipping somewhere makes a missing binary a hard failure,
+     and a checkout holding only the template does not need a typesetter installed to be
+     in working order. */
+  const printBrands = shippingBrands().filter(b =>
+    existsSync(join(root, 'brands', b, 'print')));
   if (has('typst')) {
     const v = sh('typst', ['--version']);
     report(v.ok ? 'ok' : 'bad', 'typst', v.ok ? v.out : 'on PATH but will not run');
   } else if (FIX && has('mise')) {
     const r = sh('mise', ['use', '-g', 'typst@latest']);
     report(r.ok ? 'ok' : 'bad', 'typst', r.ok ? 'installed via mise' : 'mise install failed');
+  } else if (!printBrands.length) {
+    report('warn', 'typst', 'absent — no shipping brand uses print yet, so not required');
   } else {
     const line = { darwin: 'brew install typst', win32: 'winget install Typst.Typst' }[platform()]
       ?? 'mise use -g typst@latest  (or your distro package)';
-    report('bad', 'typst', `absent — ${line}`);
+    report('bad', 'typst', `absent — ${printBrands.join(', ')} ship print; ${line}`);
   }
 
   /* Gates 3 and 4 drive a real browser. playwright the package resolving is not the same
@@ -129,11 +148,7 @@ console.log('\nexternal tools');
 console.log('\nfonts');
 {
   const brandsDir = join(root, 'brands');
-  const brands = existsSync(brandsDir)
-    ? readdirSync(brandsDir)
-      .filter(b => statSync(join(brandsDir, b)).isDirectory())
-      .filter(b => b !== TEMPLATE_BRAND)
-    : [];
+  const brands = shippingBrands();
 
   const wanted = new Set();
   for (const brand of brands) {
@@ -175,13 +190,25 @@ console.log('\nfonts');
 
 console.log('\nskills');
 {
-  const r = sh('node', [join(root, 'scripts', 'check-skills.mjs')]);
+  /* process.execPath, not 'node': resolving through PATH made a runner without node on
+     PATH produce an empty report, and an empty report matched no success line — so a
+     perfectly consistent catalog was reported as broken. Absence of evidence was being
+     read as evidence, which is the failure mode this whole suite exists to prevent. */
+  const r = sh(process.execPath, [join(root, 'scripts', 'check-skills.mjs')]);
   const missingRequired = /(\d+) REQUIRED skill\(s\) missing/.exec(r.out);
-  const invariant = /✓ catalog invariant holds/.test(r.out);
+  const ran = /catalog: \d+ authors/.test(r.out);
+  const invariant = ran && /✓ catalog invariant holds/.test(r.out);
+  /* The invariant is a property of catalog/authors.json, so it is checked everywhere.
+     What is installed is a property of a workstation, and a CI runner does not have one —
+     asking it there produces a red build about a machine nobody works on. */
   report(invariant ? 'ok' : 'bad', 'catalog invariant',
-    invariant ? 'all declared taste, none contradicted' : 'catalog/authors.json is inconsistent');
+    invariant ? 'all declared taste, none contradicted'
+      : ran ? 'catalog/authors.json is inconsistent'
+        : `check-skills.mjs did not run — ${r.out.split('\n')[0] || 'no output'}`);
 
-  if (missingRequired) {
+  if (CI) {
+    report('warn', 'installed skills', 'not judged on CI — a runner has no workstation');
+  } else if (missingRequired) {
     const sources = [...r.out.matchAll(/npx skills add (\S+)/g)].map(m => m[1]);
     if (FIX) {
       for (const src of [...new Set(sources)]) {
@@ -195,7 +222,7 @@ console.log('\nskills');
 
   /* Duplicate detection across the roots check-skills reads. A symlink into the canonical
      store is the healthy shape; two real directories with one name is the failure. */
-  const roots = [
+  const roots = CI ? [] : [
     join(homedir(), '.agents', 'skills'),
     join(homedir(), '.claude', 'skills'),
     join(homedir(), '.codex', 'skills'),
@@ -213,9 +240,10 @@ console.log('\nskills');
     }
   }
   const dupes = [...seen].filter(([, dirs]) => dirs.length > 1);
-  dupes.length
-    ? report('bad', 'skill duplicates', dupes.map(([n, d]) => `${n} (${d.join(' + ')})`).join('; '))
-    : report('ok', 'skill duplicates', 'none — one canonical copy per skill');
+  if (CI) { /* nothing to deduplicate on a machine with no skill roots */ }
+  else if (dupes.length)
+    report('bad', 'skill duplicates', dupes.map(([n, d]) => `${n} (${d.join(' + ')})`).join('; '));
+  else report('ok', 'skill duplicates', 'none — one canonical copy per skill');
 }
 
 console.log(required

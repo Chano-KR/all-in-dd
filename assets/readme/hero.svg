@@ -1,5 +1,5 @@
-<svg viewBox="0 0 1200 380" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="all-in-dd — 토큰 하나에서 웹, 슬라이드, 카드뉴스, 인쇄 네 매체로 뻗는 파이프라인">
-  <title>all-in-dd — 토큰 하나, 매체 넷</title>
+<svg viewBox="0 0 1200 380" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="all-in-dd — one token source fanning out to web, slides, cards, and print">
+  <title>all-in-dd — one token source, four media</title>
   <defs>
     <style>
       .name  { font: 700 64px ui-monospace, "Cascadia Mono", "SF Mono", Consolas, monospace; fill: #121921; letter-spacing: -2px; }
@@ -19,7 +19,7 @@
   <!-- wordmark -->
   <text x="64" y="96" class="label">ALL IN DIRECT DESIGN</text>
   <text x="60" y="164" class="name">all-in-dd</text>
-  <text x="64" y="212" class="tag">토큰 하나, 매체 넷 — 직관으로 그리고, 게이트로 지킨다.</text>
+  <text x="64" y="212" class="tag">One token source, four media. Drawn direct, held by gates.</text>
 
   <!-- the source: a real token, not decoration -->
   <rect x="64" y="252" width="360" height="72" rx="3" fill="#F1F4F6" stroke="#E2E5E8"/>
@@ -41,18 +41,18 @@
   <g>
     <circle cx="846" cy="84" r="4" fill="#BA4F1F"/>
     <text x="862" y="83"  class="media">tokens.css</text>
-    <text x="862" y="102" class="sub">웹 · 앱 — oklch() 그대로</text>
+    <text x="862" y="102" class="sub">web &amp; app — oklch() as-is</text>
 
     <circle cx="846" cy="151" r="4" fill="#BA4F1F"/>
     <text x="862" y="150" class="media">slides</text>
-    <text x="862" y="169" class="sub">16:9 HTML 덱 → PDF</text>
+    <text x="862" y="169" class="sub">16:9 HTML deck → PDF</text>
 
     <circle cx="846" cy="218" r="4" fill="#BA4F1F"/>
     <text x="862" y="217" class="media">cards</text>
-    <text x="862" y="236" class="sub">1080×1080 렌더</text>
+    <text x="862" y="236" class="sub">1080×1080 renders</text>
 
     <circle cx="846" cy="284" r="4" fill="#BA4F1F"/>
     <text x="862" y="283" class="media">tokens.typ</text>
-    <text x="862" y="302" class="sub">인쇄 A4 — 빌드가 sRGB 변환</text>
+    <text x="862" y="302" class="sub">print A4 — build-side sRGB</text>
   </g>
 </svg>

@@ -1,0 +1,11 @@
+<svg viewBox="0 0 420 64" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="README made with beautify-github-readme">
+  <title>README made with beautify-github-readme</title>
+  <desc>Signature badge in the all-in-dd token-rail grammar: a token dot leaving on its rail.</desc>
+  <rect x="0.5" y="0.5" width="419" height="63" rx="6" fill="#FBFCFD" stroke="#E2E5E8"/>
+  <!-- the repo's motif: a token dot on its rail, exiting right -->
+  <line x1="20" y1="32" x2="52" y2="32" stroke="#B3B8BE" stroke-width="1.5"/>
+  <circle cx="52" cy="32" r="4.5" fill="#BA4F1F"/>
+  <text x="72" y="27" style="font:600 11px ui-monospace,Consolas,monospace; letter-spacing:2.5px" fill="#5F6772">README MADE WITH</text>
+  <text x="72" y="46" style="font:700 15px ui-monospace,Consolas,monospace" fill="#121921">beautify-github-readme</text>
+  <path d="M 384 26 h 12 m 0 0 v 12 m 0 -12 l -14 14" stroke="#BA4F1F" stroke-width="1.5" fill="none"/>
+</svg>

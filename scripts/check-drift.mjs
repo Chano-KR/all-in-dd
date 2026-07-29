@@ -156,7 +156,17 @@ if (colorTokens.length === 0) {
   const thin = [];
   const ok = [];
   for (const [name, re] of REQUIRED) {
-    const values = new Set([...tokens].filter(([k]) => re.test(k)).map(([, v]) => v.trim()));
+    /* Canonicalise before counting: `3px` and `3.0px` are one step, and zero is zero
+       whatever unit follows it. Comparing raw strings let a single-value scale pass by
+       spelling the same value twice. */
+    const canon = (v) => {
+      const t = v.trim().toLowerCase();
+      const m = /^(-?\d*\.?\d+)([a-z%]*)$/.exec(t);
+      if (!m) return t;
+      const n = parseFloat(m[1]);
+      return n === 0 ? '0' : `${n}${m[2]}`;
+    };
+    const values = new Set([...tokens].filter(([k]) => re.test(k)).map(([, v]) => canon(v)));
     (values.size < 2 ? thin : ok).push([name, values.size]);
   }
   thin.length
@@ -183,6 +193,12 @@ if (colorTokens.length === 0) {
   /* A brand may name its own pairings: { "contrast": [["text-body","surface-card"]] }.
      Absent that, fall back to the conventional roles. */
   const declared = drift.contrast ?? null;
+  /* A declaration REMAPS the pairings; it must not SHRINK them. Declaring only the
+     roles that already pass would silently drop the failing one, which is how a
+     low-contrast text-secondary could disappear from the check by being left out. */
+  const uncovered = declared
+    ? inks.map(([k]) => k).filter(k => !declared.some(([ink]) => ink === k))
+    : [];
   const wanted = declared
     ? declared.map(([ink, ground]) => [ink, hexOf.get(ink), ground])
     : [
@@ -196,7 +212,11 @@ if (colorTokens.length === 0) {
     .map(([k, v, g]) => [k, g, contrast(v, hexOf.get(g))])
     .filter(([, , r]) => r < 4.5);
 
-  if (!grounds.length || !inks.length)
+  if (uncovered.length)
+    fail('a declared contrast mapping must cover every text role',
+      `not mapped: ${uncovered.join(', ')} — a declaration remaps pairings, it does not ` +
+      'narrow what gets judged');
+  else if (!grounds.length || !inks.length)
     fail('text and surface colour roles exist to pair',
       `found ${grounds.length} surface-* and ${inks.length} text-* colour roles`);
   else if (missing.length)

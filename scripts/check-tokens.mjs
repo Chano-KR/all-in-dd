@@ -37,7 +37,10 @@ const LITERAL = [
      the px pattern happened to catch it, so `w-[35rem]`, `text-[oklch(...)]` and
      `leading-[1.37]` went straight through — precisely the escape hatch the rule exists
      to close. This matches the syntax itself rather than any one unit. */
-  { re: /(?<![\w-])[a-z][a-z0-9-]*-\[[^\]\s]+\]/g, what: 'Tailwind arbitrary value' },
+  /* Optional leading `-` and any `variant:` prefixes. `-mt-[1rem]` and
+     `hover:-translate-x-[10%]` slipped through: the lookbehind rejected the negative
+     form outright, and neither carries a px or hex for the other rules to catch. */
+  { re: /(?<![\w-])-?[a-z][a-z0-9-]*-\[[^\]\s]+\]/g, what: 'Tailwind arbitrary value' },
 ];
 
 let failures = 0;

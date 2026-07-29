@@ -14,7 +14,7 @@
  * Writes a throwaway brand under brands/__fixture__ and removes it afterwards.
  */
 
-import { writeFileSync, mkdirSync, rmSync, existsSync } from 'node:fs';
+import { writeFileSync, readFileSync, mkdirSync, rmSync, existsSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { spawnSync } from 'node:child_process';
 
@@ -113,6 +113,22 @@ try {
     check('a text role below 4.5:1 fails',
       { script: 'check-drift.mjs', args: [BRAND], expect: 'fail', because: '4.5' });
 
+    /* A declaration must remap pairings, never narrow them: leaving the failing role
+       out of the mapping used to hide it, since only declared inks were judged. */
+    writeDrift({ contrast: [['text-primary', 'surface-page']] });
+    check('a contrast mapping that omits a text role fails',
+      { script: 'check-drift.mjs', args: [BRAND], expect: 'fail', because: 'cover every text role' });
+    writeDrift(null);
+
+    /* Equivalent spellings are one step, not two. */
+    writeTokens({ ...CLEAN, 'radius-large': '3.0px' });
+    check('3px and 3.0px count as one step',
+      { script: 'check-drift.mjs', args: [BRAND], expect: 'fail', because: 'distinct' });
+
+    writeTokens({ ...CLEAN, 'radius-small': '0px', 'radius-large': '0rem' });
+    check('0px and 0rem count as one step',
+      { script: 'check-drift.mjs', args: [BRAND], expect: 'fail', because: 'distinct' });
+
     writeTokens(Object.fromEntries(Object.entries(CLEAN).filter(([k]) => k !== 'action-hover')));
     check('a missing interaction state fails',
       { script: 'check-drift.mjs', args: [BRAND], expect: 'fail', because: 'hover, press and focus' });
@@ -168,11 +184,18 @@ try {
       check(label, { script: 'check-tokens.mjs', args: [BRAND, f], expect: 'fail', because });
     }
 
-    /* the rule ENGINE stated and the script did not implement */
-    const arb = writeFile('arb.tsx',
-      'const A = () => <div className="w-[35rem] text-[oklch(56%_0.15_42)] leading-[1.37]">x</div>;');
-    check('Tailwind arbitrary values fail regardless of unit',
-      { script: 'check-tokens.mjs', args: [BRAND, arb], expect: 'fail', because: 'arbitrary' });
+    /* The rule ENGINE stated and the script did not implement. One form per fixture:
+       bundling them let a single detection hide the other two failing. */
+    for (const [label, code] of [
+      ['a rem arbitrary value fails', 'className="w-[35rem]"'],
+      ['a function arbitrary value fails', 'className="text-[oklch(56%_0.15_42)]"'],
+      ['a unitless arbitrary value fails', 'className="leading-[1.37]"'],
+      ['a NEGATIVE arbitrary value fails', 'className="-mt-[1rem]"'],
+      ['a variant-prefixed negative fails', 'className="hover:-translate-x-[10%]"'],
+    ]) {
+      const f = writeFile('arb.tsx', `const A = () => <div ${code}>x</div>;`);
+      check(label, { script: 'check-tokens.mjs', args: [BRAND, f], expect: 'fail', because: 'arbitrary' });
+    }
 
     const utils = writeFile('utils.tsx',
       'const A = () => <div className="grid gap-6 md:flex-row">{arr[0]}</div>;');
@@ -198,6 +221,32 @@ try {
 
     check('an unknown brand exits cleanly, not with a stack trace',
       { script: 'check-tokens.mjs', args: ['nosuchbrand', mq], expect: 'fail', because: 'no built tokens' });
+  }
+  /* ---------------- skill catalog consistency ---------------- */
+  if (group('skills')) {
+    console.log('\ncatalog — taste-only invariant');
+    const catPath = join(root, 'catalog', 'authors.json');
+    const original = readFileSync(catPath, 'utf8');
+    try {
+      check('the real catalog passes --strict',
+        { script: 'check-skills.mjs', args: ['--strict'], expect: 'pass' });
+
+      /* A technique-pool skill in the author catalog is what let --diverge build a
+         direction with no taste author. The check must derive its non-taste set rather
+         than consult a hand-list, so a skill nobody remembered to blocklist still fails. */
+      for (const intruder of ['masked-reveal', 'apple-design', 'beautiful-shadows']) {
+        const c = JSON.parse(original);
+        c.authors[intruder] = {
+          ground: 'either', temp: 'neutral', surface: 'flat', structure: 'modular',
+          type: 'sans-utility', density: 'measured', motion: 'still', argues: 'fixture',
+        };
+        writeFileSync(catPath, JSON.stringify(c, null, 2));
+        check(`a non-taste skill (${intruder}) in the catalog fails --strict`,
+          { script: 'check-skills.mjs', args: ['--strict'], expect: 'fail', because: 'author catalog' });
+      }
+    } finally {
+      writeFileSync(catPath, original);
+    }
   }
 } finally {
   if (existsSync(brandDir)) rmSync(brandDir, { recursive: true, force: true });

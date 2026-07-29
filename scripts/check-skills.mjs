@@ -73,25 +73,37 @@ for (const tier of [true, false]) {
   }
 }
 
-/* The author catalog must contain taste skills only. apple-design sat in it while every
-   document classified it as craft, and --diverge duly picked it as an S1 author — a
-   direction built with no taste author at all. A manifest and a catalog that disagree
-   are worse than either alone, so the disagreement is now a check. */
-const CRAFT_AND_AUDIT = new Set([
-  'apple-design', 'emil-design-eng', 'impeccable', 'grill-me', 'review-animations',
-  'find-animation-opportunities', 'improve-animations', 'pick-ui-library',
-  'animation-vocabulary', 'remotion-best-practices', 'ui-ux-pro-max', 'dataviz',
-]);
+/* The author catalog must contain taste skills only.
+
+   Derived, not hand-listed. The first version compared against a manual blocklist, which
+   cannot be complete by construction: `masked-reveal` and every other technique-pool
+   skill was absent from it, so putting one in the catalog passed --strict and let
+   --diverge pick it as an S1 author. The non-taste set now comes from two places that
+   already exist and are already maintained:
+     1. this file's own manifest — anything a stage requires at S2/S4/S5 is craft or audit;
+     2. SKILLS.md's technique/utility sections, parsed from the headings that name them.
+   A skill in neither is unknown rather than assumed innocent, and is reported as such. */
+const nonTaste = new Set(SKILLS.filter(([stage]) => /^S[245]$/.test(stage)).map(([, n]) => n));
+const skillsDoc = resolve(import.meta.dirname, '..', 'SKILLS.md');
+if (existsSync(skillsDoc)) {
+  const md = readFileSync(skillsDoc, 'utf8');
+  const techniqueSection = md.slice(md.indexOf('## Technique skills'));
+  const utilities = md.slice(md.indexOf('**Asset utilities, not authors**'));
+  for (const chunk of [techniqueSection.split('\n## ')[0], utilities.split('\n\n')[0]]) {
+    for (const m of chunk.matchAll(/`([a-z][a-z0-9-]{3,})`/g)) nonTaste.add(m[1]);
+  }
+}
+
 const catPath = resolve(import.meta.dirname, '..', 'catalog', 'authors.json');
 if (existsSync(catPath)) {
   const authors = Object.keys(JSON.parse(readFileSync(catPath, 'utf8')).authors ?? {});
-  const wrong = authors.filter(a => CRAFT_AND_AUDIT.has(a));
+  const wrong = authors.filter(a => nonTaste.has(a));
   const uninstalled = authors.filter(a => !present.has(a));
   console.log(`
-catalog: ${authors.length} authors`);
+catalog: ${authors.length} authors, checked against ${nonTaste.size} known non-taste skills`);
   if (wrong.length) {
-    console.log(`  ✗ not taste skills, remove from the catalog: ${wrong.join(', ')}`);
-    missing.push([wrong[0], 'catalog/authors.json', true]);
+    console.log(`  ✗ craft/audit/utility skills in the author catalog: ${wrong.join(', ')}`);
+    missing.push(['(remove them)', 'catalog/authors.json', true]);
   }
   if (uninstalled.length) console.log(`  ~ catalogued but not installed: ${uninstalled.join(', ')}`);
   if (!wrong.length && !uninstalled.length) console.log('  ✓ all taste, all installed');

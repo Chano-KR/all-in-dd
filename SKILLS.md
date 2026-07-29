@@ -147,7 +147,9 @@ npx skills add https://github.com/MengTo/Skills --skill <name>
 **Atmospheric and effect-led** — `glass-dark-ui`, `dark-glass-clean-layout`,
 `blue-laser-clean-glass-layout`, `mesh-gradient-dark-blue-clean`,
 `funky-purple-container-tech`, `dark-blue-contrasting-clean`, `tech-green-dark-mode-modern`,
-`blue-cloudy-clean-modern`, `dither-laser-dark-mode`, `glass-dark-mode-clock`.
+`blue-cloudy-clean-modern`, `dither-laser-dark-mode`, `glass-dark-mode-clock`,
+`bright-green-tech-system-webgl` (a whole design system, not a WebGL technique — it was
+filed under technique until the catalog check caught the disagreement).
 
 The second group builds in exactly the vocabulary an ingredient blacklist would have banned:
 glass, gradient, glow, permanent dark, saturated purple. **That is not a reason to exclude
@@ -180,8 +182,7 @@ argue with a locked direction. Same install form.
 
 **Ambient and WebGL** — `ambient-section-particles`, `atmosphere-background`,
 `gooey-blob-system`, `thinking-orbs`, `globe-particles`, `dither-background`,
-`add-shader-cursor-trail`, `shaders-cursor-ripples`, `webgl-landing-steering`,
-`bright-green-tech-system-webgl`.
+`add-shader-cursor-trail`, `shaders-cursor-ripples`, `webgl-landing-steering`.
 
 **Imagery** — `unsplash-asset-images`, `aura-asset-images`. Sourced photography is a
 legitimate material; whether a particular image is a decision or a placeholder is what gate 0

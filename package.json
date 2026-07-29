@@ -1,19 +1,19 @@
 {
-  "name": "house-design-system",
+  "name": "all-in-dd",
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "House design system: DTCG token source of truth, built to CSS (screen) and Typst (print).",
+  "description": "All In Direct Design — one DTCG token source, four media (web, slides, card news, print), with anti-slop gates.",
   "scripts": {
     "build:tokens": "node scripts/build-tokens.mjs",
     "check:tokens": "node scripts/build-tokens.mjs --check",
     "gate:tokens": "node scripts/check-tokens.mjs",
+    "gate:drift": "node scripts/check-drift.mjs",
     "shoot": "node scripts/shoot.mjs",
-    "verify:classhift": "npm run build:tokens && node scripts/check-tokens.mjs classhift brands/classhift/specimen.html && node scripts/shoot.mjs brands/classhift/specimen.html",
-    "verify:chunaimun": "npm run build:tokens && node scripts/check-tokens.mjs chunaimun brands/chunaimun/specimen.html && node scripts/shoot.mjs brands/chunaimun/specimen.html",
-    "print:chunaimun": "npm run check:tokens && typst compile --root brands/chunaimun brands/chunaimun/print/interior-proof.typ",
+    "print:example": "npm run check:tokens && typst compile --root brands/example brands/example/print/proof.typ",
+    "fetch:fonts": "pwsh -NoProfile -ExecutionPolicy Bypass -File scripts/fetch-fonts.ps1",
     "install:fonts": "pwsh -NoProfile -ExecutionPolicy Bypass -File scripts/install-fonts.ps1",
-    "fetch:fonts": "pwsh -NoProfile -ExecutionPolicy Bypass -File scripts/fetch-fonts.ps1"
+    "fonts:unix": "bash scripts/fonts.sh"
   },
   "devDependencies": {
     "playwright": "^1.62.0",

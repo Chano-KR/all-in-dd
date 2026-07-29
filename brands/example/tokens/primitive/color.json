@@ -1,0 +1,21 @@
+{
+  "gray": {
+    "$type": "color",
+    "$description": "Cool neutral ramp, authored in OKLCH (ENGINE §2.3: CSS consumes oklch() as-is, print gets a build-time sRGB conversion). Hue 250 keeps the neutrals off the warm cream band that reads as a default.",
+    "000": { "$value": "oklch(99% 0.002 250)" },
+    "100": { "$value": "oklch(96.5% 0.004 250)" },
+    "200": { "$value": "oklch(92% 0.006 250)" },
+    "400": { "$value": "oklch(78% 0.010 250)" },
+    "600": { "$value": "oklch(51% 0.020 255)" },
+    "800": { "$value": "oklch(32% 0.022 255)" },
+    "900": { "$value": "oklch(21% 0.020 255)" }
+  },
+  "persimmon": {
+    "$type": "color",
+    "$description": "The single accent. One hue per brand is the discipline — a second accent is a second brand argument.",
+    "700": { "$value": "oklch(48% 0.13 42)" },
+    "600": { "$value": "oklch(56% 0.15 42)" },
+    "500": { "$value": "oklch(63% 0.14 42)" },
+    "200": { "$value": "oklch(90% 0.05 42)" }
+  }
+}

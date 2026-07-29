@@ -1,11 +1,22 @@
 node_modules/
-brands/*/dist/
 fonts/
+.agents/
+.claude/
 
-# Renders, screenshots, and generated proofs are evidence, not source —
-# they live in the workspace doc trail, never in this repo.
+# This repo is the reusable skeleton. Real brands are private work —
+# they live here on disk but are never tracked. `example` is the template.
+brands/*
+!brands/example/
+brands/example/dist/
+
+# S1 audition boards are run evidence, not skeleton.
+auditions/
+
+# Renders, screenshots, and generated proofs stay out — except README assets.
 **/_shots/
 **/_img/
 **/.impeccable/
 *.png
 *.pdf
+!assets/readme/*.png
+skills-lock*

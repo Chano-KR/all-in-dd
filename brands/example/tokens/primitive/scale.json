@@ -1,0 +1,44 @@
+{
+  "size": {
+    "$type": "dimension",
+    "$description": "Web type scale in px (build converts to pt for print at ×0.75). Hangul-first sizing: floors come from Korean legibility, Latin rides along.",
+    "meta": { "$value": "13px" },
+    "body": { "$value": "16px" },
+    "lead": { "$value": "19px" },
+    "title": { "$value": "28px" },
+    "display": { "$value": "44px" }
+  },
+  "space": {
+    "$type": "dimension",
+    "1": { "$value": "4px" },
+    "2": { "$value": "8px" },
+    "3": { "$value": "12px" },
+    "4": { "$value": "16px" },
+    "5": { "$value": "24px" },
+    "6": { "$value": "32px" },
+    "7": { "$value": "48px" },
+    "8": { "$value": "64px" }
+  },
+  "leading": {
+    "$type": "number",
+    "$description": "Korean floors: body ≥1.5, display answers to a 1.2 floor instead — forcing 1.5 onto display Hangul is a setting error, not compliance.",
+    "body": { "$value": 1.7 },
+    "display": { "$value": 1.25 }
+  },
+  "radius": {
+    "$type": "dimension",
+    "$description": "Two radii, not one. A single radius everywhere is a listed slop tell (gate 0).",
+    "small": { "$value": "3px" },
+    "large": { "$value": "10px" }
+  },
+  "duration": {
+    "$type": "duration",
+    "$description": "Motion QUALITY only — choreography (what moves when) is prose in DESIGN.md, never a token (ENGINE §3).",
+    "fast": { "$value": "120ms" },
+    "base": { "$value": "200ms" }
+  },
+  "easing": {
+    "$type": "cubicBezier",
+    "out": { "$value": [0.2, 0, 0, 1] }
+  }
+}

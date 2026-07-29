@@ -1,0 +1,23 @@
+{
+  "surface": {
+    "$type": "color",
+    "$description": "Layer-2 code references these roles, never the gray/persimmon primitives (gate 1).",
+    "page": { "$value": "{gray.000}" },
+    "panel": { "$value": "{gray.100}" },
+    "line": { "$value": "{gray.200}" }
+  },
+  "text": {
+    "$type": "color",
+    "primary": { "$value": "{gray.900}" },
+    "secondary": { "$value": "{gray.600}", "$description": "the contrast floor — nothing lighter carries words" }
+  },
+  "action": {
+    "$type": "color",
+    "$description": "Interactive states exist at the token layer BEFORE any component does — a missing hover/press is how a dead interface ships while every screenshot gate passes (gate 0b).",
+    "base": { "$value": "{persimmon.600}" },
+    "hover": { "$value": "{persimmon.500}" },
+    "press": { "$value": "{persimmon.700}" },
+    "focus-ring": { "$value": "{persimmon.500}" },
+    "wash": { "$value": "{persimmon.200}" }
+  }
+}

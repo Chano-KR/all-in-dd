@@ -1,0 +1,58 @@
+<svg viewBox="0 0 1200 380" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="all-in-dd — 토큰 하나에서 웹, 슬라이드, 카드뉴스, 인쇄 네 매체로 뻗는 파이프라인">
+  <title>all-in-dd — 토큰 하나, 매체 넷</title>
+  <defs>
+    <style>
+      .name  { font: 700 64px ui-monospace, "Cascadia Mono", "SF Mono", Consolas, monospace; fill: #121921; letter-spacing: -2px; }
+      .label { font: 600 15px ui-monospace, Consolas, monospace; fill: #973E16; letter-spacing: 5px; }
+      .tag   { font: 400 21px system-ui, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; fill: #5F6772; }
+      .code  { font: 400 15px ui-monospace, Consolas, monospace; fill: #2B343E; }
+      .codek { fill: #BA4F1F; }
+      .rail  { stroke: #B3B8BE; stroke-width: 1.5; fill: none; }
+      .media { font: 600 15px ui-monospace, Consolas, monospace; fill: #121921; }
+      .sub   { font: 400 13px system-ui, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; fill: #5F6772; }
+    </style>
+  </defs>
+
+  <!-- plate: fixed light ground so the card reads on both GitHub themes -->
+  <rect x="1" y="1" width="1198" height="378" rx="10" fill="#FBFCFD" stroke="#E2E5E8" stroke-width="2"/>
+
+  <!-- wordmark -->
+  <text x="64" y="96" class="label">ALL IN DIRECT DESIGN</text>
+  <text x="60" y="164" class="name">all-in-dd</text>
+  <text x="64" y="212" class="tag">토큰 하나, 매체 넷 — 직관으로 그리고, 게이트로 지킨다.</text>
+
+  <!-- the source: a real token, not decoration -->
+  <rect x="64" y="252" width="360" height="72" rx="3" fill="#F1F4F6" stroke="#E2E5E8"/>
+  <text x="84" y="282" class="code">"action": {</text>
+  <text x="84" y="306" class="code">  "base": <tspan class="codek">"oklch(56% 0.15 42)"</tspan> }</text>
+
+  <!-- build node -->
+  <line x1="424" y1="288" x2="560" y2="288" class="rail"/>
+  <rect x="560" y="262" width="118" height="52" rx="3" fill="#121921"/>
+  <text x="583" y="294" style="font:600 15px ui-monospace,Consolas,monospace" fill="#FBFCFD">build</text>
+  <circle cx="678" cy="288" r="5" fill="#BA4F1F"/>
+
+  <!-- four rails, one per medium: the repo's whole argument in one picture -->
+  <path d="M 683 288 C 760 288 760 88  838 88"  class="rail"/>
+  <path d="M 683 288 C 760 288 760 222 838 222" class="rail"/>
+  <path d="M 683 288 C 760 288 760 155 838 155" class="rail"/>
+  <line x1="683" y1="288" x2="838" y2="288" class="rail"/>
+
+  <g>
+    <circle cx="846" cy="84" r="4" fill="#BA4F1F"/>
+    <text x="862" y="83"  class="media">tokens.css</text>
+    <text x="862" y="102" class="sub">웹 · 앱 — oklch() 그대로</text>
+
+    <circle cx="846" cy="151" r="4" fill="#BA4F1F"/>
+    <text x="862" y="150" class="media">slides</text>
+    <text x="862" y="169" class="sub">16:9 HTML 덱 → PDF</text>
+
+    <circle cx="846" cy="218" r="4" fill="#BA4F1F"/>
+    <text x="862" y="217" class="media">cards</text>
+    <text x="862" y="236" class="sub">1080×1080 렌더</text>
+
+    <circle cx="846" cy="284" r="4" fill="#BA4F1F"/>
+    <text x="862" y="283" class="media">tokens.typ</text>
+    <text x="862" y="302" class="sub">인쇄 A4 — 빌드가 sRGB 변환</text>
+  </g>
+</svg>

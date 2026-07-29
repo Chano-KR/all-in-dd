@@ -1,0 +1,35 @@
+{
+  "web": {
+    "measure": {
+      "$type": "dimension",
+      "prose": { "$value": "66ch" }
+    },
+    "frame": {
+      "$type": "dimension",
+      "gutter": { "$value": "{space.7}" },
+      "gutter-narrow": { "$value": "{space.4}" }
+    }
+  },
+
+  "print": {
+    "$description": "Only roles bound to the physics of the medium may fork (ENGINE §2.1): reading distance, page vs viewport, ink vs backlight. Colour and typefaces never fork.",
+    "text-size": {
+      "$type": "dimension",
+      "meta": { "$value": "9px" },
+      "body": { "$value": "13px" },
+      "title": { "$value": "22px" }
+    },
+    "leading": {
+      "$type": "number",
+      "$description": "Paper runs tighter than glass at the same apparent size.",
+      "body": { "$value": 1.6 }
+    },
+    "frame": {
+      "$type": "dimension",
+      "$description": "A4 at 96dpi. Page geometry is medium-specific, not forked — it has no web counterpart.",
+      "page-w": { "$value": "794px" },
+      "page-h": { "$value": "1123px" },
+      "margin": { "$value": "{space.8}" }
+    }
+  }
+}

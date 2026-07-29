@@ -1,0 +1,15 @@
+{
+  "font": {
+    "$type": "fontFamily",
+    "$description": "From the house type library (ENGINE §5.1). Every stack names a matched Korean face — a Latin face over an OS Hangul fallback is a gate failure, not a fallback.",
+    "sans": { "$value": ["Wanted Sans", "system-ui", "sans-serif"] },
+    "serif": { "$value": ["Hahmlet", "serif"] },
+    "mono": { "$value": ["Jetendard", "ui-monospace", "monospace"] }
+  },
+  "font-weight": {
+    "$type": "fontWeight",
+    "body": { "$value": 400 },
+    "strong": { "$value": 600 },
+    "display": { "$value": 700 }
+  }
+}

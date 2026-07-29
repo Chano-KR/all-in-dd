@@ -240,6 +240,39 @@ try {
       { script: 'check-tokens.mjs', args: ['nosuchbrand', mq], expect: 'fail', because: 'no built tokens' });
   }
   /* ---------------- skill catalog consistency ---------------- */
+  /* ---------------- gate 2: accessibility ---------------- */
+  if (group('a11y')) {
+    console.log('\ngate 2 — accessibility');
+    const fixtures = join(root, 'fixtures', 'a11y');
+
+    let browserReady = false;
+    try {
+      const { chromium } = await import('playwright');
+      browserReady = existsSync(chromium.executablePath());
+    } catch { /* same handling as gates 3 and 4 */ }
+
+    if (!browserReady) {
+      console.log('  skip  gate 2 fixtures — no chromium binary; run `npm run preflight -- --fix`');
+    } else {
+      const args = f => [join(fixtures, f), '--medium', 'desktop'];
+      check('an accessible surface passes', {
+        script: 'check-a11y.mjs', args: args('accessible.html'), expect: 'pass',
+      });
+      /* The rule ENGINE §4 singles out — measured on the painted pixels, because the
+         declared token pair can clear 4.5:1 while what lands on screen does not. */
+      check('text below the contrast floor fails', {
+        script: 'check-a11y.mjs', args: args('low-contrast.html'),
+        expect: 'fail', because: 'color-contrast',
+      });
+      /* A screenshot cannot see either of these, which is why gate 3 passing says nothing
+         about them. */
+      check('an unlabelled input and a bare image fail', {
+        script: 'check-a11y.mjs', args: args('unlabelled.html'),
+        expect: 'fail', because: 'label',
+      });
+    }
+  }
+
   /* ---------------- gate 3: render-verify ---------------- */
   if (group('render')) {
     console.log('\ngate 3 — render-verify');

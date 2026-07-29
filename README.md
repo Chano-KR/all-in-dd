@@ -73,7 +73,7 @@ shipped wrong once.
 | token readiness | `check-drift.mjs` | a token set missing states, contrast, or differentiated scales |
 | hardcode | `check-tokens.mjs` | hex / px literals in source, undefined `var(--ds-*)` |
 | staleness | `build-tokens.mjs --check` | a dist that no longer matches its source |
-| accessibility | axe-core | contrast against the rendered surface, not the intended one |
+| accessibility | `check-a11y.mjs` | axe-core on the rendered surface — contrast, names, roles |
 | render | `shoot.mjs` | screenshots at real target dimensions — and refuses a blank, unsettled, or mis-sized frame |
 | interaction | `check-interactions.mjs` | hover, focus, motion, reduced-motion — invisible to a screenshot |
 

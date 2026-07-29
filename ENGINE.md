@@ -306,7 +306,17 @@ Run on every substantial deliverable. Skip only for micro-tweaks.
    beyond hygiene: agents reproduce token intent measurably better from semantic names
    than from raw values.
 2. **Accessibility** — axe-core; contrast verified against the actual rendered surface,
-   not the intended one.
+   not the intended one. `npm run gate:a11y -- <file|url> [--medium desktop|mobile]`, run
+   at both targets by default because type that clears the floor at 1440 can reflow onto a
+   busier ground at 375. Every violation fails — gates are a floor, so there is no severity
+   threshold to argue over.
+
+   This is not a second opinion on gate 0b. `check-drift` judges a token *pair*, which is a
+   claim about two values; this judges what the browser painted, after inheritance, opacity
+   and overlap. They agree until something in the cascade changes the answer, which is the
+   case worth catching. Where axe reports `incomplete` — text over a background image, most
+   often — it is saying a machine cannot decide, and the run prints those rather than
+   counting them. Deciding is yours.
 3. **Render-verify** — screenshot at real target dimensions (1920×1080 slides,
    1080×1080 cards, A4 PDF, 375px + 1440px web), review, fix, re-render. The browser
    targets are presets in `scripts/shoot.mjs` (`--medium slides|cards|mobile|desktop|all`);

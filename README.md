@@ -112,6 +112,12 @@ dying.
 
 You need Node 20+ everywhere, and [Typst](https://typst.app) if you use print.
 
+`mise.toml` pins the Typst version, and CI installs from it. If you have
+[mise](https://mise.jdx.dev), `mise install` is the whole step and you can skip the
+per-platform line below — the point of the pin is that a proof compiled here and a proof
+compiled on the runner came out of the same binary. A typesetter upgrade is a layout
+change, and print is where that surfaces.
+
 **Windows**
 
 ```powershell

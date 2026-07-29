@@ -22,7 +22,7 @@
  */
 
 import { readdirSync, readFileSync, existsSync, statSync } from 'node:fs';
-import { join } from 'node:path';
+import { join, resolve } from 'node:path';
 import { homedir } from 'node:os';
 
 const argv = process.argv.slice(2);
@@ -33,8 +33,9 @@ const flag = (name, def = null) => {
 const STAGE = (flag('--stage') || '').toUpperCase();
 const N = Number(flag('--n', 10));
 const LIST_STAGES = argv.includes('--list-stages');
-const brief = argv.filter((a, i) =>
-  !a.startsWith('--') && argv[i - 1] !== '--stage' && argv[i - 1] !== '--n').join(' ');
+const DIVERGE = argv.includes('--diverge') ? Number(flag('--diverge', 4)) : 0;
+const VALUED = new Set(['--stage', '--n', '--diverge']);
+const brief = argv.filter((a, i) => !a.startsWith('--') && !VALUED.has(argv[i - 1])).join(' ');
 
 /* Stage hints. Deliberately coarse: they bias the ranking, they do not gate it, because
    a skill filed under one stage is often the right answer at another. */
@@ -54,8 +55,9 @@ if (LIST_STAGES) {
   for (const [s, hints] of Object.entries(STAGE_HINTS)) console.log(`${s}  ${hints.join(', ')}`);
   process.exit(0);
 }
-if (!brief) {
+if (!brief && !DIVERGE) {
   console.error('usage: node scripts/suggest-skills.mjs [--stage S1] [--n 10] "<brief>"');
+  console.error('       node scripts/suggest-skills.mjs --diverge 5 ["<anchor brief>"]');
   process.exit(2);
 }
 
@@ -91,6 +93,77 @@ const STOP = new Set(['the', 'a', 'an', 'and', 'or', 'for', 'with', 'use', 'when
 const stem = w => (w.length > 3 ? w.replace(/ies$/, 'y').replace(/(es|s)$/, '') : w);
 const terms = s => (s.toLowerCase().match(/[a-z0-9가-힣]{2,}/g) ?? [])
   .filter(t => !STOP.has(t)).map(stem);
+
+/* ---------- S1 divergence selection ----------
+   Picking authors is not a search. The goal is a set of directions that genuinely
+   disagree, and a relevance ranker returns the opposite: things that resemble each
+   other. So this reads the hand-written catalog, treats each author as a point in a
+   small design space, and picks a spread — greedy farthest-point, which is the standard
+   way to get coverage rather than similarity.
+
+   An optional brief anchors the FIRST pick near what was asked for; the rest are chosen
+   to disagree with everything already chosen. With no brief, the whole set is a spread. */
+if (DIVERGE) {
+  const catPath = resolve(import.meta.dirname, '..', 'catalog', 'authors.json');
+  if (!existsSync(catPath)) {
+    console.error('catalog/authors.json missing — divergence selection needs it');
+    process.exit(2);
+  }
+  const cat = JSON.parse(readFileSync(catPath, 'utf8'));
+  const AXES = Object.keys(cat.$axes);
+  const pool = Object.entries(cat.authors)
+    .filter(([name]) => existsSync(join(homedir(), '.agents', 'skills', name)) ||
+                        existsSync(join(homedir(), '.claude', 'skills', name)));
+
+  if (pool.length < DIVERGE) {
+    console.error(`only ${pool.length} catalogued authors are installed; asked for ${DIVERGE}`);
+    process.exit(2);
+  }
+
+  /* Distance is plain Hamming over the axes: two authors differ by how many coordinates
+     they disagree on. "either" matches anything, so an author with no commitment on an
+     axis is never counted as disagreeing there — non-commitment is not divergence. */
+  const dist = (a, b) => AXES.reduce((n, ax) => {
+    const x = a[1][ax], y = b[1][ax];
+    return n + (x === 'either' || y === 'either' || x === y ? 0 : 1);
+  }, 0);
+
+  const chosen = [];
+  if (brief) {
+    const bt = new Set(terms(brief));
+    const affinity = e => AXES.reduce((n, ax) => n + (bt.has(stem(String(e[1][ax]))) ? 1 : 0), 0)
+      + terms(e[1].argues || '').filter(t => bt.has(t)).length;
+    chosen.push(pool.slice().sort((a, b) => affinity(b) - affinity(a) || a[0].localeCompare(b[0]))[0]);
+  } else {
+    chosen.push(pool[0]);
+  }
+  while (chosen.length < DIVERGE) {
+    let best = null, bestScore = -1;
+    for (const cand of pool) {
+      if (chosen.includes(cand)) continue;
+      const score = Math.min(...chosen.map(c => dist(c, cand)));
+      if (score > bestScore) { bestScore = score; best = cand; }
+    }
+    chosen.push(best);
+  }
+
+  console.log(`
+${DIVERGE} authors spread across the catalog` +
+    (brief ? `, anchored near "${brief}"` : '') + `  (${pool.length} installed & catalogued):
+`);
+  for (const [name, a] of chosen) {
+    console.log(`  ${name}`);
+    console.log(`      ${AXES.map(ax => a[ax]).join(' · ')}`);
+    console.log(`      ${a.argues}`);
+  }
+  const pairs = [];
+  for (let i = 0; i < chosen.length; i++) for (let j = i + 1; j < chosen.length; j++)
+    pairs.push(dist(chosen[i], chosen[j]));
+  console.log(`
+axis distance between picks: min ${Math.min(...pairs)}, max ${Math.max(...pairs)} of ${AXES.length}`);
+  console.log('A min of 0 or 1 means two picks barely disagree — widen the pool or drop one.');
+  process.exit(0);
+}
 
 const briefTerms = terms(brief);
 const hintTerms = STAGE ? terms((STAGE_HINTS[STAGE] || []).join(' ')) : [];

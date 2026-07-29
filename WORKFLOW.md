@@ -110,6 +110,15 @@ ceiling on how far a board set can diverge. Optional: `brandkit` for identity bo
 
 Pick authors that genuinely disagree with each other. Two editorial voices produce two
 editorial boards; an editorial voice against an atmospheric one produces a real choice.
+Do not select them by searching the brief — that returns similar things, which is the
+opposite of what this stage needs. Use the coordinate catalog:
+
+```bash
+npm run skills -- --diverge 4 "<the brief>"
+```
+
+It anchors the first pick near the brief and spreads the rest, then reports how far apart
+the set actually is. Override it freely; the number it prints is the thing to argue with.
 
 - **One taste skill per direction, never the same one twice.** Directions authored by one
   voice converge no matter how different their briefs claim to be. Different authors are

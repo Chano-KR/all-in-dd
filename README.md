@@ -84,6 +84,8 @@ all-in-dd/
 ├── ENGINE.md            brand-agnostic rules: layers, media, gates, motion, Korean text
 ├── WORKFLOW.md          the S0–S5 stage machine: what loads at each stage
 ├── SKILLS.md            every skill by name, what it does, how to install it
+├── ROADMAP.md           where this is going, and what each step changes about the rules
+├── catalog/             hand-classified author coordinates, for S1 divergence
 ├── AGENTS.md            instructions for coding agents (CLAUDE.md points here)
 ├── brands/
 │   └── example/         the template you copy to start a brand

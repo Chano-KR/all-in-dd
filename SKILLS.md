@@ -52,8 +52,28 @@ npm run skills -- --list-stages
 ```
 
 Ranking is IDF-weighted term overlap with a stage bias. It narrows ~160 skills to a
-shortlist; it does not choose. It also cannot resolve polysemy — read the shortlist
-rather than taking the top hit.
+shortlist; it does not choose, and it cannot resolve polysemy — read the shortlist rather
+than taking the top hit.
+
+**For S1 that is the wrong tool entirely, so there is a second mode.** Picking authors is
+not a search: the goal is a set of directions that genuinely disagree, and a relevance
+ranker returns the opposite — things that resemble each other and therefore each other's
+boards. `catalog/authors.json` places every catalogued author at a coordinate in a small
+design space (ground, temperature, surface, structure, type, density, motion) with a
+one-line statement of what it argues. Divergence then becomes a distance problem:
+
+```bash
+npm run skills -- --diverge 4 "warm serif-led reading surface, print-adjacent"
+npm run skills -- --diverge 5          # a spread with no anchor
+```
+
+The brief anchors the first pick; the rest are chosen by greedy farthest-point so each
+one disagrees with everything already selected. The output reports the minimum axis
+distance between picks — **a minimum of 0 or 1 means two of them barely disagree, and the
+board set will show it.**
+
+The catalog is hand-classified and therefore fallible. Correct an entry the moment a board
+proves it wrong; a catalog nobody edits is a catalog nobody checked.
 
 Keep the stage-required skills at `"on"`: the ones a stage cannot run without should
 still announce themselves.

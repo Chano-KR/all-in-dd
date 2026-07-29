@@ -11,7 +11,8 @@
     "This is hand-classified and therefore fallible. Correct an entry the moment a board",
     "proves it wrong; a catalog that is never edited is a catalog nobody checked.",
     "",
-    "Every entry here is kind:taste and S1-only. apple-design was removed 2026-07-29: it is classified as craft in WORKFLOW/AGENTS/SKILLS, and leaving it here let --diverge pick it as an S1 author, producing a direction with no taste author at all. If a skill's kind is not taste, it does not belong in this file."
+    "",
+    "Membership here IS the taste declaration. check-skills validates by allowlist: an author must appear in this file AND declare kind 'taste'. A derived denylist was tried first and failed the way denylists do — `diagnose`, `tdd` and `triage` were in neither source, so they passed --strict and were eligible for --diverge."
   ],
   "$axes": {
     "ground": [
@@ -55,6 +56,7 @@
   },
   "authors": {
     "high-end-visual-design": {
+      "kind": "taste",
       "ground": "either",
       "temp": "neutral",
       "surface": "layered",
@@ -65,6 +67,7 @@
       "argues": "expense reads as restraint plus one expensive detail, not as more elements"
     },
     "gpt-taste": {
+      "kind": "taste",
       "ground": "either",
       "temp": "neutral",
       "surface": "flat",
@@ -75,6 +78,7 @@
       "argues": "wide editorial typography and pinned scroll sequences carry the page"
     },
     "minimalist-ui": {
+      "kind": "taste",
       "ground": "light",
       "temp": "warm",
       "surface": "flat",
@@ -85,6 +89,7 @@
       "argues": "typographic contrast alone can carry hierarchy; effects are an admission of failure"
     },
     "industrial-brutalist-ui": {
+      "kind": "taste",
       "ground": "dark",
       "temp": "cool",
       "surface": "flat",
@@ -95,6 +100,7 @@
       "argues": "the interface should look like the machine it is, not like a brochure about it"
     },
     "design-taste-frontend": {
+      "kind": "taste",
       "ground": "either",
       "temp": "neutral",
       "surface": "layered",
@@ -105,6 +111,7 @@
       "argues": "infer the direction from the brief and refuse the templated default"
     },
     "editorial-tech": {
+      "kind": "taste",
       "ground": "light",
       "temp": "neutral",
       "surface": "framed",
@@ -115,6 +122,7 @@
       "argues": "magazine composition with instrument-panel precision; mono labels do the tech work"
     },
     "editorial-portfolio-chapters": {
+      "kind": "taste",
       "ground": "dark",
       "temp": "neutral",
       "surface": "layered",
@@ -125,6 +133,7 @@
       "argues": "the work leads and the site is its chaptering; full-bleed media over UI"
     },
     "editorial-service-booking": {
+      "kind": "taste",
       "ground": "light",
       "temp": "warm",
       "surface": "flat",
@@ -135,6 +144,7 @@
       "argues": "an operational flow can stay warm and editorial without losing trust"
     },
     "documentary-brutalist-agency": {
+      "kind": "taste",
       "ground": "dark",
       "temp": "neutral",
       "surface": "flat",
@@ -145,6 +155,7 @@
       "argues": "billboard type and an exposed grid; the collage is evidence, not decoration"
     },
     "book-serif-index": {
+      "kind": "taste",
       "ground": "light",
       "temp": "warm",
       "surface": "flat",
@@ -155,6 +166,7 @@
       "argues": "a page is for sustained reading; the index and the margin are the interface"
     },
     "agency-grid-layout-minimal": {
+      "kind": "taste",
       "ground": "light",
       "temp": "neutral",
       "surface": "flat",
@@ -165,6 +177,7 @@
       "argues": "a disciplined grid plus oversized type; quiet uppercase labels carry utility"
     },
     "split-layout-technical": {
+      "kind": "taste",
       "ground": "dark",
       "temp": "cool",
       "surface": "framed",
@@ -175,6 +188,7 @@
       "argues": "two panels in dialogue; fine frame lines and mono metadata set the register"
     },
     "technical-wireframe-info-layout": {
+      "kind": "taste",
       "ground": "dark",
       "temp": "cool",
       "surface": "framed",
@@ -185,6 +199,7 @@
       "argues": "show the construction — exploded structure with connector annotations"
     },
     "framed-grid-layout": {
+      "kind": "taste",
       "ground": "light",
       "temp": "neutral",
       "surface": "framed",
@@ -195,6 +210,7 @@
       "argues": "visible boundaries and corner brackets make the layout legible as a system"
     },
     "image-first-grid-layout": {
+      "kind": "taste",
       "ground": "either",
       "temp": "neutral",
       "surface": "flat",
@@ -205,6 +221,7 @@
       "argues": "photography is the content; type annotates and never competes"
     },
     "nested-container-clean-agency": {
+      "kind": "taste",
       "ground": "light",
       "temp": "neutral",
       "surface": "layered",
@@ -215,6 +232,7 @@
       "argues": "containers inside containers; the inset dark block is the emphasis device"
     },
     "nested-container-frames": {
+      "kind": "taste",
       "ground": "either",
       "temp": "neutral",
       "surface": "framed",
@@ -225,6 +243,7 @@
       "argues": "nesting itself encodes level; the outer frame declares the page bounds"
     },
     "light-mode-paper-technical": {
+      "kind": "taste",
       "ground": "light",
       "temp": "warm",
       "surface": "framed",
@@ -235,6 +254,7 @@
       "argues": "warm paper inside dark framing; precision reads as care, not coldness"
     },
     "clean-minimal-beige-light-mode": {
+      "kind": "taste",
       "ground": "light",
       "temp": "warm",
       "surface": "flat",
@@ -245,6 +265,7 @@
       "argues": "low contrast held together by rhythm; the quiet grid is the whole idea"
     },
     "orange-clean-paper-saas": {
+      "kind": "taste",
       "ground": "light",
       "temp": "warm",
       "surface": "layered",
@@ -255,6 +276,7 @@
       "argues": "warm neutrals with one signal colour; product illustration does the explaining"
     },
     "high-contrast-skeuomorphic-clean": {
+      "kind": "taste",
       "ground": "dark",
       "temp": "neutral",
       "surface": "layered",
@@ -265,6 +287,7 @@
       "argues": "molded surfaces and crisp light separation; depth is tactile, not decorative"
     },
     "skeuomorphic-ui": {
+      "kind": "taste",
       "ground": "either",
       "temp": "warm",
       "surface": "layered",
@@ -275,6 +298,7 @@
       "argues": "controls should look pressable; material and light do the affordance work"
     },
     "operational-enterprise-ai": {
+      "kind": "taste",
       "ground": "dark",
       "temp": "cool",
       "surface": "framed",
@@ -285,6 +309,7 @@
       "argues": "explain boundaries, approvals and rollback; the metric pause is the proof"
     },
     "product-proof-saas": {
+      "kind": "taste",
       "ground": "light",
       "temp": "cool",
       "surface": "atmospheric",
@@ -295,6 +320,7 @@
       "argues": "the product interface is the hero; a real workflow outranks a claim"
     },
     "glass-dark-ui": {
+      "kind": "taste",
       "ground": "dark",
       "temp": "cool",
       "surface": "atmospheric",
@@ -305,6 +331,7 @@
       "argues": "frosted depth with readable contrast; the gradient border is the edge language"
     },
     "dark-glass-clean-layout": {
+      "kind": "taste",
       "ground": "dark",
       "temp": "cool",
       "surface": "atmospheric",
@@ -315,6 +342,7 @@
       "argues": "a premium workspace shell; floating data cards over calm atmosphere"
     },
     "blue-laser-clean-glass-layout": {
+      "kind": "taste",
       "ground": "dark",
       "temp": "cool",
       "surface": "atmospheric",
@@ -325,6 +353,7 @@
       "argues": "one thin beam of light organises the whole dark surface"
     },
     "mesh-gradient-dark-blue-clean": {
+      "kind": "taste",
       "ground": "dark",
       "temp": "cool",
       "surface": "atmospheric",
@@ -335,6 +364,7 @@
       "argues": "procedural depth as infrastructure; minimal structure floats on it"
     },
     "funky-purple-container-tech": {
+      "kind": "taste",
       "ground": "dark",
       "temp": "cool",
       "surface": "layered",
@@ -345,6 +375,7 @@
       "argues": "playful futurism; the focal object is allowed to be the point"
     },
     "dark-blue-contrasting-clean": {
+      "kind": "taste",
       "ground": "dark",
       "temp": "cool",
       "surface": "framed",
@@ -355,6 +386,7 @@
       "argues": "hard contrast blocks rather than gradients; restraint in the glow"
     },
     "tech-green-dark-mode-modern": {
+      "kind": "taste",
       "ground": "dark",
       "temp": "cool",
       "surface": "framed",
@@ -365,6 +397,7 @@
       "argues": "matte black with a single signal hue; mono labels as system chrome"
     },
     "blue-cloudy-clean-modern": {
+      "kind": "taste",
       "ground": "light",
       "temp": "cool",
       "surface": "atmospheric",
@@ -375,6 +408,7 @@
       "argues": "luminous sky as ground; serenity is the product claim"
     },
     "dither-laser-dark-mode": {
+      "kind": "taste",
       "ground": "dark",
       "temp": "neutral",
       "surface": "atmospheric",
@@ -385,6 +419,7 @@
       "argues": "ordered dither gives the black a texture; the beam gives it a direction"
     },
     "glass-dark-mode-clock": {
+      "kind": "taste",
       "ground": "dark",
       "temp": "cool",
       "surface": "atmospheric",
@@ -395,6 +430,7 @@
       "argues": "instrument framing — dials and calibration marks as the organising metaphor"
     },
     "bright-green-tech-system-webgl": {
+      "kind": "taste",
       "ground": "dark",
       "temp": "cool",
       "surface": "framed",
@@ -405,6 +441,7 @@
       "argues": "a hard-framed shell around a live visualisation zone"
     },
     "build-awwwards-quality-sites": {
+      "kind": "taste",
       "ground": "either",
       "temp": "neutral",
       "surface": "atmospheric",

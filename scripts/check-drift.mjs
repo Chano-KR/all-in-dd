@@ -160,8 +160,14 @@ if (colorTokens.length === 0) {
        whatever unit follows it. Comparing raw strings let a single-value scale pass by
        spelling the same value twice. */
     const canon = (v) => {
-      const t = v.trim().toLowerCase();
-      const m = /^(-?\d*\.?\d+)([a-z%]*)$/.exec(t);
+      let t = v.trim().toLowerCase().replace(/\s+/g, '');
+      /* calc() around a single term is the same value written longer. Anything more
+         complex is left alone and simply will not match another spelling — the check
+         errs toward "these differ", which fails closed. */
+      const c = /^calc\((.+)\)$/.exec(t);
+      if (c && !/[+\-*/]/.test(c[1].slice(1))) t = c[1];
+      /* Accepts exponent form, so 3px and 3e0px land on the same step. */
+      const m = /^(-?\d*\.?\d+(?:e[+-]?\d+)?)([a-z%]*)$/.exec(t);
       if (!m) return t;
       const n = parseFloat(m[1]);
       return n === 0 ? '0' : `${n}${m[2]}`;
@@ -196,8 +202,14 @@ if (colorTokens.length === 0) {
   /* A declaration REMAPS the pairings; it must not SHRINK them. Declaring only the
      roles that already pass would silently drop the failing one, which is how a
      low-contrast text-secondary could disappear from the check by being left out. */
+  /* Enumerate text roles from the RAW token map, not from colorTokens. A role written in
+     a notation this script cannot parse — `rgb(185 190 196)` — used to vanish from `inks`
+     entirely, so it was neither judged nor reported missing. An unreadable colour is a
+     failure to read it, not an absence. */
+  const allInkNames = [...tokens.keys()].filter(k => /^text-/.test(k));
+  const unparsed = allInkNames.filter(k => !hexOf.has(k));
   const uncovered = declared
-    ? inks.map(([k]) => k).filter(k => !declared.some(([ink]) => ink === k))
+    ? allInkNames.filter(k => !declared.some(([ink]) => ink === k))
     : [];
   const wanted = declared
     ? declared.map(([ink, ground]) => [ink, hexOf.get(ink), ground])
@@ -212,7 +224,11 @@ if (colorTokens.length === 0) {
     .map(([k, v, g]) => [k, g, contrast(v, hexOf.get(g))])
     .filter(([, , r]) => r < 4.5);
 
-  if (uncovered.length)
+  if (unparsed.length)
+    fail('every text role must be a colour this gate can read',
+      `unreadable: ${unparsed.map(k => `--ds-${k}`).join(', ')} — use hex or oklch(); a ` +
+      'notation the gate cannot parse is silently excluded from every colour rule')
+  else if (uncovered.length)
     fail('a declared contrast mapping must cover every text role',
       `not mapped: ${uncovered.join(', ')} — a declaration remaps pairings, it does not ` +
       'narrow what gets judged');

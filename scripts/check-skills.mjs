@@ -73,40 +73,44 @@ for (const tier of [true, false]) {
   }
 }
 
-/* The author catalog must contain taste skills only.
+/* The author catalog is an ALLOWLIST, and membership is the declaration.
 
-   Derived, not hand-listed. The first version compared against a manual blocklist, which
-   cannot be complete by construction: `masked-reveal` and every other technique-pool
-   skill was absent from it, so putting one in the catalog passed --strict and let
-   --diverge pick it as an S1 author. The non-taste set now comes from two places that
-   already exist and are already maintained:
-     1. this file's own manifest — anything a stage requires at S2/S4/S5 is craft or audit;
-     2. SKILLS.md's technique/utility sections, parsed from the headings that name them.
-   A skill in neither is unknown rather than assumed innocent, and is reported as such. */
+   Two denylists were tried and both leaked. A hand-written one missed `masked-reveal`;
+   deriving it from the manifest and SKILLS.md missed `diagnose`, `tdd` and `triage`,
+   which appear in neither. A denylist can only reject what someone thought to name, and
+   --diverge treats anything it does not reject as an S1 author. So the question is
+   inverted: an entry must positively declare `kind: "taste"`, and anything the manifest
+   or SKILLS.md classifies otherwise is rejected on top of that. */
 const nonTaste = new Set(SKILLS.filter(([stage]) => /^S[245]$/.test(stage)).map(([, n]) => n));
 const skillsDoc = resolve(import.meta.dirname, '..', 'SKILLS.md');
 if (existsSync(skillsDoc)) {
   const md = readFileSync(skillsDoc, 'utf8');
   const techniqueSection = md.slice(md.indexOf('## Technique skills'));
   const utilities = md.slice(md.indexOf('**Asset utilities, not authors**'));
-  for (const chunk of [techniqueSection.split('\n## ')[0], utilities.split('\n\n')[0]]) {
+  const NL = String.fromCharCode(10);
+  for (const chunk of [techniqueSection.split(NL + '## ')[0], utilities.split(NL + NL)[0]]) {
     for (const m of chunk.matchAll(/`([a-z][a-z0-9-]{3,})`/g)) nonTaste.add(m[1]);
   }
 }
 
 const catPath = resolve(import.meta.dirname, '..', 'catalog', 'authors.json');
 if (existsSync(catPath)) {
-  const authors = Object.keys(JSON.parse(readFileSync(catPath, 'utf8')).authors ?? {});
-  const wrong = authors.filter(a => nonTaste.has(a));
-  const uninstalled = authors.filter(a => !present.has(a));
-  console.log(`
-catalog: ${authors.length} authors, checked against ${nonTaste.size} known non-taste skills`);
-  if (wrong.length) {
-    console.log(`  ✗ craft/audit/utility skills in the author catalog: ${wrong.join(', ')}`);
-    missing.push(['(remove them)', 'catalog/authors.json', true]);
+  const entries = Object.entries(JSON.parse(readFileSync(catPath, 'utf8')).authors ?? {});
+  const undeclared = entries.filter(([, a]) => a.kind !== 'taste').map(([n]) => n);
+  const contradicted = entries.filter(([n]) => nonTaste.has(n)).map(([n]) => n);
+  const uninstalled = entries.filter(([n]) => !present.has(n)).map(([n]) => n);
+  console.log(`\ncatalog: ${entries.length} authors`);
+  if (undeclared.length) {
+    console.log(`  ✗ missing kind:"taste" — an author must declare it: ${undeclared.join(', ')}`);
+    missing.push(['(fix the catalog)', 'catalog/authors.json', true]);
+  }
+  if (contradicted.length) {
+    console.log(`  ✗ classified as craft/audit/utility elsewhere: ${contradicted.join(', ')}`);
+    missing.push(['(fix the catalog)', 'catalog/authors.json', true]);
   }
   if (uninstalled.length) console.log(`  ~ catalogued but not installed: ${uninstalled.join(', ')}`);
-  if (!wrong.length && !uninstalled.length) console.log('  ✓ all taste, all installed');
+  if (!undeclared.length && !contradicted.length && !uninstalled.length)
+    console.log('  ✓ all declared taste, none contradicted, all installed');
 }
 
 const poolFound = POOL_MARKERS.filter(n => present.has(n)).length;

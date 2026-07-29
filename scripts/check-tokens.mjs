@@ -41,6 +41,11 @@ const LITERAL = [
      `hover:-translate-x-[10%]` slipped through: the lookbehind rejected the negative
      form outright, and neither carries a px or hex for the other rules to catch. */
   { re: /(?<![\w-])-?[a-z][a-z0-9-]*-\[[^\]\s]+\]/g, what: 'Tailwind arbitrary value' },
+  /* Arbitrary PROPERTIES have no utility prefix at all — `[margin-top:1rem]`,
+     `hover:[mask-type:luminance]` — so the rule above never saw them and no literal rule
+     did either. Anchored to a class boundary or a variant colon so ordinary JS like
+     `arr[0]` and `obj[key]` stays untouched. */
+  { re: /(?<=^|[\s"'`:])\[[a-z-]+:[^\]\s]+\]/g, what: 'Tailwind arbitrary property' },
 ];
 
 let failures = 0;

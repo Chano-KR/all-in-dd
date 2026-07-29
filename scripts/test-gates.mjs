@@ -129,6 +129,21 @@ try {
     check('0px and 0rem count as one step',
       { script: 'check-drift.mjs', args: [BRAND], expect: 'fail', because: 'distinct' });
 
+    /* A notation the gate cannot read used to remove the role from every colour rule,
+       so it was neither judged nor reported. Unreadable is a failure to read. */
+    writeTokens({ ...CLEAN, 'text-secondary': 'rgb(185 190 196)' });
+    check('a text role in an unreadable notation fails',
+      { script: 'check-drift.mjs', args: [BRAND], expect: 'fail', because: 'unreadable' });
+
+    /* Exponent and single-term calc() are the same value spelled differently. */
+    writeTokens({ ...CLEAN, 'radius-large': '3e0px' });
+    check('3px and 3e0px count as one step',
+      { script: 'check-drift.mjs', args: [BRAND], expect: 'fail', because: 'distinct' });
+
+    writeTokens({ ...CLEAN, 'radius-large': 'calc(3px)' });
+    check('3px and calc(3px) count as one step',
+      { script: 'check-drift.mjs', args: [BRAND], expect: 'fail', because: 'distinct' });
+
     writeTokens(Object.fromEntries(Object.entries(CLEAN).filter(([k]) => k !== 'action-hover')));
     check('a missing interaction state fails',
       { script: 'check-drift.mjs', args: [BRAND], expect: 'fail', because: 'hover, press and focus' });
@@ -192,13 +207,15 @@ try {
       ['a unitless arbitrary value fails', 'className="leading-[1.37]"'],
       ['a NEGATIVE arbitrary value fails', 'className="-mt-[1rem]"'],
       ['a variant-prefixed negative fails', 'className="hover:-translate-x-[10%]"'],
+      ['an arbitrary PROPERTY fails', 'className="[margin-top:1rem]"'],
+      ['a variant-prefixed arbitrary property fails', 'className="hover:[mask-type:luminance]"'],
     ]) {
       const f = writeFile('arb.tsx', `const A = () => <div ${code}>x</div>;`);
       check(label, { script: 'check-tokens.mjs', args: [BRAND, f], expect: 'fail', because: 'arbitrary' });
     }
 
     const utils = writeFile('utils.tsx',
-      'const A = () => <div className="grid gap-6 md:flex-row">{arr[0]}</div>;');
+      'const A = () => <div className="grid gap-6 md:flex-row">{arr[0]}{o["k"]}</div>;');
     check('ordinary utilities and JS indexing are not flagged',
       { script: 'check-tokens.mjs', args: [BRAND, utils], expect: 'pass' });
 
@@ -228,21 +245,41 @@ try {
     const catPath = join(root, 'catalog', 'authors.json');
     const original = readFileSync(catPath, 'utf8');
     try {
-      check('the real catalog passes --strict',
-        { script: 'check-skills.mjs', args: ['--strict'], expect: 'pass' });
+      /* --strict also fails on a missing INSTALLED skill, which is machine state: a
+         fresh checkout has none of them, so asserting `pass` here made the suite depend
+         on the developer's ~/.agents/skills. The catalog invariant is what this group
+         tests, so it reads the report rather than the exit code. */
+      const base = run('check-skills.mjs', []);
+      const catalogClean = /✓ all declared taste/.test(base.out);
+      if (catalogClean) { passed++; console.log('  ok    the real catalog reports clean'); }
+      else {
+        failures.push('the real catalog reports clean');
+        console.log('  FAIL  the real catalog reports clean');
+        console.log(base.out.split(String.fromCharCode(10))
+          .filter(l => /catalog:|✗|~/.test(l)).slice(0, 4)
+          .map(l => `        | ${l}`).join(String.fromCharCode(10)));
+      }
 
       /* A technique-pool skill in the author catalog is what let --diverge build a
          direction with no taste author. The check must derive its non-taste set rather
          than consult a hand-list, so a skill nobody remembered to blocklist still fails. */
-      for (const intruder of ['masked-reveal', 'apple-design', 'beautiful-shadows']) {
+      /* diagnose/tdd/triage appear in neither the manifest nor SKILLS.md — the exact
+         gap that made two successive denylists leak. */
+      for (const intruder of ['masked-reveal', 'apple-design', 'beautiful-shadows',
+                              'diagnose', 'tdd', 'triage']) {
         const c = JSON.parse(original);
         c.authors[intruder] = {
           ground: 'either', temp: 'neutral', surface: 'flat', structure: 'modular',
           type: 'sans-utility', density: 'measured', motion: 'still', argues: 'fixture',
         };
         writeFileSync(catPath, JSON.stringify(c, null, 2));
-        check(`a non-taste skill (${intruder}) in the catalog fails --strict`,
-          { script: 'check-skills.mjs', args: ['--strict'], expect: 'fail', because: 'author catalog' });
+        const r = run('check-skills.mjs', []);
+        const caught = /missing kind:"taste"|classified as craft/.test(r.out);
+        if (caught) { passed++; console.log(`  ok    a non-taste skill (${intruder}) is rejected`); }
+        else {
+          failures.push(`non-taste ${intruder} rejected`);
+          console.log(`  FAIL  a non-taste skill (${intruder}) is rejected`);
+        }
       }
     } finally {
       writeFileSync(catPath, original);

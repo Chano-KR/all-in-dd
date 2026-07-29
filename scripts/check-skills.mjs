@@ -5,8 +5,8 @@
      node scripts/check-skills.mjs            report
      node scripts/check-skills.mjs --strict   exit 1 if anything REQUIRED is missing  */
 
-import { existsSync, readdirSync } from 'node:fs';
-import { join } from 'node:path';
+import { existsSync, readdirSync, readFileSync } from 'node:fs';
+import { join, resolve } from 'node:path';
 import { homedir } from 'node:os';
 
 const STRICT = process.argv.includes('--strict');
@@ -71,6 +71,30 @@ for (const tier of [true, false]) {
     if (!ok) missing.push([name, source, tier]);
     console.log(`  ${ok ? '✓' : '✗'} ${stage}  ${pad(name)}${ok ? '' : source}`);
   }
+}
+
+/* The author catalog must contain taste skills only. apple-design sat in it while every
+   document classified it as craft, and --diverge duly picked it as an S1 author — a
+   direction built with no taste author at all. A manifest and a catalog that disagree
+   are worse than either alone, so the disagreement is now a check. */
+const CRAFT_AND_AUDIT = new Set([
+  'apple-design', 'emil-design-eng', 'impeccable', 'grill-me', 'review-animations',
+  'find-animation-opportunities', 'improve-animations', 'pick-ui-library',
+  'animation-vocabulary', 'remotion-best-practices', 'ui-ux-pro-max', 'dataviz',
+]);
+const catPath = resolve(import.meta.dirname, '..', 'catalog', 'authors.json');
+if (existsSync(catPath)) {
+  const authors = Object.keys(JSON.parse(readFileSync(catPath, 'utf8')).authors ?? {});
+  const wrong = authors.filter(a => CRAFT_AND_AUDIT.has(a));
+  const uninstalled = authors.filter(a => !present.has(a));
+  console.log(`
+catalog: ${authors.length} authors`);
+  if (wrong.length) {
+    console.log(`  ✗ not taste skills, remove from the catalog: ${wrong.join(', ')}`);
+    missing.push([wrong[0], 'catalog/authors.json', true]);
+  }
+  if (uninstalled.length) console.log(`  ~ catalogued but not installed: ${uninstalled.join(', ')}`);
+  if (!wrong.length && !uninstalled.length) console.log('  ✓ all taste, all installed');
 }
 
 const poolFound = POOL_MARKERS.filter(n => present.has(n)).length;

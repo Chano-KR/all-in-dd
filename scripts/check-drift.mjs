@@ -140,49 +140,76 @@ if (colorTokens.length === 0) {
 }
 
 /* 3. Differentiated scales. A surface cannot encode hierarchy with a vocabulary that
-   has none. This replaces the old blur/gradient/glass ban, which policed which effects
-   a brand could name rather than whether it could make distinctions.                */
+   has none.
+
+   Counts DISTINCT RESOLVED VALUES, not token names, and treats an absent scale as a
+   failure. The first version did neither: it skipped a missing scale with an explicit
+   pass, and counted names, so `radius-small: 3px` plus `button-radius: 3px` read as two
+   steps when there is only one. Both holes let a single-value token set clear the check
+   that exists to catch exactly that. */
 {
-  const stepsOf = re => [...tokens.keys()].filter(k => re.test(k)).length;
-  const scales = [
-    ['radius', stepsOf(/(^|-)radius(-|$)/)],
-    ['spacing', stepsOf(/(^|-)space(-|$)/)],
-    ['font weight', stepsOf(/(^|-)font-weight(-|$)/)],
-  ].filter(([, n]) => n > 0);
-  const thin = scales.filter(([, n]) => n < 2);
-  if (!scales.length) pass('scale differentiation', 'no radius/space/weight scales to judge');
-  else thin.length
-    ? fail('every scale needs at least two usable steps',
-        thin.map(([n]) => `${n} has ${scales.find(s2 => s2[0] === n)[1]}`).join(', ') +
-        ' — one step everywhere is the uniformity gate 0 looks for')
-    : pass('scale differentiation', scales.map(([n, c]) => `${n} ${c}`).join(', '));
+  const REQUIRED = [
+    ['radius', /(^|-)radius(-|$)/],
+    ['spacing', /(^|-)space(-|$)/],
+    ['font weight', /(^|-)font-weight(-|$)/],
+  ];
+  const thin = [];
+  const ok = [];
+  for (const [name, re] of REQUIRED) {
+    const values = new Set([...tokens].filter(([k]) => re.test(k)).map(([, v]) => v.trim()));
+    (values.size < 2 ? thin : ok).push([name, values.size]);
+  }
+  thin.length
+    ? fail('every scale needs at least two distinct values',
+        thin.map(([n, c]) => `${n}: ${c} distinct`).join(', ') +
+        ' — one value everywhere (or none at all) is the uniformity gate 0 looks for')
+    : pass('scale differentiation', ok.map(([n, c]) => `${n} ${c}`).join(', '));
 }
 
 /* 4. Contrast, decided at the token layer rather than discovered on a rendered page.
-   Every S1 board failed AA on its tertiary ink; catching that in a browser is one
-   stage too late, because by then the value is already written into four files. */
+   Every S1 board once failed AA on its tertiary ink; catching that in a browser is one
+   stage too late, because by then the value is already written into four files.
+
+   Reports the number of pairs ACTUALLY compared, and fails when that number is zero.
+   The earlier version paired every text role against `surface-page`, silently dropped
+   pairs whose ground did not exist, then printed the count from before the drop — so a
+   brand naming its ground anything else got a confident "N pairs ≥ 4.5:1" having
+   compared none of them. */
 {
-  /* Read from the normalised map, not the raw one: an oklch() ground is still a
-     ground. Filtering on /^#/ here was the second half of the same silent-skip bug. */
   const hexOf = new Map(colorTokens);
   const grounds = [...hexOf].filter(([k]) => /^surface-/.test(k));
   const inks = [...hexOf].filter(([k]) => /^text-/.test(k));
-  const pairs = [
-    ...inks.filter(([k]) => !/on-inverse/.test(k)).map(([k, v]) => [k, v, 'surface-page']),
-    ...inks.filter(([k]) => /on-inverse/.test(k)).map(([k, v]) => [k, v, 'surface-inverse']),
-  ];
-  const bad = pairs
-    .filter(([, , g]) => hexOf.has(g))
+
+  /* A brand may name its own pairings: { "contrast": [["text-body","surface-card"]] }.
+     Absent that, fall back to the conventional roles. */
+  const declared = drift.contrast ?? null;
+  const wanted = declared
+    ? declared.map(([ink, ground]) => [ink, hexOf.get(ink), ground])
+    : [
+        ...inks.filter(([k]) => !/on-inverse/.test(k)).map(([k, v]) => [k, v, 'surface-page']),
+        ...inks.filter(([k]) => /on-inverse/.test(k)).map(([k, v]) => [k, v, 'surface-inverse']),
+      ];
+
+  const missing = wanted.filter(([ink, v, g]) => !v || !hexOf.has(g));
+  const checked = wanted.filter(([ink, v, g]) => v && hexOf.has(g));
+  const bad = checked
     .map(([k, v, g]) => [k, g, contrast(v, hexOf.get(g))])
     .filter(([, , r]) => r < 4.5);
-  if (!grounds.length || !inks.length) fail('text and surface roles exist to pair',
-    `found ${grounds.length} surface-* and ${inks.length} text-* colour roles. A brand ` +
-    'with no pairable roles cannot have its contrast judged here, which is the exact ' +
-    'thing this rule exists to prevent.');
+
+  if (!grounds.length || !inks.length)
+    fail('text and surface colour roles exist to pair',
+      `found ${grounds.length} surface-* and ${inks.length} text-* colour roles`);
+  else if (missing.length)
+    fail('every text role has a ground to be judged against',
+      missing.map(([k, , g]) => `${k} → ${g} (missing)`).join(', ') +
+      ' — declare the pairing in drift.json "contrast" if this brand names roles differently');
+  else if (!checked.length)
+    fail('the contrast rule compared at least one pair',
+      'zero pairs were evaluated; a check that examines nothing is a failure, not a pass');
   else bad.length
     ? fail('every text role must clear 4.5:1 on its ground',
         bad.map(([k, g, r]) => `--ds-${k} on --ds-${g} = ${r.toFixed(2)}`).join(', '))
-    : pass('token-level contrast', `${pairs.length} text/ground pairs ≥ 4.5:1`);
+    : pass('token-level contrast', `${checked.length} pair(s) compared, all ≥ 4.5:1`);
 }
 
 /* 5. State tokens exist. Their absence is not a gap, it is the specific defect that

@@ -9,7 +9,9 @@
     "claim the author makes about how a page should behave.",
     "",
     "This is hand-classified and therefore fallible. Correct an entry the moment a board",
-    "proves it wrong; a catalog that is never edited is a catalog nobody checked."
+    "proves it wrong; a catalog that is never edited is a catalog nobody checked.",
+    "",
+    "Every entry here is kind:taste and S1-only. apple-design was removed 2026-07-29: it is classified as craft in WORKFLOW/AGENTS/SKILLS, and leaving it here let --diverge pick it as an S1 author, producing a direction with no taste author at all. If a skill's kind is not taste, it does not belong in this file."
   ],
   "$axes": {
     "ground": [
@@ -101,16 +103,6 @@
       "density": "measured",
       "motion": "restrained",
       "argues": "infer the direction from the brief and refuse the templated default"
-    },
-    "apple-design": {
-      "ground": "either",
-      "temp": "cool",
-      "surface": "layered",
-      "structure": "modular",
-      "type": "sans-utility",
-      "density": "sparse",
-      "motion": "cinematic",
-      "argues": "material and physics make an interface feel real; motion is the argument"
     },
     "editorial-tech": {
       "ground": "light",

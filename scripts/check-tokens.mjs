@@ -3,7 +3,7 @@
    var(--ds-*) reference that the built token set does not define.
    Usage: node scripts/check-tokens.mjs <brand> <file...>            */
 
-import { readFileSync } from 'node:fs';
+import { readFileSync, existsSync } from 'node:fs';
 import { resolve, relative } from 'node:path';
 
 const [brand, ...files] = process.argv.slice(2);
@@ -13,7 +13,12 @@ if (!brand || files.length === 0) {
 }
 
 const root = resolve(import.meta.dirname, '..');
-const css = readFileSync(resolve(root, `brands/${brand}/dist/tokens.css`), 'utf8');
+const cssPath = resolve(root, `brands/${brand}/dist/tokens.css`);
+if (!existsSync(cssPath)) {
+  console.error(`no built tokens for "${brand}" — run build:tokens first`);
+  process.exit(2);
+}
+const css = readFileSync(cssPath, 'utf8');
 const defined = new Set([...css.matchAll(/--ds-[\w-]+/g)].map(m => m[0]));
 
 /* Media queries cannot read custom properties — a breakpoint has to be written as a literal.
@@ -27,6 +32,12 @@ const LITERAL = [
   { re: /#[0-9a-fA-F]{3,8}\b/g, what: 'literal colour' },
   { re: /(?<![\w-])\d*\.?\d+px\b/g, what: 'literal px' },
   { re: /\brgba?\([^)]*\)/g, what: 'literal rgb()' },
+  /* Tailwind arbitrary values. ENGINE §4 gate 1 calls a bracket "a hardcode wearing
+     utility syntax", but the rule was never implemented: `w-[347px]` failed only because
+     the px pattern happened to catch it, so `w-[35rem]`, `text-[oklch(...)]` and
+     `leading-[1.37]` went straight through — precisely the escape hatch the rule exists
+     to close. This matches the syntax itself rather than any one unit. */
+  { re: /(?<![\w-])[a-z][a-z0-9-]*-\[[^\]\s]+\]/g, what: 'Tailwind arbitrary value' },
 ];
 
 let failures = 0;

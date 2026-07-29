@@ -284,6 +284,17 @@ try {
         script: 'check-interactions.mjs', args: [url('invisible-section.html')],
         expect: 'fail', because: 'nothing left invisible',
       });
+      /* Both directions, and the pass half is the one that matters here: measuring with
+         getBoundingClientRect made a translateY reveal — the technique this check exists
+         to steer people toward — read as a reflow. A gate that fails the correct answer
+         teaches the wrong lesson faster than one that misses the wrong answer. */
+      check('a transform reveal is not a reflow', {
+        script: 'check-interactions.mjs', args: [url('reflow-safe.html')], expect: 'pass',
+      });
+      check('a reveal that animates layout fails', {
+        script: 'check-interactions.mjs', args: [url('reflow-shift.html')],
+        expect: 'fail', because: 'moved',
+      });
     }
   }
 

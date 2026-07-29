@@ -20,7 +20,21 @@
 
 import { chromium } from 'playwright';
 
-const base = process.argv[2] ?? 'http://localhost:3000';
+const base = process.argv.slice(2).find(a => !a.startsWith('--')) ?? 'http://localhost:3000';
+
+/* Every element would be correct and too slow — each one costs a hover and a settle. So
+   there is a cap, and the cap is stated in the output rather than hidden in the pass: a
+   check that silently examined 8 of 40 elements reports the same "pass" as one that
+   examined all 40, which is how a bound becomes a lie. Raise it with --sample N. */
+const SAMPLE = (() => {
+  const i = process.argv.indexOf('--sample');
+  const n = i >= 0 ? Number(process.argv[i + 1]) : NaN;
+  return Number.isFinite(n) && n > 0 ? n : 24;
+})();
+const sampled = (n, total) => total > n
+  ? `${n} of ${total} sampled — ${total - n} not examined, raise with --sample`
+  : `all ${total} examined`;
+
 let failures = 0;
 const check = (name, pass, detail = '') => {
   if (!pass) failures++;
@@ -59,7 +73,8 @@ const browser = await chromium.launch();
      one still has to answer this question, and "no .row" is not an answer. */
   {
     const targets = page.locator('a[href], button, [role="button"], .row, [data-interactive]');
-    const n = Math.min(await targets.count(), 8);
+    const total = await targets.count();
+    const n = Math.min(total, SAMPLE);
     if (!n) skip('hover changes something', 'no interactive element on the page');
     else {
       /* A sample, not the first match. Judging one element made the verdict depend on
@@ -86,8 +101,72 @@ const browser = await chromium.launch();
         await page.mouse.move(0, 0);
       }
       check('hover changes something', dead.length === 0,
-        dead.length ? `dead on hover: ${dead.join(', ')}` : `${n} element(s) sampled`);
+        dead.length ? `dead on hover: ${dead.join(', ')}` : sampled(n, total));
     }
+  }
+
+  /* ── universal: the motion does not reflow what is under it ─────────────────
+     §4 names this and nothing asserted it, which left the cheapest way to build a reveal
+     — animate height, margin or top — passing the gate. Those properties move every
+     element below the animating one, so the page rearranges itself under a reader who is
+     already mid-sentence.
+
+     Measured, not declared, and sampled THROUGHOUT the motion rather than at both ends of
+     it. Comparing top-of-page before against top-of-page after looks obviously right and
+     catches nothing: by the time a baseline is taken, the reveals already in the viewport
+     have fired, and by the time the page returns to the top every reveal has finished, so
+     both measurements agree. The poisoned fixture passed exactly that way. What a reflow
+     actually looks like is a landmark whose document position is not the same number at
+     every point during the scroll. */
+  {
+    /* offsetTop, not getBoundingClientRect: the rect includes the element's transform, so
+       measuring it that way flags a translateY reveal — the correct technique, the one
+       this check exists to steer people toward — as a reflow. offsetTop is the layout
+       position and moves only when the layout actually changes. */
+    const landmarks = () => page.evaluate(() => {
+      const layoutTop = (el) => {
+        let y = 0;
+        for (let n = el; n; n = n.offsetParent) y += n.offsetTop;
+        return y;
+      };
+      return {
+        height: document.documentElement.scrollHeight,
+        tops: [...document.querySelectorAll('section, header, footer, main, article')]
+          .map(layoutTop),
+      };
+    });
+
+    await page.evaluate(() => scrollTo(0, 0));
+    await page.waitForTimeout(400);
+
+    /* Step rather than jump: a single scrollTo can outrun an IntersectionObserver, and a
+       reveal that never fired cannot reflow anything, which would read as a pass. */
+    const series = [await landmarks()];
+    const steps = 8;
+    for (let i = 1; i <= steps; i++) {
+      await page.evaluate(f => scrollTo(0, document.documentElement.scrollHeight * f), i / steps);
+      await page.waitForTimeout(240);
+      series.push(await landmarks());
+    }
+    await page.evaluate(() => scrollTo(0, 0));
+    await page.waitForTimeout(600);
+    series.push(await landmarks());
+
+    const count = Math.min(...series.map(s => s.tops.length));
+    let worst = { i: -1, delta: 0 };
+    for (let i = 0; i < count; i++) {
+      const seen = series.map(s => s.tops[i]);
+      const delta = Math.max(...seen) - Math.min(...seen);
+      if (delta > worst.delta) worst = { i, delta };
+    }
+    const heights = series.map(s => s.height);
+    const grew = Math.max(...heights) - Math.min(...heights);
+
+    check('motion does not reflow what is under it',
+      worst.delta <= 1 && grew <= 1,
+      worst.delta > 1 ? `landmark ${worst.i} moved ${worst.delta}px while the motion ran`
+        : grew > 1 ? `document height changed by ${grew}px during the motion`
+          : `${count} landmark(s) held position across ${series.length} samples`);
   }
 
   /* ── universal: keyboard focus paints a ring, the mouse does not ────────────
@@ -95,7 +174,8 @@ const browser = await chromium.launch();
      ring on every click — the exact thing :focus-visible exists to prevent — passed. */
   {
     const focusable = page.locator('a[href], button, [role="button"], input, select, textarea');
-    const n = Math.min(await focusable.count(), 8);
+    const total = await focusable.count();
+    const n = Math.min(total, SAMPLE);
     if (!n) skip('keyboard focus paints a ring', 'no focusable element');
     else {
       /* Sampled, for the same reason hover is: judging only the first focusable made the
@@ -125,7 +205,7 @@ const browser = await chromium.launch();
       }
       check('keyboard focus paints a ring', reached > 0 && unpainted.length === 0,
         !reached ? 'Tab reached nothing'
-          : unpainted.length ? `no ring on: ${unpainted.join(', ')}` : `${reached} element(s) sampled`);
+          : unpainted.length ? `no ring on: ${unpainted.join(', ')}` : sampled(reached, total));
 
       /* A click that moves focus elsewhere (a link that navigates) leaves nothing to
          judge. Where something is focused, a painted ring is the failure — that is the
@@ -140,7 +220,7 @@ const browser = await chromium.launch();
         if (mouse?.painted) ringed.push(`${mouse.name} (${mouse.detail})`);
       }
       check('a mouse click paints no ring', ringed.length === 0,
-        ringed.length ? `ring after click: ${ringed.join(', ')}` : `${n} element(s) sampled`);
+        ringed.length ? `ring after click: ${ringed.join(', ')}` : sampled(n, total));
     }
   }
 

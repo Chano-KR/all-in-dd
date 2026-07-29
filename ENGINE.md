@@ -316,6 +316,13 @@ Run on every substantial deliverable. Skip only for micro-tweaks.
    dodge by not having the markup is not a gate. Both tiers sample the elements they judge
    rather than the first match: judging one made the verdict a property of document order,
    and a page whose skip link kept its focus ring passed while every button had lost one.
+   The sample is capped and the cap is printed (`--sample N` raises it) — a bound that does
+   not appear in the output is indistinguishable from having checked everything.
+
+   The reflow half of the rule is measured during the motion, not at both ends of it: a
+   before/after comparison agrees with itself because every reveal has fired by the time the
+   page comes back. Positions are read as layout coordinates, since a rect includes the
+   element's own transform and would flag the correct technique as the defect.
    `npm run gate:interactions [baseUrl]`; poisoned fixtures live in `fixtures/interactions/`.
 
 Failing a gate returns the work to S4. It does not get waived.

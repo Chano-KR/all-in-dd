@@ -36,6 +36,17 @@ jobs:
       # skipped gate on the one machine that runs every commit is the gate not existing.
       - run: npx playwright install --with-deps chromium
 
+      # The pool is ~50 MB of release zips. fonts.sh skips whatever is already in fonts/,
+      # so a restored cache turns the fetch into a copy — the same "never re-download what
+      # is present" rule preflight applies, one layer up.
+      - name: cache the type pool
+        uses: actions/cache@v4
+        with:
+          path: fonts
+          key: type-pool-${{ hashFiles('scripts/fonts.sh') }}
+
+      # Fetches the faces if the cache missed: the type pool is toolchain, not a per-brand
+      # asset, so the runner needs it before anything typesets.
       - name: preflight
         run: npm run preflight
 
@@ -46,10 +57,20 @@ jobs:
       - run: npm run check:tokens
 
       # README calls this the line that proves the whole chain, and until now nothing but a
-      # person's own machine had ever run it. The template's own faces are not installed
-      # here by design — this asserts the pipeline compiles, not that it looks right.
+      # person's own machine had ever run it.
+      #
+      # typst exits 0 when a face is missing — it substitutes and warns. So "the proof
+      # compiled" was never the claim worth making: the first CI run produced a green
+      # print step whose every line was typeset in a fallback. The warning is the failure.
       - name: print pipeline
-        run: npm run print:example
+        run: |
+          set -o pipefail
+          npm run print:example 2>&1 | tee print.log
+          if grep -q 'unknown font family' print.log; then
+            grep 'unknown font family' print.log | sort -u
+            echo "::error::typst fell back — a declared face is not installed on the runner"
+            exit 1
+          fi
 
       - name: gates — poisoned fixtures
         run: npm test

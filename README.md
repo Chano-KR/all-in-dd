@@ -159,10 +159,14 @@ npm run preflight && npm run build:tokens && npm run print:example
 If `brands/example/print/proof.pdf` comes out, everything works.
 
 `preflight` asks, per dependency: is it present, does it actually load, and only
-then does it fetch. `--fix` installs the missing ones and nothing else. It never
-fetches anything for `brands/example` — the template is not a brand someone is
-shipping, so it renders with the faces the system already has, and the type pool
-is a real requirement only once you start a brand of your own.
+then does it fetch. `--fix` installs the missing ones and nothing else.
+
+The type pool is the exception, and deliberately so: a missing face is fetched
+without being asked. Typst does not fail on a font it cannot find — it
+substitutes and warns, exit 0 — so the failure is invisible exactly where it
+matters, on paper. `fonts.sh` skips every family already on disk, so this cannot
+turn into a re-download. CI installs the pool for the same reason and fails the
+build on a fallback warning.
 
 ## Starting a brand
 

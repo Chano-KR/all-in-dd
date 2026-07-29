@@ -66,10 +66,14 @@ Run `check:tokens` before compiling any Typst document. A gate failure returns
 the work; it is not waived.
 
 `preflight` answers present → loads → missing, in that order, and fetches only
-the last. `brands/example` sits outside every fetch decision: it is the template,
-so nothing is downloaded on its behalf and its Typst proof compiles with whatever
-faces the system already has. A brand that ships paper needs the type pool
-(`bash scripts/fonts.sh`); the template does not.
+the last. The type pool is toolchain, at the same layer as typst: a missing face
+is fetched on sight rather than waiting for `--fix`, because typst exits 0 with
+no faces installed and substitutes silently — a proof that reports success in the
+wrong faces is worse than one that fails. `fonts.sh` skips what is already on
+disk, so fetching on sight cannot become re-downloading.
+
+`brands/example` is excluded from *per-brand* assets, not from the house type
+library. It is the template: nothing brand-specific is downloaded on its behalf.
 
 ## Skills
 

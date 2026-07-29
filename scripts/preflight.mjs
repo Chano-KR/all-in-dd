@@ -141,14 +141,23 @@ console.log('\nexternal tools');
 }
 
 /* ------------------------------------------------------------------ fonts
-   Resolution is per shipping brand, never for the template: a checkout that only has
-   `example` needs no type pool at all, and asking it to download 50 MB to render a
-   template is the re-download this script exists to prevent. */
+   The type pool is toolchain, at the same layer as typst, and it is required whether or
+   not a brand of your own exists yet. Scoping it to shipping brands was wrong in the way
+   that is expensive to notice: typst exits 0 with no faces installed, substituting
+   silently, so a checkout with only the template compiled a proof that reported success
+   and typeset in the wrong faces. A missing pool is therefore fetched on sight rather
+   than waiting for --fix — fonts.sh is idempotent and skips what is already there, so the
+   thing --fix guards against (a re-download) cannot happen here.
+
+   The template exclusion survives, narrowed to what it was always about: assets belonging
+   to one brand. `example` no longer buys an exemption from the house type library. */
 
 console.log('\nfonts');
 {
   const brandsDir = join(root, 'brands');
-  const brands = shippingBrands();
+  const brands = existsSync(brandsDir)
+    ? readdirSync(brandsDir).filter(b => statSync(join(brandsDir, b)).isDirectory())
+    : [];
 
   const wanted = new Set();
   for (const brand of brands) {
@@ -164,22 +173,27 @@ console.log('\nfonts');
     }
   }
 
-  if (!brands.length) {
-    report('ok', 'type pool', `not required — only \`${TEMPLATE_BRAND}\` present, excluded by policy`);
+  if (!wanted.size) {
+    report('ok', 'type pool', 'no brand declares a face');
   } else if (!has('fc-list')) {
     report('warn', 'type pool', 'fontconfig absent — cannot verify; install manually if a face is missing');
   } else {
-    const installed = sh('fc-list', [':', 'family']).out.toLowerCase();
-    const absent = [...wanted].filter(f => !installed.includes(f.toLowerCase()));
-    if (!absent.length) report('ok', 'type pool', `${wanted.size} brand face(s) resolve`);
-    else if (FIX) {
+    const resolves = () => {
+      const installed = sh('fc-list', [':', 'family']).out.toLowerCase();
+      return [...wanted].filter(f => !installed.includes(f.toLowerCase()));
+    };
+    const absent = resolves();
+    if (!absent.length) report('ok', 'type pool', `${wanted.size} declared face(s) resolve`);
+    else if (platform() === 'win32') {
+      report('bad', 'type pool', `missing: ${absent.join(', ')} — \`npm run fetch:fonts && npm run install:fonts\``);
+    } else {
+      console.log(`  … fetching ${absent.length} missing face(s): ${absent.join(', ')}`);
       const r = sh('bash', [join(root, 'scripts', 'fonts.sh')]);
-      const after = sh('fc-list', [':', 'family']).out.toLowerCase();
-      const still = absent.filter(f => !after.includes(f.toLowerCase()));
+      const still = resolves();
       report(still.length ? 'bad' : 'ok', 'type pool',
-        still.length ? `still missing after fetch: ${still.join(', ')}` : 'fetched and resolving');
-      if (!r.ok && still.length) console.log(`      ${r.out.split('\n').slice(-1)[0]}`);
-    } else report('bad', 'type pool', `missing: ${absent.join(', ')} — \`bash scripts/fonts.sh\``);
+        still.length ? `still missing after fetch: ${still.join(', ')}` : `fetched; ${wanted.size} face(s) resolve`);
+      if (still.length) console.log(`      ${r.out.split('\n').filter(Boolean).slice(-1)[0] ?? ''}`);
+    }
   }
 }
 
